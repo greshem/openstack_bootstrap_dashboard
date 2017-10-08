@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block receiver %}
+    <h3>
+        【STcloud云】尊敬的用户{{ receiver.username }}：
+    </h3>
+{% endblock %}
+{% block content %}
+    <p>
+        您好，{{ senday }}，
+        您的帐号{{ receiver.username }}，
+        {% if type == "normal"  %}
+            已升级为信用用户 ，
+        {% else %}
+            信用额度调整为{{ receiver.credit_line }}元，
+        {% endif %}
+        目前您的账号余额为{{ receiver.cash_balance}}元，赠送余额为{{ receiver.gift_balance}}元，信用额度{{ receiver.credit_line }}元，可用额度{{ receiver.available_credit }}元，感谢您的使用。如有疑问，请与我们联系。
+    </p>
+{% endblock %}

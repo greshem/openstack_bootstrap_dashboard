@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block receiver %}
+    <h3>
+        【STcloud云】尊敬的用户{{ receiver.username }}：
+    </h3>
+{% endblock %}
+{% block content %}
+    <p>
+        您好，截止{{ senday }}，
+        您的帐号{{ receiver.username }}，
+        余额为{{ receiver.available_balance }}元。
+        账号冻结已满一个月，所有资源已永久释放，谢谢您的使用，如有疑问，请拨打服务热线：4008-166620。
+    </p>
+{% endblock %}

@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+    <div class="row search_combo">
+        <form id="current_table" class="form-inline" role="form"  onSubmit="return table_filter(this);">
+            <div class="form-group">
+                <label for="input1">产品类别</label>
+                <select class="form-control" id="input1" name="product_type">
+                    <option value="all">全部产品</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="input2">区域</label>
+                <select class="form-control" id="input2" name="region">
+                    <option value="all">全部</option>
+                    {% for record in region_list %}
+                        <option value="{{record.region_id  }}">{{ record.region_desc }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="input3">消费期段</label>
+                <select class="form-control" id="input3" name="period">
+                    <option value="current">当月</option>
+                    <option value="last">上月</option>
+                    <option value="fore_last">上上月</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-default">确定</button>
+        </form>
+    </div>
+
+    <div class="row">
+        <table id='comsumptionlist' data-url="{{root_url}}/center/comsumptionlist" data-width="100"
+               data-side-pagination="server" data-pagination="true" data-page-list="[5,10, 20, 50, 100, 200]">
+            <thead>
+            <tr>
+                <th data-field="region_id" data-formatter="valueformat">区域ID</th>
+                <th data-field="resource_type" data-formatter="valueformat" >产品</th>
+                <th data-field="resource_name" >产品名称</th>
+                {# <th data-field="username" data-align="right" >单价</th> #}
+                <th data-field="amount_total" data-formatter="money_formatter" >消费金额</th>
+                <th data-field="started_at"  data-formatter="date_format_recentcost">开始时间</th>
+                <th data-field="ended_at" data-formatter="date_format_recentcost"  >结束时间</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+
+
+    <script>
+
+        $("#comsumptionlist").bootstrapTable({
+            'onPageChange':function(number, size){
+            },
+            'onRefreshOptions':function(){
+            $('#main_content').resize()
+            },
+            'queryParams':function (params){
+                s_data=$('form').serializeArray();
+                for (key in s_data){
+                    item=s_data[key];
+                    var1=item["name"];
+                    var2=item["value"];
+                    params[var1]=var2;
+                }
+                return  params
+            }
+        });
+        function table_filter(current){
+            $("#comsumptionlist").bootstrapTable('refresh', {
+                'onPageChange':function(number, size){
+                }
+            });
+            return false;
+        };
+        reset_pagination();
+
+        load_input_select();
+    </script>
+
+{% endblock %}

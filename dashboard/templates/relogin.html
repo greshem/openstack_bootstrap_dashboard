@@ -1,0 +1,51 @@
+<!--引用静态文件-->
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+<head lang="zh-CN">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- <link rel="icon" href="../../favicon.ico"> -->
+    <link rel="shortcut icon" href="https://www.stcloud.cn/dashboard/static/dashboard/img/favicon.ico"/>
+
+    <title>STcloud费用中心</title>
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+
+    <link href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <!-- Bootstrap theme -->
+    <link href="{% static 'bootstrap/css/bootstrap-theme.min.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style1.css' %}" />
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="{% static 'js/html5shiv.min.js' %}"></script>
+      <script src="{% static 'js/respond.min.js' %}"></script>
+    <![endif]-->
+</head>
+<body>
+{% block body %}
+    <div  class="container-fluid">
+        <div class="row">
+            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+            </div>
+            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                <h2>session已经过期，请重新登录</h2>
+                <a class="btn btn-warning" href="{{root_url}}/center/payment_redirect?account_id={{ account_info.account_id }}" >重新登录</a>
+            </div>
+            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+            </div>
+        </div>
+    </div>
+
+
+
+{% endblock %}
+{% block modal %}
+{% endblock %}
+</body>
+
+</html>

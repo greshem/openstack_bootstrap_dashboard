@@ -1,0 +1,30 @@
+{% extends 'colorbox_ajax.html' %}
+
+{% block title %}
+    删除子账户
+{% endblock %}
+
+{% block content %}
+    是否删除该子账户{{ username }}!
+{% endblock %}
+
+{% block action_script %}
+    <script>
+        $('#confirm_btn').click(function(){
+            result = $.ajax({
+                type:'post',
+                url:'{{ root_url }}/manage/delete/',
+                data:{'account_id': '{{ account_id }}'},
+                async: false
+            });
+
+            if (result.responseText=='success'){
+                $.colorbox.close();
+                location.href='{{ root_url }}/manage/';
+            }else{
+                $.colorbox.close();
+                toastr.error('删除子账号失败')
+            }
+        })
+    </script>
+{% endblock %}

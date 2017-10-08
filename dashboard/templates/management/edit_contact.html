@@ -1,0 +1,144 @@
+{% extends 'colorbox_ajax.html' %}
+
+{% block title %}
+    {% ifequal fill 'yes' %}
+        编辑联系人
+    {% else %}
+        新增联系人
+    {% endifequal %}
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-lg-3">
+            <label class="pull-right kkk" for="name">姓名</label>
+        </div>
+        <div class="col-lg-6">
+            <input class="form-control" id="name" {% ifequal fill 'yes' %}value="{{ old_contact.contact_name }}"{% endifequal %}>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-3">
+            <label class="pull-right kkk" for="position">职位</label>
+        </div>
+        <div class="col-lg-6">
+            <input class="form-control" id="position" {% ifequal fill 'yes' %}value="{{ old_contact.contact_position }}"{% endifequal %}>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-3">
+            <label class="pull-right kkk" for="telephone">电话</label>
+        </div>
+        <div class="col-lg-6">
+            <input class="form-control" id="telephone" {% ifequal fill 'yes' %}value="{{ old_contact.contact_telephone }}"{% endifequal %}>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-3">
+            <label class="pull-right kkk" for="email">邮箱</label>
+        </div>
+        <div class="col-lg-6">
+            <input class="form-control" id="email" {% ifequal fill 'yes' %}value="{{ old_contact.contact_email }}"{% endifequal %}>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-3">
+            <label class="pull-right kkk" for="remark">备注</label>
+        </div>
+        <div class="col-lg-6">
+            <textarea class="form-control" id="remark" {% ifequal fill 'yes' %}value="{{ old_contact.remark }}"{% endifequal %}></textarea>
+        </div>
+    </div>
+
+    <style>
+        .kkk{
+            height: 34px;
+            line-height: 34px;
+        }
+    </style>
+{% endblock %}
+
+{% block action_script %}
+    <script>
+        $('#confirm_btn').click(function(){
+            var contact_name = $('#name').val();
+            var contact_telephone = $('#telephone').val();
+            var email=$('#email').val();
+            var hintstr = "";
+            var flag = 0;
+
+            if (contact_name==""){
+                flag = 1;
+                hintstr+='联系人姓名不能为空<br>';
+            }
+
+            if (contact_telephone!=""){
+                reg=/^\d+$/;
+                if (!reg.test(contact_telephone)){
+                    flag = 1;
+                    hintstr+='请输入正确的电话号码<br>'
+                }
+            }
+
+            if (email!=""){
+                reg1=/^(\w-*\.*)+@(\w-?)+(\.\w{2,})+$/;
+                if (!reg1.test(email)) {
+                    flag = 1;
+                    hintstr += '请输入正确的邮箱地址<br>'
+                }
+            }
+
+            if (flag==1){
+                $.alert({
+                    title: '提示',
+                    content: hintstr,
+                    confirmButton: '确认'
+                });
+                return false;
+            }
+
+            if('{{ fill }}'=='yes'){
+                result1=$.ajax({
+                    type:'POST',
+                    url:'{{ root_url }}/manage/contactedit/',
+                    data:{'name': $('#name').val(),
+                        'position': $('#position').val(),
+                        'telephone': $('#telephone').val(),
+                        'email': $('#email').val(),
+                        'remark': $('#remark').val(),
+                        'contact_id': '{{ old_contact.contact_id }}',
+                        'account_id': '{{ account_id }}'},
+                    async:false
+                });
+                if(result1.responseText=='success'){
+                    toastr.success('更新联系人成功')
+                }else{
+                    toastr.error('更新联系人失败')
+                }
+            }else{
+                result2=$.ajax({
+                    type:'POST',
+                    url:'{{ root_url }}/manage/contactedit/',
+                    data:{'name': $('#name').val(),
+                        'position': $('#position').val(),
+                        'telephone': $('#telephone').val(),
+                        'email': $('#email').val(),
+                        'remark': $('#remark').val(),
+                        'account_id': '{{ account_id }}'},
+                    async:false
+                });
+                if(result2.responseText=='success'){
+                    toastr.success('新增联系人成功')
+                }else{
+                    toastr.error('新增联系人失败')
+                }
+            }
+            $.colorbox.close();
+            location.href='{{ root_url }}/manage/contact?account_id='+'{{ account_id }}';
+        })
+    </script>
+{% endblock %}

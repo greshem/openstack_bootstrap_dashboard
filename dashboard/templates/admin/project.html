@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block title %}{% trans "Users" %}{% endblock %}
+
+{% block main_body %}
+
+<div class="container">
+
+	<div class="table_search client">
+	      <div class="form-group has-feedback">
+	        <span class="fa fa-search search-icon form-control-feedback"></span>
+	      </div>
+	</div>
+    <div class="control-group">
+       <a  href="{% url 'create_project' %}"> <button type="button" id="create_account" class="btn btn-default" >创建项目</button></a>
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-12 panel panel-default">
+            <div class="panel-body">
+            <table id="example" class="table table-striped table-bordered" cellspacing="0" width="100%" height="25px">
+            <thead>
+                <tr>
+                <th>名称</th>
+                <th>描述</th>
+                <th>项目ID</th>
+                <th>域名</th>
+                <th>激活</th>
+                <th>动作</th>
+                </tr>
+            </thead>
+            <tbody>
+            {%for item in projects%}
+             <tr >
+                <td>{{ item.name}}</td>
+                <td>{{ item.desc}}</td>
+                <td>{{ item.id}}</td>
+                <td>{{ item.domain_id}}</td>
+                <td>{{ item.enabled}}</td>
+                <td>
+				<div class="btn-group ">
+				<a  class="btn btn-default  ajax-modal" href="{% url 'update_project' item.id %}"> 编辑 </a>
+		           <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+		            <span class="caret"></span>
+		           </button>
+		           <ul class="dropdown-menu" role="menu">
+		              <li><a id="" href="{%url 'toggle_user' item.id%}">修改配额</a></li>
+		              <li><a id="" href="{%url 'toggle_user' item.id%}">查看使用量</a></li>
+		              <li><a id="" href="{%url 'delete_project' item.id%}">删除项目</a></li>
+		           </ul>
+				</div>
+                </td>
+             </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        </div>
+        <div class="col-xs-6">
+               <div class="dataTables_info" id="example_info" role="alert" aria-live="polite" aria-relevant="all"></div>
+         </div>
+         <div class="col-xs-6">
+              <div class="dataTables_paginate paging_simple_numbers" id="exmaple_paginate">
+                   {% if projects.has_previous %}
+                        <a href="?page={{ projects.previous_page_number }}">上一页</a>
+                   {% endif %}
+                   <span class="current">
+                        第{{ users.number }}页，共{{ projects.paginator.num_pages }}页
+                   </span> 
+                   {% if projects.has_next %}
+                        <a  href="?page={{ projects.next_page_number }}">下一页</a>
+                   {% endif %}
+              </div>
+         </div>
+      </div>
+
+    </div>
+    <div class="row">
+
+    </div> 
+</div>
+{% endblock %}

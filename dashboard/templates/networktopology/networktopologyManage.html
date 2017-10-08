@@ -1,0 +1,181 @@
+{% extends "ECloud.html" %} 
+{% load staticfiles %} 
+
+{% block insert_js_css %}
+
+
+
+<script src="{% static 'js/horizon/angular.js' %}"></script>
+<script src="{% static 'js/horizon/angular-route.js' %}" type="text/javascript" charset="utf-8"></script>
+<script src="{% static 'js/horizon/angular-bootstrap.js' %}" type="text/javascript" charset="utf-8"></script>
+<script src="{% static 'js/horizon/horizon.js' %}" type="text/javascript" charset="utf-8"></script>
+
+<script src="{% static 'js/horizon/angular-cookies.js' %}" type="text/javascript" charset="utf-8"></script>
+<script src="{% static 'js/horizon/angular-gettext.js' %}" type="text/javascript" charset="utf-8"></script>
+<script src="{% static 'js/horizon/angular-sanitize.js' %}" type="text/javascript" charset="utf-8"></script>
+<script src="{% static 'js/horizon/lrdragndrop.js' %}" type="text/javascript" charset="utf-8"></script>
+<script src="{% static 'js/horizon/smart-table.js' %}" type="text/javascript" charset="utf-8"></script>
+<script src="{% static 'js/horizon/ng-file-upload-all.js' %}" type="text/javascript" charset="utf-8"></script>
+
+
+
+<script src="{% static 'js/horizon/d3.js' %}"></script>
+<script src="{% static 'js/horizon/spin.js' %}"></script>
+<script src="{% static 'js/horizon/spin.jquery.js' %}"></script>
+<script src="{% static 'js/horizon/hogan.js' %}"></script>
+<script src="{% static 'js/horizon/app.module.js' %}"></script>
+<script src="{% static 'js/horizon/horizon.networktopologycommon.js' %}"></script>
+<script src="{% static 'js/horizon/horizon.flatnetworktopology.js' %}"></script>
+<script src="{% static 'js/horizon/horizon.networktopology.js' %}"></script>
+
+<script src="{% static 'js/networktopology.js' %}"></script>
+
+<style type="text/css">
+svg#topology_canvas {
+  font-family: sans-serif;
+}
+svg#topology_canvas .network-rect {
+  cursor: pointer;
+}
+svg#topology_canvas .network-rect.nourl {
+  cursor: auto;
+}
+svg#topology_canvas .network-name {
+  font-weight: bold;
+  font-size: 12px;
+  fill: #fff;
+  text-anchor: middle;
+}
+svg#topology_canvas .network-cidr {
+  font-size: 11px;
+  text-anchor: end;
+}
+svg#topology_canvas text.network-type {
+  font-family: FontAwesome;
+  text-anchor: end;
+}
+svg#topology_canvas .port_text {
+  font-size: 9px;
+  fill: #666;
+}
+svg#topology_canvas .port_text.left {
+  text-anchor: end;
+}
+svg#topology_canvas .base_bg_normal {
+  fill: #333;
+}
+svg#topology_canvas .loading_bg_normal {
+  fill: #555;
+}
+svg#topology_canvas .base_bg_small,
+svg#topology_canvas .loading_bg_small {
+  fill: #fff;
+}
+svg#topology_canvas .active {
+  fill: #45B035;
+}
+svg#topology_canvas .icon polygon {
+  fill: #333;
+}
+svg#topology_canvas .instance_small .frame,
+svg#topology_canvas .router_small .frame {
+  fill: url(#device_small_bg);
+  stroke: #333;
+  stroke-width: 3;
+}
+svg#topology_canvas .instance_small .port_text,
+svg#topology_canvas .router_small .port_text {
+  display: none;
+}
+svg#topology_canvas .router_normal .frame,
+svg#topology_canvas .instance_normal .frame {
+  fill: #fff;
+  stroke: #333;
+  stroke-width: 4;
+}
+svg#topology_canvas .router_normal .icon_bg,
+svg#topology_canvas .instance_normal .icon_bg {
+  fill: #fff;
+  stroke: #333;
+  stroke-width: 4;
+}
+svg#topology_canvas .router_normal .texts_bg,
+svg#topology_canvas .instance_normal .texts_bg {
+  fill: url('#device_normal_bg');
+}
+svg#topology_canvas .router_normal .texts .name,
+svg#topology_canvas .instance_normal .texts .name {
+  text-anchor: middle;
+  fill: #333;
+  font-size: 12px;
+}
+svg#topology_canvas .router_normal .texts .type,
+svg#topology_canvas .instance_normal .texts .type {
+  text-anchor: middle;
+  fill: #fff;
+  font-size: 12px;
+}
+svg#topology_canvas .router_normal .instance_bg,
+svg#topology_canvas .instance_normal .instance_bg {
+  fill: #333;
+}
+svg#topology_canvas g.loading .active {
+  fill: #555;
+}
+svg#topology_canvas g.loading .icon polygon {
+  fill: #555;
+}
+svg#topology_canvas g.loading .instance_bg {
+  fill: #555;
+}
+svg#topology_canvas g.loading .instance_small .frame,
+svg#topology_canvas g.loading .router_small .frame {
+  stroke: #555;
+  fill: url(#device_small_bg_loading);
+}
+svg#topology_canvas g.loading .router_normal .frame,
+svg#topology_canvas g.loading .instance_normal .frame {
+  stroke: #555;
+}
+svg#topology_canvas g.loading .router_normal .name,
+svg#topology_canvas g.loading .instance_normal .name {
+  fill: #999;
+}
+svg#topology_canvas g.loading .router_normal .texts_bg,
+svg#topology_canvas g.loading .instance_normal .texts_bg {
+  fill: url(#device_normal_bg_loading);
+}
+svg#topology_canvas g.loading .router_normal .icon_bg,
+svg#topology_canvas g.loading .instance_normal .icon_bg {
+  stroke: #555;
+}
+</style>
+{% endblock %} 
+{% block title %}
+<span class="menu-num-blue">网络</span>
+<span class="menu-num-defult">/ 网络拓扑</span>
+{% endblock %} 
+
+{% block center_body %}
+<div class="row">
+	<div class="col-lg-12 col-md-12">
+		<div class="panel panel-default" style="padding: 0px;">
+			<div class="panel-heading heading-default">
+				<h4 class="panel-title">网络拓扑</h4>
+			</div>
+			<div class="panel-body" style="padding: 30px 0px;">
+				<div id="topologyCanvasContainer">
+  					<div class="nodata">{% block trans %}There are no networks, routers, or connected instances to display.{% endblock %}</div>
+				</div>
+				
+			
+				<span data-networktopology="{% url 'networktopology_json' %}" id="networktopology"></span>
+				<div id="topologyMessages"></div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %} 
+{% block insert_html %}
+
+{% endblock %}

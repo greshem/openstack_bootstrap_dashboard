@@ -1,0 +1,161 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block content %}
+    <div class="row search_combo">
+        <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+            <form id="current_table" class="form-inline" role="form"  onSubmit="return table_filter(this);">
+                <div class="form-group">
+                    <select name="queryItem" class='form-control' id="queryItem">
+                        <option value="company">公司名</option>
+                        <option value="username">用户名</option>
+                        <option value="telephone">手机号</option>
+                        <option value="email">邮箱</option>
+                    </select>
+                    <input style="margin-right: 20px" name="queryContent" class='form-control' id='queryContent' placeholder="输入内容模糊筛选" style="">
+                </div>
+            </form>
+        </div>
+        <div class="col-lg-4" style="margin-left: -15px">
+            <input class="btn btn-warning" onClick="colorpopx1(this,800)"
+                   data-url="{{ root_url }}/manage/create/" type="button" id="btn_new_subaccount" value="新建子账户">
+        </div>
+    </div>
+
+    <div class="row" style="margin-bottom: 15px">
+        <div class="col-lg-12 row form-inline">
+            <div class="col-lg-3 form-group">
+                <span style="height: 34px; line-height: 34px"> 账户总数：{{ total }}个   正常账户总数：{{ normal }}个   冻结账户总数：{{ frozen }}个 </span>
+            </div>
+
+            <div class="col-lg-2 form-group">
+                <label for="type">账户类型</label>
+                <select id="type" class="form-control">
+                    <option value="">全部</option>
+                    <option value="normal">普通</option>
+                    <option value="credit">信用</option>
+                </select>
+            </div>
+            <div class="col-lg-2 form-group">
+                <label for="status">状态</label>
+                <select id="status" class="form-control">
+                    <option value="">全部</option>
+                    <option value="normal">正常</option>
+                    <option value="frozen">冻结</option>
+                    <option value="deleted">删除</option>
+                </select>
+            </div>
+            <div class="col-lg-2 form-group">
+                <label for="cash_balance">账户余额</label>
+                <select id="cash_balance" class="form-control">
+                    <option value="">全部</option>
+                    <option value="0">0元以下</option>
+                    <option value="0-500">0-500元</option>
+                    <option value="500-1000">500-1000元</option>
+                    <option value="1000">1000元以上</option>
+                </select>
+            </div>
+            <div class="col-lg-1 form-group">
+                <button class="btn btn-warning pull-left" id="filter">搜索</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="">
+        <table id='listdata' data-url="{{ root_url }}/manage/get_data_for_main/?status=normal" data-width="100"
+               data-side-pagination="server" data-pagination="true" data-page-list="[5,10, 20, 50]">
+            <thead>
+            <tr>
+                <th data-field="username" data-formatter="todetails">用户名</th>
+                <th data-field="telephone">手机号</th>
+                <th data-field="email">邮箱</th>
+                <th data-field="company">公司名称</th>
+                <th data-field="type" data-formatter="tochinese">账户类型</th>
+                <th data-field="status" data-formatter="tochinese1">账户状态</th>
+                <th data-field="balance">账户余额</th>
+                <th data-field="credit_line">信用额度</th>
+                <th data-field="created_at" data-formatter="date_format_time">创建时间</th>
+                <th data-field="whatever" data-formatter="operation">操作</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+
+    <script>
+        $('#status').val('normal');
+        $('#listdata').bootstrapTable();
+        $('#filter').click(function(){
+            $('#listdata').bootstrapTable('refresh',{
+                url:"{{ root_url }}/manage/get_data_for_main/",
+
+                query: {
+                    'queryItem': $('#queryItem').val(),
+                    'queryContent': $('#queryContent').val(),
+                    'type': $('#type').val(),
+                    'status': $('#status').val(),
+                    'cash_balance': $('#cash_balance').val()
+                }
+            });
+        });
+
+        function operation(value, row){
+            return '<div class="btn-group"><a data-toggle="dropdown">操作</a><ul class="dropdown-menu">' +
+                    '<li><a onClick="colorpopx1(this,600)" data-url="'+'{{ root_url }}'+'/manage/info/?account_id='+row.account_id+'&user_id='+row.user_id+'">基本信息修改</a></li>' +
+{#                    '<li><a onClick="colorpopx1(this,600)" data-url="'+'{{ root_url }}'+'/manage/account/?account_id='+row.account_id+'&credit_line='+row.credit_line+'&type='+row.type+'">成为信用用户</a></li>' +#}
+                    '<li><a onClick="colorpopx1(this,800)" data-url="'+'{{ root_url }}'+'/manage/discount/?account_id='+row.account_id+'&user_id='+row.user_id+'&parent_name='+row.parent_name+'">折扣管理</a></li>' +
+                    '<li><a onClick="colorpopx1(this,600)" data-url="'+'{{ root_url }}'+'/manage/gift/?account_id='+row.account_id+'">赠送金额</a></li>' +
+                    '<li><a href="'+'{{ root_url }}'+'/manage/recharge/?account_id='+row.account_id+'" target="_Blank">代充值</a></li>' +
+                    '<li><a href="'+'{{ root_url }}'+'/manage/contact/?account_id='+row.account_id+'">联系人管理</a></li>' +
+                    '<li><a onClick="colorpopx1(this,600)" data-url="'+'{{ root_url }}'+'/manage/delete/?account_id='+row.account_id+'&username='+row.username+'">删除子账户</a></li>' +
+                    '</ul></div>';
+        }
+
+        function tochinese(value, row){
+            switch (value){
+                case 'normal':
+                    return '普通';
+                case 'credit':
+                    return '信用';
+                default:
+                    return '-'
+            }
+        }
+
+        function tochinese1(value, row){
+            switch (value){
+                case 'normal':
+                    return '正常';
+                case 'frozen':
+                    return '冻结';
+                case 'deleted':
+                    return '已删除';
+                default:
+                    return '-'
+            }
+        }
+
+        function todetails(value,row){
+            return '<a onClick="colorpopx1(this,1100)" data-url="'+'{{ root_url }}'+'/manage/details/?account_id='+
+                    row.account_id+'">'+value+'</a></li>'
+        }
+
+        $('#btn_new_tunnel').click(function(){
+            url='{{ root_url }}/connection/tunnel/tunnel_new/';
+            $.colorbox({href:url,
+            transition:'none', opacity:0.3,
+            closeButton:true, width: 800, initialWidth: 800, initialHeight: 350, top:"15%"})
+        });
+
+        function colorpopx1(gg, width){
+            url=gg.getAttribute('data-url');
+            $.colorbox({href:url,
+            transition:'none', opacity:0.3,
+            closeButton:true, width: width, initialWidth: 800, initialHeight: 350, top:"15%"})
+        }
+    </script>
+
+    <style>
+        .btn-group{
+            position:absolute;
+        }
+    </style>
+{% endblock %}

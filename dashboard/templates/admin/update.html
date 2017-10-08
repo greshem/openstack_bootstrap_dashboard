@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block title %}{% trans "Users" %}{% endblock %}
+
+{% block main_body %}
+
+<div class="container">
+            <h3>更新用户</h3>
+          <form id="update_user_form"  name="" autocomplete="" action="{%url 'update_user' user.id %}" method="POST">
+          {% csrf_token %}
+            <div class="modal-body clearfix">
+                <div class="row">
+                  <div class="col-sm-6">
+                    <fieldset>
+                        <div class="form-group ">
+                            <label class="control-label  " for="id_domain_id">域ID</label>
+                            <div class=" ">
+                                <input class="form-control" id="id_domain_id" name="domain_id" readonly="readonly" type="text" value="{{user.domain_id}}">
+                            </div>
+                        </div>
+                        <div class="form-group ">
+                              <label class="control-label  " for="id_domain_name">域名</label>
+                            <div class=" ">
+                                <input class="form-control" id="id_domain_name" name="domain_name" readonly="readonly" type="text" value="Default">
+                            </div>
+                        </div>
+                        <div class="form-group required">
+                              <label class="control-label  required" for="id_name">用户名</label>
+                              <span class="hz-icon-required fa fa-asterisk"></span>
+                            <div class=" ">
+                                <input class="form-control" id="id_name" maxlength="255" name="name" type="text" value="{{user.name}}">
+                            </div>
+                        </div>
+                        <div class="form-group ">
+                              <label class="control-label  " for="id_description">描述</label>
+                            <div class=" ">
+                                <textarea class="form-control" cols="40" id="id_description" name="description" rows="4">{{user.description}}</textarea>
+                            </div>
+                        </div>
+                        <div class="form-group ">
+                              <label class="control-label  " for="id_email">邮箱</label>
+                            <div class=" ">
+                                <input class="form-control" id="id_email" name="email" type="email" value="{{user.email}}">
+                            </div>
+                        </div>
+                    </fieldset>
+                  </div>
+                  <div class="col-sm-6">
+                      <h3>说明：</h3>
+                      <p>编辑用户详情。</p>
+                      <script type="text/javascript">
+
+                      </script>
+                      </div>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                    <a href="/admin/" class="btn btn-default cancel">取消
+                    </a>
+                    <input class="btn btn-primary" type="submit" value="更新用户">
+                </div>
+            </form>
+
+</div>
+{% endblock %}

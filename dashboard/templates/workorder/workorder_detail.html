@@ -1,0 +1,149 @@
+{% load staticfiles %}
+{% block content %}
+  <div class="row" style="max-width: 100%">
+    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+      <div class="row">
+        <div class="form-group col-sm-11" style="margin-left: 2%">
+            <label>问题描述</label>
+            <textarea class="form-control" name="workorder_desc" readonly rows="6" >{{ workorder.content }}</textarea>
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group col-sm-11" style="margin-left: 2%">
+          <label class="col-sm-5">工单编号: <strong>{{ workorder.workorder_no }}</strong></label>
+          <label class="col-sm-5">工单类型: <strong>{{ workorder.type.name }}</strong></label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group col-sm-11" style="margin-left: 2%">
+          <label class="col-sm-5">工单状态:
+            {% for key, value in status.items %}
+              {% ifequal key workorder.status %}
+                <strong>{{ value }}</strong>
+              {% endifequal %}
+            {% endfor %}
+          </label>
+          <label class="col-sm-5">提交时间:<strong class="datetime_time" >{{ workorder.apply_at }}</strong>
+        </div>
+      </div>
+
+    </div>
+    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+      <div class="row">
+        <div class="row" style="margin-top: 5px"></div>
+        {% for item in workorderrecordlist %}
+          {% if item.record_by == user %}
+            <div class="row">
+              <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10 col-xs-offset-1 col-sm-offset-1 col-md-offset-1 col-lg-offset-1" style="border: 1px solid #676A6C;margin-bottom: 10px">
+                <p style="text-align: right">{{ item.record_by }} :{{ item.content }}</p>
+
+                <p style="text-align: right"><span class="datetime_time">{{ item.record_at }}</span>&nbsp;&nbsp;&nbsp;
+                  {% for key, value in status.items %}
+                    {% ifequal key item.status %}
+                      {{ value }}
+                    {% endifequal %}
+                  {% endfor %}
+                </p>
+              </div>
+              <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
+                {% if item.status %}
+                  <img src="{% static 'img/business_header_self.png' %}"/>
+                {% else %}
+                  <img src="{% static 'img/business_header_customer.png' %}"/>
+                {% endif %}
+              </div>
+            </div>
+          {% else %}
+            <div class="row">
+              <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
+                {% if item.status %}
+                  <img src="{% static 'img/business_header_self.png' %}"/>
+                {% else %}
+                  <img src="{% static 'img/business_header_customer.png' %}"/>
+                {% endif %}
+              </div>
+              <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10" style="border: 1px solid #676A6C;margin-bottom: 10px">
+                <p style="text-align: left">{{ item.record_by }} :{{ item.content }}</p>
+
+                <p style="text-align: left"><span class="datetime_time">{{ item.record_at }}</span>&nbsp;&nbsp;&nbsp;
+                  {% for key, value in status.items %}
+                    {% ifequal key item.status %}
+                      {{ value }}
+                    {% endifequal %}
+                  {% endfor %}
+                </p>
+              </div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+      <div class="row">
+        <form id="workorder_details" class="form" action="{{ root_url }}/workorder/detail/{{ workorderno }}" role="form"
+              method="post" onsubmit="return false">
+          <div class="form-group">
+              <textarea class="form-control" id="record_content" name="content" rows="3" style="width: 93%"></textarea>
+          </div>
+          <div class="form-group">
+            <input class="form-control" type=hidden name="workorderno" value="{{ workorderno }}"/>
+            <input class="form-control" type=hidden name="user" value="{{ user }}"/>
+            <input class="form-control" type=hidden name="submit_type" id="submit_type" value="closed"/>
+            <input class="form-control" type=hidden name="status" value="{{ workorder.status }}"/>
+          </div>
+          {% ifequal workorder.apply_by user %}
+            <div class="form-group">
+              {% ifequal workorder.status 'confirmed' %}
+                {% else %}
+                <button class="btn btn-primary" onclick="form_submit('respond')">回复</button>
+                <button class="btn btn-danger" onclick="form_submit('closed')">关闭工单</button>
+              {% endifequal %}
+            </div>
+            {% else %}
+            <div class="form-group">
+              <span style="padding: 10px">处理结果:</span>
+              <label class="radio-inline" style="padding: 10px">
+                <input type="radio" name="hanlde_option" id="inlineRadio1" value="handling" checked='checked'> 处理中
+              </label>
+              <label class="radio-inline" style="padding: 10px">
+                <input type="radio" name="hanlde_option" id="inlineRadio2" value="handled"> 已处理
+              </label>
+              <label class="radio-inline" style="padding: 10px">
+                <input type="radio" name="hanlde_option" id="inlineRadio3" value="delay"> 延迟处理
+              </label>
+              <button class="btn btn-primary" onclick="form_submit('respond')">回复</button>
+            </div>
+          {% endifequal %}
+
+        </form>
+      </div>
+    </div>
+  </div>
+
+
+  <script>
+    function form_submit(submit_type) {
+      {% ifequal workorder.apply_by  user %}
+        {% else %}
+        if (!$("#record_content").val()) {
+          alert("请输入内容!");
+          return false;
+        }
+      {% endifequal %}
+      $('#submit_type').val(submit_type);
+      $("#workorder_details").ajaxSubmit({
+        success: function (data) {
+          if (submit_type == 'closed') {
+            location.href = "{{ root_url }}/workorder/";
+          }
+          else {
+            ajaxclickload("{{ root_url }}/workorder/detail/{{ workorderno}}");
+          }
+
+        },
+        error: function (data, status, e) {
+        }
+      });
+      return false;
+    }
+  utc2local();
+  </script>
+{% endblock %}

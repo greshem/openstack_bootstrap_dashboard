@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% load formatters %}
+{#{% block title %}#}
+{#    <strong>#}
+{#        <a style="cursor:pointer;text-decoration:none;" onclick='refreshMainContent("{{root_url}}/center/bill")'>账单</a>&nbsp;/&nbsp;{{ bill_id }}#}
+{#    </strong>#}
+{#{% endblock %}#}
+{% block content %}
+    <script type="text/javascript">
+	    function cash_amount(value, row) {
+		    return Number(row['amount']-row['gift_amount']).formatMoney()
+	    }
+    $('#standard_amount').empty()
+	$('#standard_amount').append(money_formatter({{amount}}))
+	var regions=getRegionList()
+	var region_formatter=function (value){
+    	for(var i=0;i<regions.length;i++){
+    		if (regions[i]['region_id']==value)
+    			if(regions[i]['region_desc']){
+    				return regions[i]['region_desc']
+    			}else{
+    				return regions[i]['region_id']
+    			}
+    	}
+    }
+    </script>
+    <div>
+        <label>产品分类消费汇总</label><br/><br/>
+        <span>账单时间:</span>&nbsp;&nbsp;&nbsp;&nbsp;<span>{{ dateFrom | todate|date:"Y-m-d"}}</span> &nbsp;&nbsp;至&nbsp;&nbsp;&nbsp;<span>{{ dateTo|todate|date:"Y-m-d"}}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <span>消费总额:</span><span style="color:#ffb52e">{{ amount }}&nbsp;元</span>
+    </div>
+
+    <br/>
+    <div>
+        <table id="bill_details" data-url="{{root_url}}/center/getbillDetail?bill_id={{bill_id}}"
+                 data-toggle="table";>
+            <thead>
+                <tr>
+                    <th data-field="resource_type"
+					    data-sortable="false" data-formatter="valueformat">产品分类</th>
+					<th data-field="resource_name"
+					    data-sortable="false" >产品名称</th>
+					<th data-field="region_id"
+					    data-sortable="false" data-formatter="region_formatter">区域</th>
+				    <th data-field="amount"
+					    data-sortable="false" data-formatter="money_formatter">总金额(元)</th>
+				    <th data-field=""
+					    data-sortable="false" data-formatter='cash_amount'>现金余额扣费(元)</th>
+				    <th data-field="gift_amount"
+					    data-sortable="false" data-formatter="money_formatter">赠送余额扣费(元)</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+    <script type="text/javascript">
+	    $("#bill_details").bootstrapTable()
+    </script>
+{% endblock %}

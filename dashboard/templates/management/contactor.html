@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block content %}
+    <div class="row col-sm-12">
+    <div class="col-sm-6">
+        联系人列表
+    </div>
+    <div class="col-sm-6" align="right">
+        <button class="yellow_confirm" id="add_contact" value="{{ account_id }}">+联系人</button>&nbsp;&nbsp;&nbsp;&nbsp;
+        <button class="black_cancel" id="gobackfromcontact">返回</button>
+    </div>
+    </div>
+    <table class="table" style="font-size: 13px">
+        <tr>
+            <th>联系人姓名</th>
+            <th>职位</th>
+            <th>电话</th>
+            <th>Email</th>
+            <th>备注</th>
+            <th>操作</th>
+        </tr>
+        {% for i in contact_list %}
+            <tr>
+                <td>{{ i.contact_name }}</td>
+                <td>{{ i.contact_position }}</td>
+                <td>{{ i.contact_telephone }}</td>
+                <td>{{ i.contact_email }}</td>
+                <td>{{ i.remark }}</td>
+                <td><a href="#" class="update_contact" name="{{ i.contact_id }}">编辑</a>&nbsp;&nbsp;<a href="#" class="delete_contact" name="{{ i.contact_id }}">删除</a></td>
+            </tr>
+        {% endfor %}
+    </table>
+    <script>
+        $('#add_contact').click(function(){
+            $.colorbox({href:'{{ root_url }}/manage/contactedit/?account_id='+$(this).val(), transition:'none',
+            open:true, opacity:0.3, width: 500, initialWidth: 500, initialHeight: 350, top:"15%"})
+            });
+
+        $('.update_contact').click(function(){
+            $.colorbox({href:'{{ root_url }}/manage/contactedit/?contact_id='+$(this).attr('name')+'&account_id='+'{{ account_id }}', transition:'none',
+            open:true, opacity:0.3, width: 500, initialWidth: 500, initialHeight: 350, top:"15%"})
+        });
+
+        $('.delete_contact').click(function(){
+            var delete_contact_id=$(this).attr('name');
+            $.confirm({
+                title: '删除联系人',
+                content: '是否删除此联系人？',
+                confirmButton: '确认',
+                cancelButton: '取消',
+                confirm: function(){
+                    result=$.ajax({
+                        type:'post',
+                        url:'{{ root_url }}/manage/contactdelete/',
+                        data: {'contact_id':delete_contact_id, 'account_id':'{{ account_id }}'},
+                        async:false
+                    });
+                    if(result.responseText=='success'){
+                        location.href='{{ root_url }}/manage/contact/?account_id='+'{{ account_id }}';
+                    }else{
+                        toastr.error('删除联系人失败')
+                    }
+
+                }
+            });
+        });
+
+        $('#gobackfromcontact').click(function(){
+            location.href='{{ root_url }}/manage/';
+        })
+    </script>
+{% endblock %}

@@ -1,0 +1,223 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block content %}
+  <div class="row search_combo">
+    <div class="row">
+      <button style="float: left;margin-right: 20px" class="btn btn-warning" onclick="$('#myModal').modal('toggle');">
+        +新建工单
+      </button>
+      <form id="current_table" class="form-inline" role="form" onSubmit="return table_filter(this);">
+
+        <div class="form-group" style="margin-right: 10px">
+          <label for="input2">状态</label>
+          <select class="form-control" id="input2" name="status">
+            {% for key,value in status.items %}
+              <option value="{{ key }}">{{ value }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="form-group" style="margin-right:10px">
+          <label for="input3">工单类型</label>
+          <select class="form-control" id="input3" name="type">
+            <option value="all">全部</option>
+            {% for item in workorder_type %}
+              <option value="{{ item.code }}">{{ item.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="form-group" style="margin-right:10px">
+            <label for="apply_source">工单来源</label>
+            <select class="form-control" id="apply_source" name="apply_source">
+                {% for key,value in apply_source.items %}
+                    <option value="{{ key }}">{{ value }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group" style="margin-right:10px">
+          <label for="input4"></label>
+          <input type="text" class="form-control" name="sno" placeholder="按照工单编号模糊查询">
+        </div>
+        <button type="submit" class="btn btn-warning">确定</button>
+      </form>
+    </div>
+  </div>
+  <div class="row" style="margin-top: 10px">
+    <table id='workorderlist' data-toggle="table" data-url="{{ root_url }}/workorder/list_data"
+           data-method="get" data-side-pagination="server" data-pagination="true" data-page-list="[10, 20, 50]">
+      <thead>
+      <tr>
+        <th data-field="workorder_no">工单编号</th>
+        <th data-field="apply_by">提交人</th>
+        <th data-field="type" data-width="130px" style="width: auto">工单类型</th>
+        <th data-field="theme">主题</th>
+        <th data-field="content">问题描述</th>
+        <th data-field="apply_source" data-formatter="apply_source_trans">工单来源</th>
+        <th data-field="apply_at" data-width="150px" data-formatter="date_format_time">提交时间</th>
+        <th data-field="lasthandled_at" data-width="150px" data-formatter="date_format_time">处理时间</th>
+        <th data-field="lasthandled_by">处理人</th>
+        <th data-field="status" data-width="70px" data-formatter="status_trans">状态</th>
+        <th data-field="" data-formatter='operate'>操作</th>
+      </tr>
+      </thead>
+    </table>
+  </div>
+  <!-- /.modal -->
+  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" data-backdrop="static"
+       aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" id="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close"
+                  data-dismiss="modal" aria-hidden="true" style="margin-top:-8px">
+            &times;
+          </button>
+          <h4 class="modal-title" id="myModalLabel2">
+            新建工单
+          </h4>
+        </div>
+        <div class="modal-body">
+          <div id="gift_recharge">
+            <form class="form row search_combo" role="form" id="gift">
+              <div class="form-group">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                  <label style="">工单来源</label>
+                  <select class="form-control" id="source" >
+                    {% for key,value in apply_source.items %}
+                      {% if key != '' %}
+                        <option value="{{ key }}">{{ value }}</option>
+                      {% endif %}
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                  <label style="">主题</label> <input class="form-control" id="modalinput1" type="text" value=""
+                                                    size="3"/>
+                </div>
+                <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                  <label style="">工单类型</label>
+                  <select class="form-control" id="modalinput2">
+                    {% for item in workorder_type %}
+                      <option value="{{ item.code }}">{{ item.name }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                  <label style="">问题描述</label>
+                  <textarea id="modalinput3" class="form-control" rows="3"></textarea>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <div class="col-sm-6">
+            <button type="button"
+                    data-dismiss="modal" class="btn btn-primary" id="discount_close_model" style="float:right">关闭
+            </button>
+          </div>
+          <div class="col-sm-6">
+            <button type="button " class="btn btn-primary" id="discount_confirm_model" style="float:left"
+                    onclick="create_workorder();">
+              提交
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- /.modal-content -->
+    </div>
+  </div>
+  <script>
+    $("#workorderlist").bootstrapTable({
+      'onPageChange': function (number, size) {
+      },
+      'onRefreshOptions': function () {
+        $('#main_content').resize()
+      },
+      'queryParams': function (params) {
+        s_data = $('form').serializeArray();
+        for (key in s_data) {
+          item = s_data[key];
+          var1 = item["name"];
+          var2 = item["value"];
+          params[var1] = var2;
+        }
+        return params
+      }
+    });
+    function table_filter(current) {
+      $("#workorderlist").bootstrapTable('refresh', {
+        'onPageChange': function (number, size) {
+        }
+      });
+      return false;
+    }
+    ;
+    function ajaxclickload(obj_url) {
+        htmlobj=$.ajax({url:obj_url,async:false});
+        $("#main_content").html(htmlobj.responseText);}
+    function operate(value, row){
+        status=row["status"];
+        apply_by=row["apply_by"];
+        workorderno=row["workorder_no"];
+        href='{{ root_url }}/workorder/detail/'+workorderno;
+        func="ajaxclickload('"+href+"')";
+
+        if (status=="confirmed"){
+            return '<a onclick="'+func+'"'+'>已关闭</a>'
+        }
+        else{
+            return '<a onclick="'+func+'"'+'>操作</a>'
+        }
+
+    };
+    function status_trans(value, row) {
+      status_map = {};
+      {% for k,v in status.items %}
+        status_map['{{ k }}'] = '{{ v }}';
+      {% endfor %}
+      return status_map[value]
+    }
+    function apply_source_trans(value,row){
+        apply_source_map={};
+        {% for k,v in apply_source.items %}
+            apply_source['{{ k }}']='{{ v }}';
+        {% endfor %}
+        return apply_source[value]
+    }
+    function create_workorder() {
+      request_data = {
+        "theme": $('#modalinput1').val(),
+        "type": $('#modalinput2').val(),
+        "source": $('#source').val(),
+        "content": $('#modalinput3').val()
+      };
+      htmlobj = $.ajax({
+        url: '{{ root_url }}/workorder/create',
+        type: "post",
+        data: {workorder: JSON.stringify(request_data)},
+        async: false,
+        success: function (data) {
+          if (data == 'success') {
+            $('#myModal').modal('toggle');
+            alert("创建成功!");
+            $("#workorderlist").bootstrapTable('refresh');
+          }
+          else {
+            $('#myModal').modal('toggle');
+            alert("创建失败!");
+          }
+        },
+        error: function (data, status, e) {
+          $('#myModal').modal('toggle');
+          alert("创建失败!");
+        }
+      });
+    }
+    ;
+  </script>
+
+{% endblock %}

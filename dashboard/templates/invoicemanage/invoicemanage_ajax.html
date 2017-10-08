@@ -1,0 +1,466 @@
+{% extends 'base.html' %}
+{% block content %}
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      <div class="modal-dialog" role="document" style="width: 600px">
+        <div class="modal-content">
+          <div class="container-fluid headbar_modal_invoice">
+              <div class="row">
+                  <div class="col-sm-6" id="myModalLabel">发票</div>
+                  <div class="col-sm-6"><a id="cancel_icon1" href="#" style="float:right"><span class="glyphicon glyphicon-remove" aria-hidden="false" style="color:#fff;"></span></a></div>
+              </div>
+          </div>
+          <div class="modal-body">
+              <div id="invoice_input_form1" class="container-fluid">
+                  <form class="form-horizontal">
+                      <div class="form-group form-group_invoice" style="height:24px; line-height:24px">
+                          <label for="invoice_type" class="col-sm-3 text-right"><span class="text_red">*</span>&nbsp;发票类型</label>
+                          <div class="col-sm-8" id="invoice_type" style="height:24px; line-height:24px; color:#999">
+                                  <input type="radio" name="invoicetype" id="optionsRadios3"
+                                     value="normal" checked> 增值税普通发票&nbsp;&nbsp;&nbsp;
+                                  <input type="radio" name="invoicetype" id="optionsRadios4"
+                                     value="special" style="padding-left: 15px"> 增值税专用发票
+                          </div>
+                      </div>
+                      <div class="form-group form-group_invoice">
+                          <label for="invoice_title" class="col-sm-3 text-right"><span class="text_red">*</span>&nbsp;发票抬头</label>
+                          <div class="col-sm-8"><input class="form-control" id="invoice_title" placeholder="上海市******有限公司" maxlength="40" onblur="check_null(this, this.value)"></div>
+                      </div>
+                      <div class="col-sm-offset-3 col-sm-8 row hint" style="display: none;"><span class="text_red">*发票抬头不能为空</span>&nbsp;</div>
+                      <div class="form-group form-group_invoice">
+                          <div class="clearfix"></div>
+                          <label for="invoice_amount" class="col-sm-3 text-right"><span class="text_red">*</span>&nbsp;发票金额</label>
+                          <div class="col-sm-5"><input class="form-control" id="invoice_amount" placeholder="800" onblur="check_null(this, this.value)"></div>
+                          <div><p style="margin-bottom:10px; height:32px; line-height:32px">元</p></div>
+                      </div>
+                      <div class="col-sm-offset-3 col-sm-8 row hint" style="display: none;"><span class="text_red">*发票金额不能为空</span>&nbsp;</div>
+                      <div class="form-group form-group_invoice">
+                          <div class="clearfix"></div>
+                          <label for="invoice_content" class="col-sm-3 text-right"><span class="text_red">*</span>&nbsp;内容</label>
+                          <div class="col-sm-8"><textarea class="form-control" id="invoice_content" placeholder="STcloud云服务器购买费用" onblur="check_null(this, this.value)"></textarea></div>
+                      </div>
+                      <div class="col-sm-offset-3 col-sm-8 row hint" style="display: none;"><span class="text_red">*内容不能为空</span>&nbsp;</div>
+                  </form>
+                  <div class="col-sm-8 col-sm-offset-3" style="height:40px"><button id="first_save" class="btn btn-default" style="position: absolute; right:0px" onmousedown="saveNewInvoiceBody(event)">保存</button></div>
+              </div>
+              <div style="padding-left: 30px;" ><font color="red" size="1">注：发票金额大于2000，免快递费</font></div>
+              <div id="invoice_apply_detail" class="container-fluid" style="display: none">
+                  <div class="row">
+                      <div class="col-sm-6">
+                          <span id="invoice_type_choosen"></span>
+                      </div>
+                      <div class="col-sm-6">
+                          <button onmousedown=backToInvoiceInput(event) style="float: right" class="btn btn-default btn-sm">修改</button>
+                      </div>
+                  </div>
+                  <div>
+                      <table class="table" id="table_invoice_body_modal" style="word-break: break-all">
+                          <thead>
+                          <th style="width:33%">
+                              发票抬头
+                          </th>
+                          <th style="width:33%">
+                              发票金额
+                          </th>
+                          <th style="width:34%">
+                              内容
+                          </th>
+                          </thead>
+                          <tbody id="invoice_pop_tbody">
+                          </tbody>
+                      </table>
+                  </div>
+              </div>
+              <div id="form_NewAddr" class="container-fluid" style="display: none">
+                  <div class="row" style="margin: 0px; padding-right: 0px;">
+                      <div class="col-sm-12" style="margin-top: 15px; margin-bottom:15px;padding-left:0px;">
+                          <p style="color:lightgray">地址信息填写&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;—————————————————————————————</p>
+                      </div>
+                  </div>
+                  <form class="form-horizontal" id="form_add_new_addr">
+                  </form>
+                  <div class="col-sm-8 col-sm-offset-3" id="save_new_addr_div" style="height:40px">
+                      <button id="save_new_addr" class="btn btn-default" style="position: absolute; right:0px">保存</button>
+                      <button id="update_addr" class="btn btn-default" style="position: absolute; right:0px;">保存</button>
+                      <button id="cancel_addr_form" class="btn btn-default" style="position: absolute; right:80px;">取消</button>
+                  </div>
+              </div>
+
+              <div class="container-fluid" >
+                  <script>
+                  $(document).ready(function(){
+                       $.ajaxSetup({
+                           async : false
+                       });
+                      htmlobj_i_summary2= $.ajax({url:'{{root_url}}/center/invoice_querySummary', async:false});
+                      var sum2=eval('('+htmlobj_i_summary2.responseText+')');
+                      $("#money1").html(sum2['invoice_amount_avail']);
+                      $("#money2_ix").html(sum2['invoice_amount']);
+
+                        $("#invoice_amount").numeral({'positions':20,'scale':2});
+                        $("#invoice_apply").click(function() {
+                            $("#myModal").modal({backdrop: 'static', keyboard:false});
+                            htmlobj_i1= $.ajax({url:'{{root_url}}/center/invoice_getAccountAddr', async:false});
+                            $("#invoice_address_list").html(htmlobj_i1.responseText).show();
+                            $("#form_NewAddr").hide();
+                            $(".hint").hide();
+                            $("#headbar_address_list").show();
+                            $("#invoice_title").val("");
+                            $("#invoice_amount").val("");
+                            $("#invoice_content").val("");
+                            $("#invoice_apply_detail").hide();
+                            $("#invoice_input_form1").show();
+                        });
+
+                        $("#Button_AddNewAddr").mousedown(function(event){
+                            if (event.which==1){
+                                $("#headbar_address_list").hide();
+                                htmlobj_i10= $.ajax({url:'{{root_url}}/center/invoice_NewAddrForm', async:false});
+                                $("#form_add_new_addr").html(htmlobj_i10.responseText).show();
+                                $("#form_NewAddr").show();
+                                $("#update_addr").hide();
+                                $("#save_new_addr").show();
+                            }
+                          });
+
+                        $("#save_new_addr").mousedown(function(event){
+                            if (event.which==1){
+                                var alertmsg1 = "";
+                                var alertflag1= 0;
+                                if ($("#receiver_name").val()==""){
+                                    alertmsg1+='请填写收件人姓名<br>';
+                                    alertflag1 =1;
+                                }
+                                if($("#seachprov").val()==0){
+                                    alertmsg1+='请选择正确的省<br>';
+                                    alertflag1 =1;
+                                }
+                                if($("#seachcity").css('display')!='none' && $('#seachcity').val()==0){
+                                    alertmsg1+='请选择正确的市<br>';
+                                    alertflag1 =1;
+                                }
+                                if($("#seachdistrict_div").css('display')!='none' && $('#seachdistrict').val()==0){
+                                    alertmsg1+='请选择正确的区<br>';
+                                    alertflag1 =1;
+                                }
+                                if($('#street').val()==0){
+                                    alertmsg1+='请填写正确的街道地址<br>';
+                                    alertflag1 =1;
+                                }
+                                if($("#mobile").val()==""){
+                                    alertmsg1+='请填写正确的手机号码<br>';
+                                    alertflag1 =1;
+                                }
+                                if(isNaN($("#mobile").val())){
+                                    alertmsg1+='手机号码只能为数字<br>';
+                                    alertflag1 =1;
+                                }
+                                if(isNaN($("#district_num").val()) || isNaN($("#work_num").val()) || isNaN($("#forward").val())){
+                                    alertmsg1+='电话号码只能为数字<br>';
+                                    alertflag1 =1;
+                                }
+                                if(isNaN($("#zip").val())){
+                                    alertmsg1+='邮政编码只能为数字<br>';
+                                    alertflag1 =1;
+                                }
+                                if(alertflag1==1){
+                                    $.alert({
+                                            title: false,
+                                            content: alertmsg1,
+                                            confirmButton:'好的',
+                                            confirmButtonClass: 'middle_btn',
+                                        });
+                                } else {
+                                    $("#form_NewAddr").hide();
+                                    $("#headbar_address_list").show();
+                                    var addr_fetched;
+                                    if ($("#seachdistrict_div").css('display')=='none'){
+                                        addr_fetched = $("#seachprov option:selected").text()+'|'+$("#seachcity option:selected").text()+'|'+$("#street").val();
+                                    }else{
+                                        addr_fetched = $("#seachprov option:selected").text()+'|'+$("#seachcity option:selected").text()+'|'+$("#seachdistrict option:selected").text()+'|'+$("#street").val();
+                                    };
+                                    htmlobj_i2= $.post('{{root_url}}/center/invoice_getAccountAddr',
+                                            {
+                                                "name": $("#receiver_name").val(),
+                                                "addr": addr_fetched,
+                                                "mobile": $("#mobile").val(),
+                                                "phone": $("#district_num").val()+'-'+$("#work_num").val()+'-'+$("#forward").val(),
+                                                "zip": $("#zip").val()
+                                            });
+                                    htmlobj_i3= $.ajax({url:'{{root_url}}/center/invoice_getAccountAddr', async:false});
+                                    $("#invoice_address_list").html(htmlobj_i3.responseText).show();
+                                }
+                            }
+                        });
+
+                        $("#update_addr").mousedown(function(event){
+                            if (event.which==1){
+                                var alertmsg1 = "";
+                                var alertflag1= 0;
+                                if ($("#receiver_name").val()==""){
+                                    alertmsg1+='请填写收件人姓名<br>';
+                                    alertflag1 =1;
+                                }
+                                if($("#seachprov").val()==0){
+                                    alertmsg1+='请选择正确的省<br>';
+                                    alertflag1 =1;
+                                }
+                                if($("#seachcity").css('display')!='none' && $('#seachcity').val()==0){
+                                    alertmsg1+='请选择正确的市<br>';
+                                    alertflag1 =1;
+                                }
+                                if($("#seachdistrict_div").css('display')!='none' && $('#seachdistrict').val()==0){
+                                    alertmsg1+='请选择正确的区<br>';
+                                    alertflag1 =1;
+                                }
+                                if($('#street').val()==0){
+                                    alertmsg1+='请填写正确的街道地址<br>';
+                                    alertflag1 =1;
+                                }
+                                if($("#mobile").val()==""){
+                                    alertmsg1+='请填写正确的手机号码<br>';
+                                    alertflag1 =1;
+                                }
+                                if(isNaN($("#mobile").val())){
+                                    alertmsg1+='手机号码只能为数字<br>';
+                                    alertflag1 =1;
+                                }
+                                if(isNaN($("#district_num").val()) || isNaN($("#work_num").val()) || isNaN($("#forward").val())){
+                                    alertmsg1+='电话号码只能为数字<br>';
+                                    alertflag1 =1;
+                                }
+                                if(isNaN($("#zip").val())){
+                                    alertmsg1+='邮政编码只能为数字<br>';
+                                    alertflag1 =1;
+                                }
+                                if(alertflag1==1){
+                                    $.alert({
+                                            title: false,
+                                            content: alertmsg1,
+                                            confirmButton:'好的',
+                                            confirmButtonClass: 'middle_btn',
+                                        });
+                                } else
+                                {
+                                    var addr_fetched;
+                                    if ($("#seachdistrict_div").css('display')=='none'){
+                                        addr_fetched = $("#seachprov option:selected").text()+'|'+$("#seachcity option:selected").text()+'|'+$("#street").val();
+                                    }else{
+                                        addr_fetched = $("#seachprov option:selected").text()+'|'+$("#seachcity option:selected").text()+'|'+$("#seachdistrict option:selected").text()+'|'+$("#street").val();
+                                    };
+
+                                    htmlobj_i7= $.post('{{root_url}}/center/invoice_getAccountAddr',
+                                        {
+                                            "name": $("#receiver_name").val(),
+                                            "addr": addr_fetched,
+                                            "mobile": $("#mobile").val(),
+                                            "phone": $("#district_num").val()+'-'+$("#work_num").val()+'-'+$("#forward").val(),
+                                            "zip": $("#zip").val(),
+                                            "update": 'true',
+                                            "address_id": $("#transparent").attr("class"),
+                                        });
+                                    htmlobj_ix7= $.ajax({url:'{{root_url}}/center/invoice_getAccountAddr', async:false});
+                                    $("#form_NewAddr").hide();
+                                    $("#headbar_address_list").show();
+                                    $("#invoice_address_list").html(htmlobj_ix7.responseText).show();
+                                }
+                            }
+                        });
+
+                        $("#Do_Apply").mousedown(function(event){
+                            if (event.which==1){
+                                var alertmag2="";
+                                var alertflag2=0;
+                                if($("#invoice_apply_detail").is(":hidden")){
+                                    alertmag2+='请保存发票信息<br>';
+                                    alertflag2=1;
+                                }
+                                if($("#invoice_address_list").is(":hidden")){
+                                    alertmag2+="新增发票地址未保存<br>";
+                                    alertflag2=1;
+                                }
+                                if($(".Invoice_Address_Choosen").length==0){
+                                    alertmag2+="请提供必要的地址";
+                                    alertflag2=1;
+                                }
+                                if(alertflag2==1){
+                                        $.alert({
+                                            title: false,
+                                            content: alertmag2,
+                                            confirmButton:'好的',
+                                            confirmButtonClass: 'middle_btn',
+                                        });
+                                }
+                                else{
+                                    $.confirm({
+                                    title: '开具发票', // hides the title.
+                                    cancelButton: '取消', // hides the cancel button.
+                                    confirmButton: '确认', // hides the confirm button.
+                                    closeIcon: false, // hides the close icon.
+                                    content: '确认开具发票？',// hides content block.
+                                    confirm: function(){
+                                        htmlobj_i6= $.post('{{root_url}}/center/invoice_do_apply',
+                                            {
+                                                "address_id": $(".Invoice_Address_Choosen").find(".delete_address").attr("id"),
+                                                "type": $("input[name='invoicetype']:checked").val(),
+                                                "title": $("#invoice_title").val(),
+                                                "amount": $("#invoice_amount").val(),
+                                                "prove": $("#invoice_content").val(),
+                                            });
+                                        $("#myModal").modal('toggle');
+                                        htmlobj_i_summary1= $.ajax({url:'{{root_url}}/center/invoice_querySummary', async:false});
+                                        var sum1=eval('('+htmlobj_i_summary1.responseText+')');
+                                        $("#money2_ix").html(sum1['invoice_amount']);
+                                        $("#money1").html(sum1['invoice_amount_avail']);
+                                        $("#invoice_table_body").bootstrapTable('refresh');
+                                    }
+                                    });}
+                            }
+                        });
+
+                        $("#cancel_apply").mousedown(function(event){
+                            if (event.which==1){
+                                $.confirm({
+                                    title: '取消', // hides the title.
+                                    cancelButton: '取消', // hides the cancel button.
+                                    confirmButton: '确认', // hides the confirm button.
+                                    closeIcon: false, // hides the close icon.
+                                    content: '确认取消开具发票？',// hides content block.
+                                    confirm: function(){
+                                        $("#myModal").modal('toggle');
+                                    },
+                                    });
+                            }
+                        });
+
+                        $("#confirm_invoice_apply").click(function(){
+                            htmlobj_i6= $.post('{{root_url}}/center/invoice_do_apply',
+                                {
+                                    "address_id": $(".Invoice_Address_Choosen").find(".delete_address").attr("id"),
+                                    "type": $("input[name='invoicetype']:checked").val(),
+                                    "title": $("#invoice_title").val(),
+                                    "amount": $("#invoice_amount").val(),
+                                    "prove": $("#invoice_content").val(),
+                                });
+                            $('#myModal3').modal('toggle');
+                            $('#myModal').modal('toggle');
+                            $("#invoice_table_body").bootstrapTable('refresh');
+                        });
+
+                         $("#cancel_addr_form").mousedown(function(event){
+                             if (event.which==1){
+                                 $("#form_NewAddr").hide();
+                                 $("#invoice_address_list").show();
+                                 $("#headbar_address_list").show();
+                             }
+                         });
+
+                      $("#cancel_icon1").mousedown(function(event){
+                          if (event.which==1){
+                              $.confirm({
+                              title: '取消', // hides the title.
+                              cancelButton: '取消', // hides the cancel button.
+                              confirmButton: '确认', // hides the confirm button.
+                              closeIcon: false, // hides the close icon.
+                              content: '确认取消开具发票？',// hides content block.
+                              confirm: function () {
+                                  $("#myModal").modal('toggle');
+                              }
+                          });
+                          }
+                      });
+
+                      if (!String.prototype.format) {
+                            String.prototype.format = function () {
+                                var args = arguments;
+                                return this.replace(/{(\d+)}/g, function (match, number) {
+                                    return typeof args[number] != 'undefined'
+                                      ? args[number]
+                                      : match
+                                    ;
+                                });
+                            };
+                        }
+                  })
+                  </script>
+                  <div id="headbar_address_list">
+                  <div  style=" border-bottom:solid 1px lightgrey; margin-bottom: 35px; margin-top:15px">&nbsp;</div>
+                  <div class="row"  style="height: 32px;line-height:32px; margin-bottom: 8px">
+                      <div id="newAddrTitle" class="col-sm-6">
+                          <span>地址信息</span>
+                      </div>
+                      <div class="col-sm-6">
+                          <button id="Button_AddNewAddr" class="btn btn-default btn-sm" style="float: right;">新增地址</button>
+                      </div>
+                  </div>
+                  <div id="invoice_address_list" class="modalbody_invoice" style="color:#666">
+                  </div>
+              </div>
+              </div>
+              <div id="transparent" style="display: none"></div>
+          </div>
+
+          <div class="modal-footer">
+              <div class="row">
+                  <div class="col-sm-6"><button type="button" id="cancel_apply" class="btn btn-default" style="float: right;padding-left:25px;padding-right: 25px;">取消</button></div>
+                  <div class="col-sm-6"><button type="button" class="btn btn-primary" id="Do_Apply" style="float:left">开具发票</button></div>
+              </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Modal -->
+    <div name="summary" class="row highlight_bar">
+        <div>
+        &nbsp;	&nbsp;未开发票总额:&nbsp;	&nbsp;<span class="money1">￥</span><span class="money1" id="money1">{{ summary.invoice_amount_avail }}</span>元 &nbsp;	&nbsp;
+        已开发票总额: &nbsp;	&nbsp;<span class="money2">￥</span><span class="money2" id="money2_ix">{{ summary.invoice_amount }}</span>元
+    &nbsp;	&nbsp;<button class="btn btn-warning" id="invoice_apply" type="button">开具发票</button>
+        </div>
+    </div>
+    <div class="row child_title">
+    已开发票列表
+    </div>
+    <div>
+
+    </div>
+    <div id="invoice_tb_list" class='row'>
+        <table id='invoice_table_body' class="table" data-url="{{root_url}}/center/prepareInvoiceData" data-side-pagination="server"
+               data-page-list="[5,10,20,50,100]" data-pagination="true" data-search="false" style="word-break: break-all">
+            <thead>
+                <tr>
+                    <th data-field="amount" data-align="left" data-halign="left" data-formatter="money_formatter" data-width="10%">发票金额</th>
+                    <th data-field="title" data-align="left" data-halign="left" data-width="20%">发票抬头</th>
+                    <th data-field="address.address" data-align="left" data-halign="left" data-width="32%" data-formatter="addressFormatter">配送地址</th>
+                    <th data-field="post_by" data-align="left" data-halign="left" data-width="13%">快递</th>
+                    <th data-field="apply_at" data-formatter="date_format_date" data-align="left" data-halign="left" data-width="15%">申请时间</th>
+                    <th data-field="status" data-align="left" data-halign="left" data-width="10%" data-formatter="statusFormatter">状态</th>
+                </tr>
+            </thead>
+        </table>
+        <script>
+            function statusFormatter(value){
+                if (value=='apply'){
+                    return '待处理'
+                }else{
+                    return value
+                }
+            }
+            function addressFormatter(value) {
+                if(value!=null){
+                    var addr_arry=value.split('\|');
+                    var clean_addr = addr_arry.join('')
+                    var addr_len = clean_addr.length;
+                    if(addr_len>34){
+                        var showstr = clean_addr.substr(0,34)+'...'
+                        return '<span title="'+clean_addr+'" style="height:46;">'+showstr+'</span>';
+
+                    }else{
+                        return clean_addr;
+                    }
+                }
+            }
+            $("#invoice_table_body").bootstrapTable();
+        </script>
+    </div>
+{% endblock %}
+<!--引用静态文件-->

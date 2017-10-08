@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block receiver %}
+    <h3>
+        【STcloud云】尊敬的用户{{ receiver.username }}：
+    </h3>
+{% endblock %}
+{% block content %}
+    <p>您好,STcloud云(stcloud)的注册用户 &nbsp; <span>{{ receiver.username }}</span> ：</p>
+    <h2>您已经成功注册！</h2>
+{% endblock %}

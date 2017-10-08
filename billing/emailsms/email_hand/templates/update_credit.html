@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block receiver %}
+    <h3>
+        【STcloud云】尊敬的用户{{ receiver.username }}：
+    </h3>
+{% endblock %}
+{% block content %}
+    <p>
+        您好，{{ senday }}，
+        您的帐号{{ receiver.username }}，
+        {% if type == "normal"  %}
+        {% else %}
+        {% endif %}
+        账号已升级为信用用户 ，
+        信用额度为{{ receiver.credit_line }}元，感谢您的使用。如有疑问，请与我们联系。
+    </p>
+{% endblock %}

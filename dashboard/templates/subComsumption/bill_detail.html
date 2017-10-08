@@ -1,0 +1,44 @@
+{% extends 'base.html' %}{% block content %}
+    {% load formatters %}
+    <script type="text/javascript">
+        function cash_sum(value, row) {
+            return money_formatter(row['amount'] - row['gift_amount']);//Number(row['amount'] - row['gift_amount']).formatMoney()
+        }
+        /* $('#subconsumption_bill_detail_amount').empty();
+        $('#subconsumption_bill_detail_amount').append(money_formatter({{amount}})) */
+        $(".moneyformatter").each(function(){
+            $(this).html("<span class='moneyformatter money1'>"+money_formatter($(this).text())+"</span>")
+        });
+        var regions=getRegionList()
+    	var region_formatter=function (value){
+        	for(var i=0;i<regions.length;i++){
+        		if (regions[i]['region_id']==value)
+        			return regions[i]['region_desc']
+        	}
+        }
+    </script>
+    <div class="row child_title1">
+        账单时间&nbsp;&nbsp;&nbsp;{{started_at|todate|date:"Y-m-d"}}&nbsp;&nbsp;至&nbsp;&nbsp;{{ended_at|todate|date:"Y-m-d"}}
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;消费总额&nbsp;&nbsp;&nbsp;<span id="subconsumption_bill_detail_amount" class="moneyformatter">{{amount}}</span>
+    </div>
+    <div class="row">
+        <table id='consumptionsum_table'
+               data-url="{{root_url}}/center/billdetailsum?bill_id={{bill_id}}"
+               data-width="100" data-toggle='table'>
+            <thead>
+            <tr>
+                <th data-field="resource_type" data-formatter="valueformat" >类型</th>
+                <th data-field="region_id"
+					    data-sortable="false" data-formatter="region_formatter">区域</th>
+                <th data-field="amount"   data-formatter="money_formatter">总金额</th>
+                <th data-field="cash_amount"   data-formatter="cash_sum">现金余额扣费</th>
+                <th data-field="gift_amount"   data-formatter="money_formatter">赠送余额扣费</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+    <script type="text/javascript">
+        $("#consumptionsum_table").bootstrapTable()
+    </script>
+
+{% endblock %}

@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% block title %}
+    历史账单&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    消费总额:{{ amount_total }}元 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    {#    返现总额:10元#}
+{% endblock %}
+
+{% block content %}
+    <div class="row search_combo">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <form id="current_table" class="form-inline" role="form"  onSubmit="return table_filter(this);">
+                <div class="form-group">
+                    <input class="form-control" name="keyword" size="16"  type="text" value="" placeholder="账单编号查询">
+                </div>
+                <div class="form-group">
+                    <label>账单时间:</label>&nbsp;&nbsp;&nbsp;
+                    <div class="input-group date form_datetime" data-date-format="yyyy-mm-dd" >
+                        <input class="form-control" name="started_at" type="text" value="" id="started_at" readonly style="background-color: #fff;width: 90px; border-right: none;">
+                        <span class="input-group-addon" style="background-color: #fff;border-left: none;border-right: none;padding-top: 4px;"><span class="glyphicon icon-empty"></span></span>
+                        <span class="input-group-addon" style="background-color: #fff;"><span class="icon-date glyphicon-th"></span></span>
+                    </div>
+                    ——
+                    <div class="input-group date form_datetime" data-date-format="yyyy-mm-dd"  >
+                        <input class="form-control" name="ended_at" type="text" value="" id="ended_at" readonly style="background-color: #fff;width: 90px; border-right: none;">
+                        <span class="input-group-addon" style="background-color: #fff;border-left: none;border-right: none;padding-top: 4px;"><span class="glyphicon icon-empty"></span></span>
+                        <span class="input-group-addon" style="background-color: #fff;"><span class="icon-date glyphicon-th"></span></span>
+                    </div>
+
+                </div>
+                <button type="submit" class="btn btn-default">搜索</button>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <table id='historylistdata' data-url="{{root_url}}/bill/historylistdata/{{ sub_account_id }}" data-width="100"
+               data-side-pagination="server" data-pagination="true" data-page-list="[5,10, 20, 50, 100, 200]">
+            <thead>
+            <tr>
+                <th data-field="no" data-formatter="popout">账单编号</th>
+                <th data-field="amount" data-formatter="" >消费金额（元）</th>
+                <th data-field="standard_amount" >标准消费金额（元）</th>
+                {#                <th data-field="amount_total" data-formatter="" >返现金额</th>#}
+                <th data-field="started_at"  data-formatter="date_format_date">账单开始时间</th>
+                <th data-field="ended_at"  data-formatter="date_format_date">账单结束时间</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+    <script>
+        $("#historylistdata").bootstrapTable({
+            'onPageChange':function(number, size){
+            },
+            'onRefreshOptions':function(){
+                $('#main_content').resize()
+            },
+            'onLoadSuccess':function(data){
+            },
+            'queryParams':function (params){
+                s_data=$('#current_table').serializeArray();
+                for (key in s_data){
+                    item=s_data[key];
+                    var1=item["name"];
+                    var2=item["value"];
+                    params[var1]=var2;
+                }
+                return  params
+            }
+        });
+        function table_filter(current){
+            $("#historylistdata").bootstrapTable('refresh', {
+                'onPageChange':function(number, size){
+                }
+            });
+            return false;
+        };
+        function popout(value,row){
+            current=date_format_date(row.started_at).split(' ')[0];
+            url1="'detail/{{ sub_account_id }}?month="+current+"'";
+            content='<a onClick="colorpop('+url1+')">'+value+'</a>';
+            return content
+        };
+        $(".form_datetime").datetimepicker({
+            format : 'yyyy-mm-dd',
+            language : 'zh-CN',
+            pickDate : false,
+            pickTime : false,
+            startView:2,
+            minView : 2,
+            todayBtn:true,
+            autoclose : true,
+            inputMask : true,
+            pickerPosition : 'bottom-left'
+        })
+        function colorpop(url_name){
+            url='{{ root_url }}/bill/'+url_name;
+            $.colorbox({href:url,
+                transition:'none', opacity:0.3,
+                closeButton:true, width: 1024, initialWidth: 800, initialHeight: 650, top:"15%"})
+        }
+    </script>
+{% endblock %}

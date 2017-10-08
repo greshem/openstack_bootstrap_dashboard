@@ -1,0 +1,86 @@
+{% extends 'base.html' %} {% block content %}
+    <script type="text/javascript">
+        function bill_detail(bill_id, no) {
+            refreshMainContent('{{root_url}}/center/subComsumption/billdetail?bill_id='
+            + bill_id + '&account_id={{account_id}}&no=' + no
+            + '&name={{name}}')
+        }
+        function bill_no(value, row) {
+            return '<a onclick="bill_detail(\'' + row['bill_id'] + '\','
+                    + row['no'] + ')">' + value + '</a>'
+        }
+        $(".formatter").each(function(){
+            $(this).text(valueformat($(this).text()))
+        });
+    </script>
+    <div class="row child_title1">
+        账号:&nbsp;&nbsp;&nbsp;{{name}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;用户分类:&nbsp;&nbsp;&nbsp;<span id="need_change" class="formatter">{{account.type}}</span>
+    </div>
+    <div class="row search_combo">
+        <form class="form-inline" role="form" onSubmit="return table_filter(this)">
+            <div class="form-group">
+                <label>期段:</label>&nbsp;&nbsp;&nbsp;
+                <div class="input-group date form_datetime col-md-4" data-date-format="yyyy-mm" data-link-field="dtp_input1">
+                    <input class="form-control" size="16"  type="text" value="" id="started_at" readonly style="background-color: #fff;width: 80px; border-right: none;">
+                    <span class="input-group-addon" style="background-color: #fff;border-left: none;border-right: none;padding-top: 4px;"><span class="glyphicon icon-empty"></span></span>
+                    <span class="input-group-addon" style="background-color: #fff;"><span class="icon-date glyphicon-th"></span></span>
+                </div>
+                ——
+                <div class="input-group date form_datetime col-md-4" data-date-format="yyyy-mm" data-link-field="dtp_input1">
+                    <input class="form-control" size="16"  type="text" value=""id="ended_at" readonly style="background-color: #fff;width: 80px; border-right: none;">
+                    <span class="input-group-addon" style="background-color: #fff;border-left: none;border-right: none;padding-top: 4px;"><span class="glyphicon icon-empty"></span></span>
+                    <span class="input-group-addon" style="background-color: #fff;"><span class="icon-date glyphicon-th"></span></span>
+                </div>
+                <button class="btn btn-default" onclick="search()" style="margin-right: 20px">查询</button>
+            </div>
+
+        </form>
+    </div>
+    <div class="row">
+        <table id='consumptionsum_table'
+               data-url="{{root_url}}/center/billlist?account_id={{account_id}}"
+               data-toggle='table' data-side-pagination="server" data-width="100"
+               data-pagination="true" data-page-list="[5, 10, 20, 50, 100, 200]">
+            <thead>
+            <tr>
+                <th data-field="started_at" data-formatter="date_format_date" >开始时间</th>
+                <th data-field="ended_at" data-formatter="date_format_date" >结束时间</th>
+                <th data-field="amount" 
+                    data-formatter="money_formatter">消费金额</th>
+                <th data-field="standard_amount"
+                    data-formatter="money_formatter" >标准消费金额</th>
+                <th data-field="no"  
+                    data-formatter="bill_no">账单号</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+    <script type="text/javascript">
+        $("#consumptionsum_table").bootstrapTable({
+            'queryParams':function(params){
+                var started_at=$('#started_at').val()
+                var ended_at=$('#ended_at').val()
+                if(started_at.length>0)
+                    params['started_at']=started_at
+                if(ended_at.length>0)
+                    params['ended_at']=ended_at
+                return params
+            }
+        })
+        $(".form_datetime").datetimepicker({
+            format : 'yyyy-mm',
+            language : 'zh-CN',
+            pickDate : false,
+            pickTime : false,
+            startView:3,
+            minView : 3,
+            autoclose : true,
+            inputMask : true,
+            pickerPosition : 'bottom-left'
+        })
+        function search(){
+            $("#consumptionsum_table").bootstrapTable('selectPage',1)
+        }
+    </script>
+
+{% endblock %}

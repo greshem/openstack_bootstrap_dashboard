@@ -1,0 +1,552 @@
+{% extends 'base.html' %} {% block content %}
+    {% load staticfiles %}
+    <style>
+        a{
+            cursor: pointer;
+        }
+        a:hover{
+            text-decoration:none;
+        }
+    </style>
+    <div class="row highlight_bar">
+        <div style="margin-top: 5px">&nbsp; &nbsp; <label>主帐号:&nbsp; &nbsp;<font color="#ffb52e">{{account_info.username }}</font> &nbsp; &nbsp; <label>信用账户:</label>&nbsp; &nbsp;<font color="#ffb52e">{{ credit_child_num }}</font>&nbsp;<label>个</label>
+            &nbsp; &nbsp; <label>普通账户:</label>&nbsp; &nbsp;{{ general_child_num }}&nbsp;个</label></div>
+    </div>
+    <div class="row search_combo">
+        <form class="form-inline" role="form"
+              onSubmit="return table_filter(this);">
+            {% csrf_token %}
+            <div class="form-group" style="padding: 5px">
+                <label for="input1">账户类型</label> <select class="form-control"
+                                                         id="input1">
+                <option value="">全部</option>
+            </select>
+            </div>
+            <div class="form-group" style="padding: 5px">
+                <label for="input2">现金余额</label> <select class="form-control"
+                                                         id="input2">
+                <option value="">全部</option>
+                <option value="<0">信用透支</option>
+                <option value="0-1000">0-1000元</option>
+                <option value="1000-5000">1000-5000元</option>
+                <option value="5000-10000">5000-10000元</option>
+                <option value=">10000">10000元以上</option>
+            </select>
+            </div>
+            <div class="form-group" style="padding: 5px">
+                <label for="input3">赠送金额</label> <select class="form-control"
+                                                         id="input3">
+                <option value="">全部</option>
+                <option value="<100">100元以下</option>
+                <option value="100-500">100-500元</option>
+                <option value="500-1000">500-1000元</option>
+                <option value=">1000">1000元以上</option>
+            </select>
+            </div>
+            <div class="form-group" style="padding: 5px">
+                <label for="input4">信用额度</label> <select class="form-control"
+                                                         id="input4">
+                <option value="">全部</option>
+                <option value="0-500">0-500元</option>
+                <option value="500-1000">500-1000元</option>
+                <option value="1000-5000">1000-5000元</option>
+                <option value=">5000">5000元以上</option>
+            </select>
+            </div>
+            <div class="form-group" style="padding: 5px">
+                <label for="input5">帐号</label> <input type="text"
+                                                      class="form-control" id="account_text" placeholder="">
+            </div>
+            <button type="button" class="btn btn-default" onclick="search();">查询</button>
+        </form>
+    </div>
+    <div class="row">
+        <table id='childaccount' data-url="{{root_url}}/center/childaccountdata"
+               data-side-pagination="server" data-width="100" data-pagination="true"
+               data-page-list="[5, 10, 20, 50, 100, 200]">
+            <thead>
+            <tr>
+                <th data-field="name"
+                    data-formatter="name_formatter">帐号</th>
+                <th data-field="company"  >公司名称</th>
+                <th data-field="type"
+                    data-formatter="type_formatter">账户分类</th>
+                <th data-field="cash_balance"
+                    data-formatter="money_formatter">现金余额</th>
+                <th data-field="gift_balance"
+                    data-formatter="money_formatter">赠送金额</th>
+                <th data-field="credit_line"
+                    data-formatter="money_formatter">信用额度(元)</th>
+                <th data-field="operate" data-formatter="operation_formatter">操作</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+    <div class="row"></div>
+    <div class="modal fade" id="myModal1" tabindex="-1" role="dialog" data-backdrop="static"
+         aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog" id="modal-dialog1">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close"
+                            data-dismiss="modal" aria-hidden="true" style="margin-top:-8px">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel1">
+                        线下充值
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div id="instead_recharge">
+                        <form class="form row search_combo" role="form" id="instead">
+                            <div style="margin-left:20px;margin-right:20px;padding-right: 10px;padding-left: 10px;padding-top: 10px;color: #E69100;background-color: #fff4e2;height:40px;">
+                                <label >请输入充值金额</label>
+                            </div>
+                            <div class="form-group" style="padding-right: 30px;padding-left: 30px;width:45%;padding-top: 20px;">
+                                <label style="width: 120px;">充值金额:</label> <input class="form-control" id="rechargeAmount1" class="number" value="1.0" size="3"/>
+                            </div>
+                            <div class="form-group" style="padding-right: 30px;padding-left: 30px;width:80%;padding-top: 20px;">
+                                <label style="width: 320px;">评论:</label> <input class="form-control" id="remark1" class="text" value="" size="3"/>
+                            </div>
+                            <input type="hidden" class="form-control" id="account_id1" class="text" value="" size="3"/>
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="col-sm-6">
+                        <button type="button"
+                                data-dismiss="modal" id="discount_close_model" style="float:right">关闭
+                        </button>
+                    </div>
+                    <div class="col-sm-6">
+                        <button type="button" id="discount_confirm_model" style="float:left" onclick="instead_recharge();">
+                            充值
+                        </button>
+                    </div>
+                </div>
+            </div><!-- /.modal-content -->
+        </div>
+    </div>
+    <!-- /.modal -->
+    <div class="modal fade" id="myModal2" tabindex="-1" role="dialog" data-backdrop="static"
+         aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog" id="modal-dialog2">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close"
+                            data-dismiss="modal" aria-hidden="true" style="margin-top:-8px">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel2">
+                        赠送
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div id="gift_recharge">
+                        <form class="form row search_combo" role="form" id="gift">
+                            <div style="margin-left:20px;margin-right:20px;padding-right: 10px;padding-left: 10px;padding-top: 10px;color: #E69100;background-color: #fff4e2;height:40px;">
+                                <label >请输入充值金额</label>
+                            </div>
+                            <div class="form-group" style="padding-right: 30px;padding-left: 30px;width:45%;padding-top: 20px;">
+                                <label style="width: 120px;">充值金额:</label> <input class="form-control" id="rechargeAmount2" class="number" value="1.0" size="3"/>
+                            </div>
+                            <div class="form-group" style="padding-right: 30px;padding-left: 30px;width:80%;padding-top: 20px;">
+                                <label style="width: 320px;">评论:</label> <input class="form-control" id="remark2" class="text" value="" size="3"/>
+                            </div>
+                            <input type="hidden" class="form-control" id="account_id2" class="text" value="" size="3"/>
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="col-sm-6">
+                        <button type="button"
+                                data-dismiss="modal" id="discount_close_model" style="float:right">关闭
+                        </button>
+                    </div>
+                    <div class="col-sm-6">
+                        <button type="button" id="discount_confirm_model" style="float:left" onclick="gift_recharge();">
+                            充值
+                        </button>
+                    </div>
+                </div>
+            </div><!-- /.modal-content -->
+        </div>
+    </div>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" 
+   aria-labelledby="myModalLabel" aria-hidden="true">
+   <div class="modal-dialog" id="modal-dialog">
+      <div class="modal-content">
+         <div class="modal-header">
+            <button type="button" class="close" 
+               data-dismiss="modal" aria-hidden="true" style="margin-top:-8px">
+                  &times;
+            </button>
+            <h4 class="modal-title" id="myModalLabel">
+               修改折扣
+            </h4>
+         </div>
+         <div class="modal-body">
+         <div id="region_discount">
+         
+         </div>
+         </div>
+         <div class="modal-footer">
+             <div class="col-sm-6">
+            <button type="button"
+               data-dismiss="modal" id="discount_close_model" style="float:right">关闭
+            </button>
+                 </div>
+             <div class="col-sm-6">
+            <button type="button" id="discount_confirm_model" style="float:left" onclick="editDiscount();">
+              	保存
+            </button>
+                 </div>
+         </div>
+      </div><!-- /.modal-content -->
+</div><!-- /.modal -->
+</div>
+<div class="modal fade" id="credit_line_form" tabindex="-1" role="dialog" 
+   aria-labelledby="myModalLabel" aria-hidden="true">
+   <div class="modal-dialog" id="modal-dialog_credit">
+      <div class="modal-content">
+         <div class="modal-header">
+            <button type="button" class="close" 
+               data-dismiss="modal" aria-hidden="true" style="margin-top:-8px">
+                  &times;
+            </button>
+            <h4 class="modal-title" id="myModalLabel">
+               信用额度
+            </h4>
+         </div>
+         <div class="modal-body">
+         <div id="credit_line">
+         
+         </div>
+         </div>
+         <div class="modal-footer">
+             <div class="col-sm-6">
+            <button type="button"
+               data-dismiss="modal" id="discount_close_model" style="float:right">关闭
+            </button>
+                 </div>
+             <div class="col-sm-6">
+            <button type="button" id="discount_confirm_model" style="float:left" onclick="editCredit();">
+              	保存
+            </button>
+                 </div>
+         </div>
+      </div><!-- /.modal-content -->
+</div><!-- /.modal -->
+</div>
+    <script>
+        var sub_account_id='';
+        function operation_formatter(value, row) {
+            sub_account=row['account_id'];
+            return '<a onclick="'+'sub_account_id='+"'"+sub_account+"';"+'$('+"'#myModal1'"+").modal();"+'"><font color="#ffb52e">线下充值</font></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' +
+                    '<a onclick="'+'sub_account_id='+"'"+sub_account+"';"+'$('+"'#myModal2'"+").modal();"+'"><font color="#ffb52e">赠送</font></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'+
+                    '<a onclick="open_credit_line_form(\''+sub_account+'\')"><font color="#ffb52e">信用额度</font></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'+
+                    '<a onclick="open_form(\''+sub_account+'\')"><font color="#ffb52e">折扣修改</font></a>'
+        }
+        function open_credit_line_form(account_id){
+        	sub_account_id=account_id
+        	htmlobj= $.ajax({url:'{{root_url}}/center/credit_line?account_id='+account_id, async:false});
+        	$("#credit_line").html(htmlobj.responseText).show();
+        	$("#credit_line_form").modal({
+    			backdrop : 'static'
+    		});
+        	$("input[for='number']").numeral({'positions':10,'scale':2})
+        }
+        function editCredit(){
+        	var account_type=$("#account_type_key").val()
+        	credit_line=0
+        	if (account_type=='normal' && $("input[type='checkbox']:checked").length==1){
+        		if($("#credit_line_set_num").val()>0){
+        			credit_line=$("#credit_line_set_num").val()
+        		}
+        	}
+        	if (account_type=='credit'){
+        		if($("#credit_line_set_num").val()>0){
+        			credit_line=$("#credit_line_set_num").val()
+        		}
+        	}
+        	if (credit_line>0){
+        		$("#modal-dialog_credit").mask('数据保存中，请稍后......')
+        		result = $.ajax({url: '{{root_url}}/center/changecreditline?account_id='+sub_account_id+'&credit_line='+credit_line, type: 'GET', async: false})
+        		result = eval("(" + result.responseText + ")")
+                $("#modal-dialog_credit").unmask()
+                if (result['success']=='success'){
+                	$("#credit_line_form").modal('hide');
+                	temp = '<div style="margin-top:2px"><img src="{% static 'img/icon_success.png' %}" style="margin-bottom:3px"></img><span style="margin-left:25px;">修改信用额度成功</span></div>'
+                	$.confirm({
+                        title: false, // hides the title.
+                        cancelButton: false, // hides the cancel button.
+                        confirmButton: false, // hides the confirm button.
+                        closeIcon: true, // hides the close icon.
+                        content: temp// hides content block.
+                    });
+                	$("#childaccount").bootstrapTable('selectPage', 1)
+                }else{
+                	temp='<div style="margin-top:2px"><img src="{% static 'img/icon_fail.png' %}" style="margin-bottom:3px"></img><span style="margin-left:25px">'+result['msg']+'</span></div>'
+                	$.confirm({
+                        title: false, // hides the title.
+                        cancelButton: false, // hides the cancel button.
+                        confirmButton: false, // hides the confirm button.
+                        closeIcon: true, // hides the close icon.
+                        content: temp// hides content block.
+                    });
+                }
+        	}else{
+        		$.confirm({
+                    title: false, // hides the title.
+                    cancelButton: false, // hides the cancel button.
+                    confirmButton: false, // hides the confirm button.
+                    closeIcon: true, // hides the close icon.
+                    content: '输入参数不正确'// hides content block.
+                });
+        	}
+        		
+        }
+        function open_form(account_id) {
+    		sub_account_id=account_id
+    		htmlobj= $.ajax({url:'{{root_url}}/center/account_manage/discount/edit', async:false});
+    		$("#region_discount").html(htmlobj.responseText).show();
+    		$("#myModal").modal({
+    			backdrop : 'static'
+    		});
+    		regions=getRegionList()
+    		$("#region").empty()
+    		for (var i=0;i<regions.length;i++){
+    			var region=regions[i]
+    			$("#region").append(
+    					"<option value='"+region['region_id']+"'>" + region['region_desc']
+    							+ "</option>")
+    		}
+    		$("#region").change(function(){
+    			$("#region").trigger("select");
+    		})
+    		$("#region").select(function(){
+    			var discount=$.ajax({url:'{{root_url}}/center/getdiscountbyregionid?account_id='+account_id+'&region_id='+$(this).val(),async:false}).responseText
+    			discount=eval("("+discount+")")
+    			for(var key in discount){
+    				$("#"+key).val(discount[key])
+    			}
+    			cdn_discount=1
+    			if (discount['cdnflow_discount']>discount['cdnbandwidth_discount'])
+    				cdn_discount=discount['cdnflow_discount']
+    			else
+    				cdn_discount=discount['cdnbandwidth_discount']
+    			$("#cdn_discount").val(cdn_discount)
+    		})
+    		$("#region").trigger("select");
+    		$("input[for='number']").numeral({'positions':1,'scale':2})
+    	}
+    	function editDiscount(){
+            var error_discount=[]
+            var null_discount=[]
+            for(var i=0;i<constant.discount_item.length;i++)
+            {
+                type=constant.discount_item[i]
+                item_discount_value=parseFloat($("#"+type+"_discount").val())
+                if (item_discount_value<0.2 || item_discount_value>2)
+                    error_discount.push(constant.resource_type[type])
+                if (isNaN(item_discount_value))
+                    null_discount.push(constant.resource_type[type])
+            }
+            if ((error_discount.length!=0) || (null_discount.length!=0))
+            {
+                var temp=''
+                if(null_discount.length!=0)
+                    for (var i=0;i<=(null_discount.length-1);i++)
+                        temp+=(null_discount[i]+" 折扣系数不能为空<br/>")
+                if(error_discount.length!=0)
+                    for (var i=0;i<=(error_discount.length-1);i++)
+                        temp+=(error_discount[i]+" 折扣系数不在可设置范围内<br/>")
+                $.confirm({
+                        title: false, // hides the title.
+                        cancelButton: false, // hides the cancel button.
+                        confirmButton: false, // hides the confirm button.
+                        closeIcon: true, // hides the close icon.
+                        content: temp// hides content block.
+                    });
+            }
+            else
+            {
+                $("#modal-dialog").mask('数据保存中，请稍后......')
+                data = {"account_id": sub_account_id, 'region_id': $("#region").val()}
+                for (var i = 0; i < constant.discount_item.length; i++) {
+                    type = constant.discount_item[i]
+                    data[type + '_discount'] = $("#" + type + "_discount").val()
+                }
+                result = $.ajax({url: '{{root_url}}/center/editdiscountbyregionid', type: 'POST', data: data, async: false})
+                result = eval("(" + result.responseText + ")")
+                $("#modal-dialog").unmask()
+                if (result['success'] == 'success') {
+                    temp = '<div style="margin-top:2px"><img src="{% static 'img/icon_success.png' %}" style="margin-bottom:3px"></img><span style="margin-left:25px;">修改折扣成功</span></div>'
+                    $.confirm({
+                        title: false, // hides the title.
+                        cancelButton: false, // hides the cancel button.
+                        confirmButton: false, // hides the confirm button.
+                        closeIcon: true, // hides the close icon.
+                        content: temp// hides content block.
+                    });
+                }
+                else {
+                    temp='<div style="margin-top:2px"><img src="{% static 'img/icon_fail.png' %}" style="margin-bottom:3px"></img><span style="margin-left:25px">'+result['msg']+'</span></div>'
+                    $.confirm({
+                        title: false, // hides the title.
+                        cancelButton: false, // hides the cancel button.
+                        confirmButton: false, // hides the confirm button.
+                        closeIcon: true, // hides the close icon.
+                        content: temp// hides content block.
+                    });
+                }
+            }
+
+    	}
+        
+        function instead_recharge(){
+            var request_data={
+                "instead_recharge":{
+                    "instead_recharge_by":"{{account_info.username }}",
+                    "instead_recharge_account":"{{ account_info.account_id }}",
+                    "remark":$('#remark1').val()
+                },
+                "recharge":{
+                    "amount":$('#rechargeAmount1').val(),
+                    "account_id":sub_account_id
+                }
+            };
+            htmlobj= $.ajax({url:'{{root_url}}/center/insteadRecharge',type:"post",data:{recharge:JSON.stringify(request_data)}, async:false,
+                success:function (data){
+                    if (data=='success'){
+                        $('#myModal1').modal('toggle');
+                        alert("充值成功!");
+                        $("#childaccount").bootstrapTable('refresh');
+                    }
+                    else{
+                        $('#myModal1').modal('toggle');
+                        alert("充值失败!");
+                    }
+                },
+                error: function (data, status, e) {
+                    $('#myModal1').modal('toggle');
+                    alert("充值失败!");
+                }
+            });
+
+        }
+        function gift_recharge(){
+            request_data={
+                "gift":
+                {
+                    "gift_by":"{{account_info.username }}",
+                    "status":"pay_success",
+                    "gift_at":new Date().format("yyyy-MM-dd hh:mm:ss","east0"),
+                    "amount":$('#rechargeAmount2').val(),
+                    "remark":$('#remark2').val()
+                }
+            };
+
+            htmlobj= $.ajax({url:'{{root_url}}/center/giftRecharge/'+sub_account_id,type:"post",data:{recharge:JSON.stringify(request_data)}, async:false,
+                success:function (data){
+                    if (data=='success'){
+                        $('#myModal2').modal('toggle');
+                        alert("赠送成功!");
+                        $("#childaccount").bootstrapTable('refresh');
+                    }
+                    else{
+                        $('#myModal2').modal('toggle');
+                        alert("赠送失败!");
+                    }
+                },
+                error: function (data, status, e) {
+                    $('#myModal2').modal('toggle');
+                    alert("赠送失败!");
+                }
+            });
+        }
+
+
+        $("#childaccount").bootstrapTable(
+                {
+                    'onPageChange' : function(number, size) {
+                    },
+                    'queryParams' : function(params) {
+                        var type = $("#input1").val()
+                        if (type.length > 0) {
+                            params['type'] = type
+                        }
+                        var cash = $("#input2").val()
+                        if (cash.length > 0) {
+                            if (cash.indexOf("<") > -1) {
+                                params['max_cash'] = cash.substring(cash
+                                        .indexOf("<") + 1)
+                            } else if (cash.indexOf(">") > -1) {
+                                params['min_cash'] = cash.substring(cash
+                                        .indexOf(">") + 1)
+                            } else {
+                                numbs = cash.split('-')
+                                params['min_cash'] = numbs[0]
+                                params['max_cash'] = numbs[1]
+                            }
+                        }
+                        var gift = $("#input3").val()
+                        if (gift.length > 0) {
+                            if (gift.indexOf("<") > -1) {
+                                params['max_gift'] = gift.substring(gift
+                                        .indexOf("<") + 1)
+                            } else if (gift.indexOf(">") > -1) {
+                                params['min_gift'] = gift.substring(gift
+                                        .indexOf(">") + 1)
+                            } else {
+                                numbs = gift.split('-')
+                                params['min_gift'] = numbs[0]
+                                params['max_gift'] = numbs[1]
+                            }
+                        }
+                        var credit = $("#input4").val()
+                        if (credit.length > 0) {
+                            if (credit.indexOf("<") > -1) {
+                                params['max_credit'] = credit.substring(credit
+                                        .indexOf("<") + 1)
+                            } else if (credit.indexOf(">") > -1) {
+                                params['min_credit'] = credit.substring(credit
+                                        .indexOf(">") + 1)
+                            } else {
+                                numbs = credit.split('-')
+                                params['min_credit'] = numbs[0]
+                                params['max_credit'] = numbs[1]
+                            }
+                        }
+                        var name = $('#account_text').val()
+                        if (name.length > 0)
+                            params['name'] = name
+                        return params
+                    }
+                });
+        /* window.operateEvents = {
+         'click' : function(e, value, row, index) {
+         $(this).setAttribute('value', "");
+         ajaxclickload();
+         }
+         }; */
+        for ( var type in constant.account_type) {
+            $("#input1").append(
+                    "<option value='"+type+"'>" + constant.account_type[type]
+                    + "</option>")
+        }
+        function search() {
+            $("#childaccount").bootstrapTable('selectPage', 1)
+        }
+        function account_detail(account_id) {
+            refreshMainContent('{{root_url}}/center/account_manage/detail?account_id='
+            + account_id)
+        }
+        function name_formatter(value, row) {
+            return value
+            return '<a onclick="account_detail(\'' + row['account_id'] + '\')">'
+                    + value + '</a>'
+        }
+    </script>
+{% endblock %}

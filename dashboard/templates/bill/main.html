@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block content %}
+    <div class="row search_combo">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <form id="current_table" class="form-inline" role="form"  onSubmit="return table_filter(this);">
+                <div class="form-group">
+                    <label style="">搜索字段</label>
+                    <select class="form-control" name="field">
+                        {% for code,name in field_list %}
+                            <option value="{{ code }}">{{ name }}</option>
+                        {% endfor %}
+                    </select>
+                    <input class="form-control" name="keyword" size="16"  type="text" value="" placeholder="请输入关键字">
+                </div>
+                <div class="form-group">
+                    <label style="">账户类型</label>
+                    <select class="form-control" name="account_type">
+                        {% for code,name in account_type %}
+                            <option value="{{ code }}">{{ name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-default">搜索</button>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <table id='listdata' data-url="{{root_url}}/bill/listdata" data-width="100"
+               data-side-pagination="server" data-pagination="true" data-page-list="[5,10, 20, 50, 100, 200]">
+            <thead>
+            <tr>
+                <th data-field="name" data-formatter="">用户名</th>
+                <th data-field="company" data-formatter="" >公司名</th>
+                <th data-field="type" data-formatter="translate2CN">账户类型</th>
+                <th data-field="amount_total" data-formatter="" >当月消费金额（元）</th>
+                <th data-field="standard_amount_total"  data-formatter="">当月标准价消费金额（元）</th>
+                <th data-field="operation" data-formatter="show_drop_down" >操作</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+    <script>
+        $("#listdata").bootstrapTable({
+            'onPageChange':function(number, size){
+            },
+            'onRefreshOptions':function(){
+                $('#main_content').resize()
+            },
+            'queryParams':function (params){
+                s_data=$('#current_table').serializeArray();
+                for (key in s_data){
+                    item=s_data[key];
+                    var1=item["name"];
+                    var2=item["value"];
+                    params[var1]=var2;
+                }
+                return  params
+            }
+        });
+        function table_filter(current){
+            $("#listdata").bootstrapTable('refresh', {
+                'onPageChange':function(number, size){
+                }
+            });
+            return false;
+        };
+        function show_drop_down(value, row){
+            subaccount=row.account_id;
+            url1="'detail/"+subaccount+"'";
+            url2='{{ root_url }}/bill/history/'+subaccount;
+            innerhtml='<div class="btn-group"><a onClick="colorpop('+url1+')">详情</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="'+url2+'">历史账单</a></div>';
+            return innerhtml
+        }
+        function translate2CN(value,row){
+            translate_dict={
+                'normal':'普通用户',
+                'credit':'信用用户'
+            };
+            return translate_dict[value]
+        }
+        function colorpop(url_name){
+            url='{{ root_url }}/bill/'+url_name;
+            $.colorbox({href:url,
+                transition:'none', opacity:0.3,
+                closeButton:true, width: 1024, initialWidth: 800, initialHeight: 650, top:"15%"})
+        }
+    </script>
+{% endblock %}

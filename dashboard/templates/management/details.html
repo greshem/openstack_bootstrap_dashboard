@@ -1,0 +1,108 @@
+{% extends 'colorbox_ajax.html' %}
+
+{% block title %}
+    客户详情
+{% endblock %}
+
+{% block content %}
+    <table class="table table-bordered">
+        <tr>
+            <td>公司名称：{{ customer_details.company }}</td>
+            <td>客户等级：{{ customer_details.customer_level }}</td>
+            <td>所属行业：{{ customer_details.industry }}</td>
+        </tr>
+        <tr>
+            <td>公司性质：{{ customer_details.company_property }}</td>
+
+            <td>创建时间：{{ customer_details.created_at }}</td>
+        </tr>
+    </table>
+    <table class="table table-bordered">
+        <tr>
+            <td>用户名：{{ customer_details.username }}</td>
+            <td>账号邮箱：{{ customer_details.email }}</td>
+            <td>手机号码：{{ customer_details.telephone }}</td>
+        </tr>
+        <tr>
+            <td>区域：{{ customer_details.regions }}</td>
+            <td>账户类型：{{ customer_details.type }}</td>
+            <td>角色：{{ customer_details.role }}</td>
+        </tr>
+    </table>
+    <table style="font-size:12px" class="table table-bordered">
+        <tr><td>折扣系数</td></tr>
+        <th>区域</th>
+        <th>CPU</th>
+        <th>内存</th>
+        <th>浮动IP</th>
+        <th>云硬盘</th>
+        <th>快照</th>
+        <th>CDN服务</th>
+        <th>带宽服务</th>
+        <th>路由</th>
+        <th>专线通道</th>
+        {% for i, v in customer_discount.items %}
+            <tr>
+                <td>{{ v.title1 }}</td>
+                <td>{{ v.cpu_1_core|default:1.00 }}</td>
+                <td>{{ v.memory_1024_M|default:1.00 }}</td>
+                <td>{{ v.ip_1|default:1.00 }}</td>
+                <td>{{ v.disk_1_G|default:1.00 }}</td>
+                <td>{{ v.snapshot_1_G|default:1.00 }}</td>
+                <td>{{ v.cdnflow_1_G|default:1.00 }}</td>
+                <td>{{ v.bandwidth_1_M|default:1.00 }}</td>
+                <td>{{ v.router_1|default:1.00 }}</td>
+                <td>{{ v.naas_discount|default:1.00 }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+    <table class="table table-bordered">
+        <tr><td colspan="2">配额信息</td></tr>
+        <tr>
+            <th>区域</th>
+            <th>云服务器(台)</th>
+            <th>CPU(核)</th>
+            <th>内存(M)</th>
+            <th>网络(个)</th>
+            <th>浮动IP(个)</th>
+            <th>路由器(个)</th>
+            <th>硬盘数(个)</th>
+            <th>硬盘容量(G)</th>
+            <th>快照(个)</th>
+            <th>快照容量(G)</th>
+            <th>负载均衡(个)</th>
+            <th>带宽(M)</th>
+        </tr>
+        {% for k,v in quota_list.items %}
+            <tr>
+                <td>{{ k }}</td>
+                <td>{{ v.instances }}</td>
+                <td>{{ v.cores }}</td>
+                <td>{{ v.ram }}</td>
+                <td>{{ v.network }}</td>
+                <td>{{ v.floatingip }}</td>
+                <td>{{ v.router }}</td>
+                <td>{{ v.volumes }}</td>
+                <td>{{ v.volume_gigabytes }}</td>
+                <td>{{ v.snapshots }}</td>
+                <td>{{ v.snapshot_gigabytes }}</td>
+                <td>{{ v.pool }}</td>
+                <td>{{ v.bandwidth }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}
+
+{% block yesornot %}
+    <div style="text-align: center; padding-bottom: 10px">
+        <button class="btn btn-primary" id="confirm_btn">确定</button>
+    </div>
+    <script>
+        $('#confirm_btn').click(function(){
+            $.colorbox.close();
+        })
+    </script>
+
+    {% block action_script %}
+    {% endblock %}
+{% endblock %}

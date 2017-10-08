@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="row search_combo">
+        <form  class="form-inline form-horizontal" role="form" onSubmit="return table_filter(this)">
+            <div class="form-group">
+                <div>
+                    <label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;类型</label>
+                    <select id="payment_select" name="payment_type" class="form-control">
+                        <option value="all">全部</option>
+                        <option value="recharge">充值</option>
+                        <option value="gift">赠送</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group" style="width: 500px;">
+                <label >&nbsp;&nbsp;&nbsp;时间选择</label>
+                <div class="input-group date form_datetime col-md-4" data-link-field="dtp_input1">
+                    <input class="form-control" size="16"  type="text" value=""  readonly style="background-color: #fff;width: 90px; border-right: none;">
+                    <span class="input-group-addon" style="background-color: #fff;border-left: none;border-right: none;padding-top: 4px;"><span class="glyphicon icon-empty"></span></span>
+                    <span class="input-group-addon" style="background-color: #fff;"><span class="icon-date glyphicon-th"></span></span>
+                </div>
+                <input type="hidden" id="dtp_input1" name="dateFrom" value="" />
+
+                <span>—</span>
+
+                <div class="input-group date form_datetime col-md-4" data-link-field="dtp_input2">
+                    <input class="form-control" size="16" type="text" value="" readonly style="background-color: #fff;width: 90px;border-right: none;">
+                    <span class="input-group-addon" style="background-color: #fff;border-left: none;border-right: none;padding-top: 4px;"><span class="glyphicon icon-empty"></span></span>
+                    <span class="input-group-addon" style="background-color: #fff;"><span class="icon-date glyphicon-th"></span></span>
+                </div>
+                <input type="hidden" id="dtp_input2" name="dateTo" value="" />
+            </div>
+            <button type="submit" class="btn btn-default" style="margin-left: 0px">查询</button>
+        </form>
+    </div>
+    <div class="row">
+        <table id="getrechargeRecordList" data-url="{{root_url}}/center/getrechargeRecordList"
+               data-side-pagination="server" data-pagination="true" data-page-list="[5, 10, 20, 50, 100, 200]"
+               data-search="false" data-width="100" style="table-layout:fixed">
+            <thead>
+            <tr>
+                <th data-field="order_no" data-sortable="false" data-align="left" data-width="20%">流水号</th>
+                <th data-field="payment_type" data-align="left" data-width="15%">类型</th>
+                <th data-field="amount" data-formatter="money_formatter" data-sortable="false" data-align="left" data-width="15%">收入</th>
+                <th data-field="remark" data-align="left" data-width="25%">备注</th>
+                <th data-field="pay_at" data-formatter="date_format_time" data-sortable="false" data-align="left" data-width="25%">时间</th>
+            </tr>
+            </thead>
+        </table>
+        <script type="text/javascript">
+            $("#getrechargeRecordList").bootstrapTable({
+                'onPageChange':function(number, size){},
+                'queryParams':function(params)
+                {
+                    s_data=$('form').serializeArray();
+                    for (key in s_data)
+                    {
+                        item=s_data[key];
+                        var1=item["name"];
+                        var2=item["value"];
+                        params[var1]=var2;
+                    }
+                    return params
+                }
+            });
+            function table_filter(current){
+                $("#getrechargeRecordList").bootstrapTable('refresh',{
+                    'onPageChange': function (number,size) {
+                    }
+                });
+                return false
+            }
+            $(".form_datetime").datetimepicker({
+                format : 'yyyy-mm-dd',
+                language : 'zh-CN',
+                pickDate : true,
+                pickTime : false,
+                minView : 2,
+                autoclose : true,
+                inputMask : true,
+                pickerPosition : 'bottom-left'
+            })
+        </script>
+    </div>
+{% endblock %}

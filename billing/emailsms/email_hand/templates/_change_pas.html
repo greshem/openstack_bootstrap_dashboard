@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+{% block content %}
+    <p>您好,您的注册用户 &nbsp; <span>{{ receiver.username }}</span> 申请修改密码：</p>
+    <h2>请点击如下链接进行密码修改：</h2>
+    <p><a href="{{ random_url }}">' + random_url + '</a></p>
+{% endblock %}

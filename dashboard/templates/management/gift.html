@@ -1,0 +1,75 @@
+{% extends 'colorbox_ajax.html' %}
+{% block title %}
+    赠送金额
+{% endblock %}
+
+{% block content %}
+    <div style="text-align: center; margin: 10px; height: 40px; line-height: 40px;background-color: #FFEBCD"><p>注：每个账户有且只有一次赠送机会</p></div>
+
+    <div class="row">
+        <div class="col-lg-3">
+            <label class="pull-right kkk">用户名</label>
+        </div>
+        <div class="col-lg-9">
+            <input class="form-control" id="username" value="{{ customer_info.username }}" disabled="disabled">
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-3">
+            <label class="pull-right kkk">公司名</label>
+        </div>
+        <div class="col-lg-9">
+            <input class="form-control" id="company" value='{{ customer_info.company }}' disabled="disabled">
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-3">
+            <label class="pull-right kkk">赠送金额</label>
+        </div>
+        <div class="col-lg-9">
+            <input class="form-control" id="money" value="{{ gift_value }}" disabled="disabled">
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-3">
+            <label class="pull-right kkk" for="remark">备注</label>
+        </div>
+        <div class="col-lg-9">
+            <textarea class="form-control" id="remark"></textarea>
+        </div>
+    </div>
+
+    <style>
+        .kkk {
+            height: 34px;
+            line-height: 34px;
+        }
+
+        .form-control{
+            width:auto;
+        }
+    </style>
+{% endblock %}
+
+{% block action_script %}
+    <script>
+        $('#confirm_btn').click(function(){
+            result=$.ajax({
+                type:'POST',
+                url: '{{ root_url }}/manage/gift/',
+                data:{'account_id': '{{ customer_info.account_id }}', 'gift_money': '{{ gift_value }}', 'remark':$('#remark').val(),
+                'by_user_id': '{{ by_user_id }}', 'by_user_name': '{{ by_user_name }}', 'to_user_name': '{{ customer_info.username }}'},
+                async:false
+            });
+            $.colorbox.close();
+            if(result.responseText=='success'){
+                location.href='{{ root_url }}/manage/';
+            }else{
+                toastr.error(result.responseText);
+            }
+        })
+    </script>
+{% endblock %}

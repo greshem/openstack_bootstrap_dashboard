@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block title %}{% trans "Users" %}{% endblock %}
+
+{% block main_body %}
+
+<div class="container">
+
+      <div class="modal-header">
+          <a href="#" class="close" data-dismiss="modal">
+            <span class="fa fa-times"></span>
+          </a>
+        <h3 class="modal-title">创建用户</h3>
+      </div>
+  <form id="create_user_form"  name=""  action="/admin/create/" method="POST">
+  <input type="hidden" name="csrfmiddlewaretoken" value="QjSHv7KgLZJxcYCVxyUr3wZvG7xROdjy">
+    <div class="modal-body clearfix">
+      <div class="fake_credentials has-feedback" style="display: none">
+        <input type="text" name="fake_email" value="">
+        <input type="password" name="fake_password" value=""><span class="form-control-feedback fa fa-eye password-icon"></span>
+      </div>
+        <div class="row">
+          <div class="col-sm-6">
+            <fieldset>
+                <div class="form-group ">
+                      <label class="control-label  " for="id_domain_id">域ID</label>
+                    <div class=" ">
+                        <input class="form-control" id="id_domain_id" name="domain_id" readonly="readonly" type="text" value="{{domain_id}}">
+                    </div>
+                </div>
+                <div class="form-group ">
+                      <label class="control-label  " for="id_domain_name">域名</label>
+                    <div class=" ">
+                        <input class="form-control" id="id_domain_name" name="domain_name" readonly="readonly" type="text" value="{{domain_id}}">
+                    </div>
+                </div>
+                <div class="form-group required">
+                      <label class="control-label  required" for="id_name">用户名</label>
+                      <span class="hz-icon-required fa fa-asterisk"></span>
+                    <div class=" ">
+                        <input class="form-control" id="id_name" maxlength="255" name="name" type="text">
+                    </div>
+                </div>
+                <div class="form-group ">
+                      <label class="control-label  " for="id_description">描述</label>
+                    <div class=" ">
+                        <textarea class="form-control" cols="40" id="id_description" name="description" rows="4"></textarea>
+                    </div>
+                </div>
+                <div class="form-group ">
+                      <label class="control-label  " for="id_email">邮箱</label>
+                    <div class=" ">
+                        <input class="form-control" id="id_email" name="email" type="email">
+                    </div>
+                </div>
+                <div class="form-group required">
+                      <label class="control-label  required" for="id_password">密码</label>
+                      <span class="hz-icon-required fa fa-asterisk"></span>
+                    <div class="has-feedback">
+                        <input class="form-control" id="id_password" name="password" type="password"><span class="form-control-feedback fa fa-eye password-icon"></span>
+                    </div>
+                </div>
+                <div class="form-group required">
+                      <label class="control-label  required" for="id_confirm_password">确认密码</label>
+                      <span class="hz-icon-required fa fa-asterisk"></span>
+                    <div class="has-feedback">
+                        <input class="form-control" id="id_confirm_password" name="confirm_password" type="password"><span class="form-control-feedback fa fa-eye password-icon"></span>
+                    </div>
+                </div>
+                <div class="form-group ">
+                      <label class="control-label  " for="id_project">主项目</label>
+                    <div class=" ">
+                        <div class="input-group">
+                          <select class="form-control" data-add-item-url="/dashboard/identity/create" id="id_project" name="project">
+                <option value="" selected="selected">选择一个项目</option>
+                <option value="6bdce88e45604ca0a4e54412d6fc4e08">demo</option>
+                <option value="6cfb740b182c41f69c2c3e5bceaf3a3b">admin</option>
+                <option value="8739f32915114201bc48233ae00c4627">services</option>
+                </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group ">
+                      <label class="control-label  " for="id_role_id">角色</label>
+                    <div class=" ">
+                        <select class="form-control" id="id_role_id" name="role_id">
+                <option value="0e2d2268058741a8af2fae510759dc97">heat_stack_owner</option>
+                <option value="3f13becd94354c0081a031c54fbe45bf">SwiftOperator</option>
+                <option value="7687a4c385ae425db40ca5a9fd19b41d">heat_stack_user</option>
+                <option value="8604c22d9ded4bf6ac0018a3ae3a30b5">admin</option>
+                <option value="9fe2ff9ee4384b1894a90878d3e92bab" selected="selected">_member_</option>
+                <option value="a763d4cbe43642ac813fe2ae5d2191e8">ResellerAdmin</option>
+                </select>
+                    </div>
+                </div>
+                <div class="form-group ">
+                    <div class="">
+                    <div class="themable-checkbox">
+                    <input checked="checked" id="id_enabled" name="enabled" type="checkbox">
+                    <label for="id_enabled">
+                       <span>激活</span>
+                    </label>
+                </div>
+                    </div>
+                </div>
+            </fieldset>
+          </div>
+          <div class="col-sm-6">
+  <h3>说明：</h3>
+  <p>创建一个新用户，并设置相关的属性，例如该用户的主项目和角色。</p>
+  <script type="text/javascript">
+    if (typeof horizon.user !== 'undefined') {
+      horizon.user.init();
+    } else {
+      addHorizonLoadEvent(function() {
+        horizon.user.init();
+      });
+    }
+  </script>
+          </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a href="/dashboard/identity/users/" class="btn btn-default cancel">取消
+        </a>
+        <input class="btn btn-primary" type="submit" value="创建用户">
+    </div>
+  </form>
+    </div>
+
+
+</div>
+{% endblock %}

@@ -1,0 +1,290 @@
+{% extends 'colorbox_ajax.html' %}
+{% block title %}
+    新建客户
+{% endblock %}
+
+{% block content %}
+<div class="row needspace">
+    <div class="col-lg-2">
+        <label for="new_company" class="pull-right kkk">公司名</label>
+    </div>
+    <div class="col-lg-4">
+        <input class="form-control" id="new_company">
+    </div>
+</div>
+
+<div class="row needspace">
+    <div class="col-lg-2">
+        <label for="new_companyType" class="pull-right kkk">公司性质</label>
+    </div>
+    <div class="col-lg-4">
+        <select class="form-control" id="new_companyType">
+            <option value="集体企业">集体企业</option>
+            <option value="股份制企业">股份制企业</option>
+            <option value="私营企业">私营企业</option>
+            <option value="个体户">个体户</option>
+        </select>
+    </div>
+    <div class="col-lg-2">
+        <label for="new_contactName" class="pull-right">联系人</label>
+    </div>
+    <div class="col-lg-4">
+        <input class="form-control" id="new_contactName">
+    </div>
+</div>
+
+<div class="row needspace">
+    <div class="col-lg-2">
+        <label for="new_industry" class="pull-right kkk">所属行业</label>
+    </div>
+    <div class="col-lg-4">
+        <select class="form-control" id="new_industry">
+            <option value="饮食行业">饮食行业</option>
+            <option value="服装行业">服装行业</option>
+            <option value="机械行业">机械行业</option>
+            <option value="金融行业">金融行业</option>
+            <option value="移动互联网行业">移动互联网行业</option>
+        </select>
+    </div>
+    <div class="col-lg-2">
+        <label for="new_phone" class="pull-right">电话</label>
+    </div>
+    <div class="col-lg-4">
+        <input class="form-control" id="new_phone">
+    </div>
+</div>
+
+<div class="row needspace">
+    <div class="col-lg-2">
+        <label for="new_level" class="pull-right kkk">客户等级</label>
+    </div>
+    <div class="col-lg-4">
+        <select class="form-control" id="new_level">
+            <option value="A">A级</option>
+            <option value="B">B级</option>
+            <option value="C">C级</option>
+            <option value="D">D级</option>
+        </select>
+    </div>
+    <div class="col-lg-2">
+        <label for="new_email" class="pull-right">邮箱</label>
+    </div>
+    <div class="col-lg-4">
+        <input class="form-control" id="new_email">
+    </div>
+</div>
+
+<div class="row needspace">
+    <div class="col-lg-2">
+        <label for="new_username" class="pull-right kkk">用户名</label>
+    </div>
+    <div class="col-lg-4">
+        <input class="form-control" id="new_username">
+    </div>
+</div>
+
+<div class="row needspace">
+    <div class="col-lg-2">
+        <label for="new_password1" class="pull-right kkk">密码</label>
+    </div>
+    <div class="col-lg-4">
+        <input class="form-control" type="password" id="new_password1">
+    </div>
+    <div class="col-lg-2">
+        <label for="new_password2" class="pull-right kkk">确认密码</label>
+    </div>
+    <div class="col-lg-4">
+        <input class="form-control"  type="password" id="new_password2">
+    </div>
+</div>
+
+{#<div class="row needspace">#}
+{#    <div class="col-lg-2">#}
+{#        <label for="new_type" class="pull-right kkk">账户类型</label>#}
+{#    </div>#}
+{#    <div class="col-lg-4 form-inline form-group">#}
+{#        <div class="col-lg-6">#}
+{#            <input type="radio" name="new_type" id='type_normal_btn' value="normal">普通用户#}
+{#        </div>#}
+{#        <div class="col-lg-6">#}
+{#            <input type="radio" name="new_type" id="credit_btn" value="credit">信用用户#}
+{#        </div>#}
+{#    </div>#}
+{#    <div class="col-lg-2">#}
+{#        <label for="new_creditline" class="pull-right" style="display: none">信用额度</label>#}
+{#    </div>#}
+{#    <div class="col-lg-2">#}
+{#        <input class="form-control" id="new_creditline" style="display: none">#}
+{#    </div>#}
+{#    <div class="col-lg-1 row">#}
+{#        <label for="new_creditline" class="pull-left kkk" id="yuan" style="display: none">元</label>#}
+{#    </div>#}
+{#</div>#}
+
+<div class="row needspace">
+    <div class="col-lg-2">
+        <label for="new_comment" class="pull-right kkk">备注</label>
+    </div>
+    <div class="col-lg-10">
+        <textarea class="form-control"></textarea>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block action_script %}
+    <script>
+{#        $('#credit_btn').click(function(){#}
+{#            $('#new_creditline').show();#}
+{#            $('#yuan').show();#}
+{#        });#}
+
+{#        $('#type_normal_btn').click(function(){#}
+{#            $('#new_creditline').hide();#}
+{#            $('#yuan').hide();#}
+{#        });#}
+
+        $('#confirm_btn').click(function(){
+            var new_company = $('#new_company').val();
+            var new_companyType = $('#new_companyType').val();
+            var new_industry = $('#new_industry').val();
+            var new_level= $('#new_level').val();
+            var new_username = $('#new_username').val();
+            var new_contactName = $('#new_contactName').val();
+            var new_phone = $('#new_phone').val();
+            var new_email = $('#new_email').val();
+{#            var new_type = $("input:radio[name='new_type']:checked").val();#}
+{#            var new_creditline = $('#new_creditline').val();#}
+            var new_comment = $('#new_comment').val();
+            var new_password = $('#new_password1').val();
+            var repeat_password = $('#new_password2').val();
+
+{#            这里需要插入输入检查#}
+            var hintstr='';
+            var flag='';
+            if(new_company==""){
+                flag=1;
+                hintstr+='公司名不能为空<br>';
+            }
+            if(new_email==""){
+                flag=1;
+                hintstr+='邮箱不能为空<br>';
+            }
+            if(new_email!=""){
+                reg_email=/^(\w-*\.*)+@(\w-?)+(\.\w{2,})+$/;
+                if(!reg_email.test(new_email)){
+                    flag=1;
+                    hintstr+='您的邮箱格式不正确<br>'
+                }
+            }
+            if(new_contactName==""){
+                flag=1;
+                hintstr+='联系人不能为空<br>';
+            }
+
+            if(new_phone==""){
+                flag=1;
+                hintstr+='手机号不能为空<br>';
+            }
+
+            if(new_username==""){
+                flag=1;
+                hintstr+='用户名不能为空<br>';
+            }else{
+                reg_all_digit = /^\d+$/;
+                if(reg_all_digit.test(new_username)){
+                    flag=1;
+                    hintstr+='用户名不能全为数字<br>'
+                }
+            }
+
+            reg=/^1\d{10}$/;
+            if(new_phone!="" && !reg.test(new_phone)){
+                flag=1;
+                hintstr+='请填写正确的手机号码<br>';
+            }
+
+{#            if(new_type=='credit'){#}
+{#                reg1=/^\d+(\.(\d){1,2})?$/;#}
+{#                if(!reg1.test($('#credit_line').val())){#}
+{#                    flag=1;#}
+{#                    hintstr+='请填写正整数或1到2位小数信用额度<br>'#}
+{#                }#}
+{#            }#}
+
+            if(new_password==""){
+                flag=1;
+                hintstr+= '请出入密码<br>';
+            }
+
+            if(repeat_password==""){
+                flag=1;
+                hintstr+= '请再次输入密码<br>'
+            }
+
+            if(new_password!="" && repeat_password!=""){
+                if(new_password!=repeat_password){
+                    flag=1;
+                    hintstr+='两次输入密码不一致<br>';
+                }else if(/\s/.test(new_password)){
+                    flag=1;
+                    hintstr+='密码中不能包含空格<br>';
+                }else{
+                    regpwd = /^.{6,20}$/;
+                    if(!regpwd.test(new_password)){
+                        flag=1;
+                        hintstr+='密码只能为6-20位数字，字符，特殊字符的组合<br>';
+                    }
+                }
+            }
+
+            if(flag==1){
+                $.alert({
+                    title: '提示',
+                    content: hintstr,
+                    confirmButton: '确认'
+                });
+                return false;
+            }
+{#            上面插入输入检查#}
+
+
+            result= $.ajax({
+                type: 'post',
+                url: '{{ root_url }}/manage/create/',
+                data:{
+                    'new_company': new_company,
+                    'new_companyType': new_companyType,
+                    'new_industry': new_industry,
+                    'new_level': new_level,
+                    'new_username': new_username,
+                    'new_contactName': new_contactName,
+                    'new_phone': new_phone,
+                    'new_email': new_email,
+                    'new_type': 'normal',
+                    'new_creditline': 0,
+                    'new_comment': new_comment,
+                    'new_password': new_password
+                },
+                async: false
+            });
+
+            if (result.responseText=='ok'){
+                $.colorbox.close();
+                location.href='{{ root_url }}/manage/';
+            }else{
+                toastr.error(result.responseText)
+            }
+        })
+    </script>
+    <style>
+        .needspace{
+            margin-bottom: 3px;
+        }
+
+        .kkk {
+            height: 34px;
+            line-height: 34px;
+        }
+    </style>
+{% endblock %}

@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+    <div class="row highlight_bar">
+        <div>
+            &nbsp;	&nbsp;
+       {% if account_info.credit_line %}
+            信用额度:<span class="moneyformatter money1" >{{ account_info.credit_line|floatformat:4}}</span> &nbsp;	&nbsp;
+       {% endif %}
+            余额 	&nbsp;	&nbsp;<span class="moneyformatter money2" style="color:#1b6d85;">{{ amount|floatformat:4  }}</span>&nbsp;	&nbsp;
+            {% if isSubAccount %}
+            {% else %}
+            &nbsp;	&nbsp;<a class="btn btn-warning" href="{{root_url}}/center/payment_redirect?account_id={{ account_info.account_id }}" target="_Blank">账户充值</a>
+            {% endif %}
+        </div>
+    </div>
+    <div class="row child_title">
+        消费预估
+    </div>
+    <div class="row">
+        <table id='forecast' data-url="{{root_url}}/center/forecast" data-width="100" data-toggle="table">
+            <thead>
+            <tr>
+              <th data-field="resource_type" data-formatter="billitem_name">资源名称</th>
+              <th data-field="hour">小时</th>
+              <th data-field="day">天</th>
+              <th data-field="month">月</th>
+              <th data-field="year">年</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+
+    <script>
+
+        $("#forecast").bootstrapTable({
+            'onPageChange':function(number, size){
+            }
+        });
+        $(".moneyformatter").each(function(){
+            $(this).text(money_formatter($(this).text()))
+        });
+
+        function billitem_name(value,row){
+            temp=row.resource_type;
+            if (temp=='instance')
+            {return '实例'}
+            if (temp=='disk')
+            {return '云硬盘'}
+            if (temp=='snapshot')
+            {return '快照'}
+            if (temp=='router')
+            {return '路由器'}
+            if (temp=='ip')
+            {return '浮动IP'}
+            if (temp=='bandwidth')
+            {return '带宽'}
+            if (temp=='image')
+            {return '镜像'}
+            if (temp=='vpn')
+            {return 'VPN'}
+            if (temp=='tunnel')
+            {return '通道'}
+            if (temp=='total')
+            {return '总计'}
+            return temp
+        }
+    </script>
+{% endblock %}

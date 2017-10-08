@@ -1,0 +1,51 @@
+{% extends 'colorbox_ajax.html' %}
+{% block title %}
+    当月消费详情&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    账单时间：{{ current_month }} 至今 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    消费总额:{{ amount_total }}元
+{#    返现总额:10元#}
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <table id='currentlistdata' data-url="{{root_url}}/bill/currentlistdata/{{ sub_account_id }}?month={{ current_month }}" data-width="100"
+               data-side-pagination="server" data-pagination="true" data-page-list="[5,10, 20, 50, 100, 200]">
+            <thead>
+            <tr>
+                <th data-field="region_id" data-formatter="">区域</th>
+                <th data-field="resource_name" data-formatter="" >产品</th>
+                <th data-field="type" >产品名称</th>
+                <th data-field="amount_total" data-formatter="" >消费金额（元）</th>
+{#                <th data-field="standard_amount_total"  data-formatter="">返现金额（元）</th>#}
+            </tr>
+            </thead>
+        </table>
+    </div>
+    <script>
+        $("#currentlistdata").bootstrapTable({
+            'onPageChange':function(number, size){
+
+            },
+            'onRefreshOptions':function(){
+                $('#main_content').resize()
+            },
+            'onLoadSuccess':function(data){
+                $.colorbox.resize()
+            },
+            'queryParams':function (params){
+                s_data=$('#current_table').serializeArray();
+                for (key in s_data){
+                    item=s_data[key];
+                    var1=item["name"];
+                    var2=item["value"];
+                    params[var1]=var2;
+                }
+                return  params
+            }
+        });
+    </script>
+{% endblock %}
+
+{% block yesornot %}
+
+{% endblock %}

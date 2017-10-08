@@ -1,0 +1,219 @@
+html, body, h1, h2, h3, h4, h5, h6, div, dl, dt, dd, ul, ol, menu, li, p, blockquote, pre, hr, table, caption, thead, tbody, tfoot, th, td, form, fieldset, legend, input, button, textarea {
+    margin: 0;
+    padding: 0;
+}
+
+body, textarea, input, button, select, keygen, legend {
+    font-size: 14px;
+    line-height: 1.5em;
+    background: #ffffff;
+    font-family: 'Microsoft YaHei';
+    color: #999;
+    outline: none;
+}
+.main{
+    background: #2870ae;
+}
+.mainframe{
+    position: relative;
+    margin: 0 auto;
+    width: 1100px;
+    min-height: 500px;
+}
+a{
+    color: #2870ae;
+    font-size: 12px;
+    text-decoration: blink;
+}
+.clearfix{
+    clear: both;
+}
+input{
+	background: #fff;
+    border: none;
+    color: #999;
+    width: 91%;
+    padding: 15px;
+    font-size: 13px;
+    border-radius: 4px;
+    -webkit-border-radius:4px;
+    -moz-border-radius:4px;
+}
+input::-webkit-input-placeholder{
+	color:#999;
+}
+input:-moz-placeholder{
+	color:#999;
+}
+input::-moz-placeholder{
+	color:#999;
+}
+input:-ms-input-placeholder{
+	color:#999;
+}
+.header{
+    margin: 0 auto;
+    height: 70px;
+}
+.headerbar{
+    width: 1100px;
+    margin: 0 auto;
+}
+.header-logo{
+    float: left;
+    margin-top: 8px;
+}
+.header-welcome{
+    float: right;
+    margin-top: 20px;
+}
+.header-welcome span:first-child{
+    font-size: 12px;
+    color: #666;
+}
+.header-welcome span:first-child + span{
+    font-size: 12px;
+    color: #ff9c00;
+}
+.header-welcome span img{
+    vertical-align: sub;
+    margin-left: 15px;
+    margin-right: 8px;
+}
+.login-frame{
+    position: absolute;
+    top: 10%;
+    padding: 30px 20px;
+    background: #bfd4e7;
+    color: #333;
+    width: 328px;
+    z-index: 999;
+    right: 0;
+}
+.main-login{
+    margin: 20px 0px 30px;
+}
+.main-login div{
+    position: relative;
+}
+.main-login div p{
+    display: none;
+    position: absolute;
+    font-size: 12px;
+    color: #ff3535;
+    left: 5px;
+}
+.verifycode{
+    float: right;
+    height: 40px;
+    width: 80px;
+    border: 1px solid #e5fbfe;
+    background: #e5fbfe;
+    padding: 3px 15px;
+    line-height: 40px;
+}
+.main-button{
+    width: 91%;
+    margin-top: 30px;
+    background: #f09401;
+    color: #fff;
+    padding: 15px;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 4px;
+    -webkit-border-radius:4px;
+    -moz-border-radius:4px;
+}
+.login-psw{
+    margin: 30px 0px;
+}
+#createcode{
+    float: right;
+    width: 120px;
+    background: #ebfbff;
+    color:#0e518e;
+    cursor: pointer;
+    font-family:Arial;
+    font-style:italic;
+    font-size: 20px;
+    padding: 10px;
+    letter-spacing:3px;
+    font-weight:bolder; 
+}
+.site_foot {
+    height: 100px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+.site_foot .site_foot_wrap {
+    width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+}
+.site_foot .site_foot_frie {
+    overflow: hidden;
+    height: 18px;
+    margin-right: auto;
+    margin-left: 400px;
+    text-align: left;
+}
+.site_foot .site_foot_frie_link {
+    font-size: 12px;
+    line-height: 18px;
+    float: left;
+    overflow: hidden;
+    height: 18px;
+    color: #999999;
+}
+.site_foot .site_foot_frie_line {
+    float: left;
+    overflow: hidden;
+    width: 0;
+    height: 12px;
+    margin-top: 3px;
+    margin-right: 5px;
+    margin-left: 5px;
+    border-right: 1px solid #c6c8cd;
+    border-left: 1px solid #71757e;
+}
+.site_foot .site_foot_copr {
+    margin: 0 auto;
+    padding-top: 5px;
+    padding-bottom: 10px;
+}
+.site_foot .site_foot_copr_txt {
+    font-size: 12px;
+    font-weight: 500;
+    font-style: normal;
+    color: #999999;
+}
+.site_foot .site_foot_copr_txt_link {
+    color: #999999;
+}
+.site_foot .site_foot_report {
+    margin: 0 auto;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    text-align: left;
+    margin-left:430px;
+}
+.site_foot .site_foot_report_2 {
+    background-position: -168px 0;
+}
+.site_foot .site_foot_report_3 {
+    background-position: -252px 0;
+}
+.site_foot .site_foot_report_4 {
+    background-position: -336px 0;
+}
+.site_foot .site_foot_report_link {
+    float: left;
+    overflow: hidden;
+    width: 84px;
+    height: 31px;
+    margin-right: 1px;
+    text-align: left;
+    text-indent: -9999px;
+    background-image: url(http://scdn.qbcdn.com/common/img/cm_report.png);
+    background-repeat: no-repeat;
+}

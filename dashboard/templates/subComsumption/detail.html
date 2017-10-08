@@ -1,0 +1,39 @@
+{% extends 'base.html' %} {% block content %}
+    {% load formatters %}
+    <script type="text/javascript">
+        function cash_amount(value, row) {
+            return money_formatter(row['amount_total'] - row['amount_gift_total']);
+        }
+        $('#subconsumptiondetail_amount_total').empty()
+        $('#subconsumptiondetail_amount_total').append(money_formatter('{{amount_total}}'))
+    </script>
+    <div class="row child_title1">
+        当月消费分类汇总
+    </div>
+    <div class="row child_title2">
+        账单时间&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{started_at|todate|date:"Y-m-d"}}&nbsp;&nbsp;&nbsp;
+        至今&nbsp;&nbsp;&nbsp;&nbsp;消费总额&nbsp;&nbsp;&nbsp;<span class="money1" id="subconsumptiondetail_amount_total">{{amount_total}}</span>
+    </div>
+
+    <div class="row">
+        <table id='consumptionsum_table'
+               data-url="{{root_url}}/center/getConsumptionSummary?account_id={{account_id}}" data-width="100" data-toggle='table'>
+            <thead>
+            <tr>
+                <th data-field="resource_type" data-formatter="valueformat"
+                    >产品分类</th>
+                <th data-field="amount_total"
+                    data-formatter="money_formatter">总金额</th>
+                <th data-field="amount_cash"
+                    data-formatter="cash_amount">现金余额扣费</th>
+                <th data-field="amount_gift_total"
+                    data-formatter="money_formatter">赠送余额扣费</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+    <script type="text/javascript">
+        $("#consumptionsum_table").bootstrapTable()
+    </script>
+
+{% endblock %}

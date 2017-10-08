@@ -1,0 +1,77 @@
+{% extends 'base.html' %} {% block content %}
+<div style="width: 30%; height: auto; float: left;">
+	基本信息<br />
+	<hr>
+	<label style="font-size: 13px;">
+	<span style="padding-right: 30px;">帐号:</span>{{ childaccount.name }}<br />
+	<br /> <span style="padding-right: 30px;">联系人:</span>
+	{% if childaccount.contact %}
+		{{ childaccount.contact }}
+	{% endif %}
+	<br />
+	<br /> <span style="padding-right: 30px;">联系方式:</span>{% if childaccount.contact %}{{ childaccount.telephone }}{% endif %}<br />
+	<br /> <span style="padding-right: 30px;">邮件:</span>{% if childaccount.contact %}{{ childaccount.email }}{% endif %}<br />
+	<br /> <span style="padding-right: 30px;">用户分类:</span><span
+		id="account_type">{{ childaccount.type }}</span><br />
+	<br /> <span style="padding-right: 30px;">信用额度:</span><span
+		id="account_credit_line">{{ childaccount.credit_line }}</span><br />
+	<br /> <span style="padding-right: 30px;">现金余额:</span><span
+		id="account_cash_balance">{{ childaccount.cash_balance }}</span><br />
+	<br /> <span style="padding-right: 30px;">赠送金额:</span><span
+		id="account_gift_balance">{{ childaccount.gift_balance }}</span><br />
+	<br />
+	</label>
+</div>
+<div style="width: 70%; height: auto; float: left; padding-left: 10px;">
+	折扣
+	<hr>
+	<div>
+		<table id='discount_table' data-url="{{root_url}}/center/getdiscountlist?account_id={{account_id}}"
+			 data-width="100">
+			<thead>
+				<tr>
+					<th data-field="region_desc"  data-sortable="true">区域</th>
+					<th data-field="memory_discount"  data-sortable="true">内存</th>
+					<th data-field="cpu_discount"  data-sortable="true">CPU</th>
+					<th data-field="disk_discount"  data-sortable="true">硬盘</th>
+					<th data-field="snapshot_discount" 
+						data-sortable="true" >快照</th>
+					<th data-field="bandwidth_discount" 
+						data-sortable="true" >带宽</th>
+					<th data-field="router_discount" 
+						data-sortable="true" >路由器</th>
+					<th data-field="ip_discount" 
+						data-sortable="true" >浮动IP</th>
+					<th data-field="vpn_discount" 
+						data-sortable="true" >VPN</th>
+					<th data-field="" 
+						data-sortable="true" data-formatter="cdn_formatter">CDN</th>
+				</tr>
+			</thead>
+		</table>
+	</div>
+</div>
+<script type="text/javascript">
+    	$("#account_type").empty()
+    	$("#account_type").append(constant.account_type['{{childaccount.type}}'])
+    	
+    	$("#account_credit_line").empty()
+    	$("#account_credit_line").append(money_formatter({{childaccount.credit_line}}))
+    	
+    	$("#account_cash_balance").empty()
+    	$("#account_cash_balance").append(money_formatter({{childaccount.cash_balance}}))
+    	
+    	$("#account_gift_balance").empty()
+    	$("#account_gift_balance").append(money_formatter({{childaccount.gift_balance}}))
+    	$("#discount_table").bootstrapTable()
+    	function cdn_formatter(value,row){
+    		var cdn
+    		if (row['cdnflow_discount']>row['cdnbandwidth_discount']){
+    			cdn=row['cdnflow_discount']
+    		}else{
+    			cdn=row['cdnbandwidth_discount']
+    		}
+    		return cdn
+    	}
+    </script>
+{% endblock %}

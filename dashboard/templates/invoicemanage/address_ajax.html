@@ -1,0 +1,60 @@
+<script>
+    $(".delete_address").mousedown(function(event){
+        if (event.which==1){
+            var address_id = $(this).attr("id");
+            delete_address(address_id);
+        }
+    });
+    $(".Invoice_Address").mousedown(function(event){
+        if (event.which==1){
+            $(".Invoice_Address_Choosen").attr("class", "row Invoice_Address_Unchoosen Invoice_Address");
+            $(this).attr("class", "row Invoice_Address_Choosen Invoice_Address");
+        }
+    });
+    $(".modify_address").mousedown(function(event){
+        if (event.which==1){
+            var address_id1= $(this).attr("id");
+            var address_id1m = address_id1.substr(1);
+            $("#headbar_address_list").hide();
+            htmlobj_i10= $.ajax({url:'{{root_url}}/center/invoice_NewAddrForm', async:false});
+            $("#form_add_new_addr").html(htmlobj_i10.responseText).show();
+            $("#form_NewAddr").show();
+            fillFormWithCurrentAddr(address_id1m);
+            $("#transparent").attr("class", address_id1m);
+            $("#update_addr").show();
+            $("#save_new_addr").hide();
+        }
+    })
+
+</script>
+
+{% for item in result1 %}
+    {% if forloop.first %}
+        <div class="row Invoice_Address_Choosen Invoice_Address" style="margin:0px; word-break: break-all">
+    {% else %}
+        <div class="row Invoice_Address_Unchoosen Invoice_Address" style="margin:0px; word-break: break-all">
+    {% endif %}
+        <div class="col-sm-2">
+            <span class="glyphicon glyphicon-map-marker xmx" aria-hidden="true"></span><span class="xmx">寄送至</span>
+        </div>
+        <div class="col-sm-8">
+            <div id="xjbt" style="display:{{ item.display1 }}">{{ item.address }}</div>
+            <div id="xjbt_1" style="display:{{ item.display2 }}"><span title="{{ item.address }}">{{ item.address_1 }}</span></div>
+            <div style="margin-top:8px">{{ item.name }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ item.mobile }}</div>
+        </div>
+        <div class="col-sm-2" style="padding:0px">
+        <div class="col-sm-6" style="padding-top: 24px; padding-right:0px; padding-left:0px;">
+            <a class="modify_address" id="m{{ item.address_id }}">修改</a>
+        </div>
+        <div class="col-sm-6" style="padding-top: 24px; padding-right:0px; padding-left:0px;">
+            <a class="delete_address" id="{{ item.address_id }}">删除</a> {# 较好的办法是把 #}
+        </div>
+        </div>
+
+    </div>
+{% endfor %}
+
+
+
+
+

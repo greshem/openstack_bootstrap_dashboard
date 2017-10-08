@@ -1,0 +1,184 @@
+{% extends "ECloud.html" %} 
+{% load staticfiles %} 
+
+{% block insert_js_css %}
+<script src="{% static 'js/floatingip.js' %}"></script>
+{% endblock %} 
+{% block title %}
+<span class="menu-num-blue">网络</span>
+<span class="menu-num-defult">/ 浮动IP管理</span>
+{% endblock %} 
+
+{% block center_body %}
+<div class="row">
+	<div class="col-lg-12 col-md-12">
+		<div class="panel panel-default" style="padding: 0px;">
+			<div class="panel-heading heading-default">
+				<h4 class="panel-title">浮动IP管理</h4>
+			</div>
+			<div class="panel-body" style="padding: 30px 0px;">
+				<div class="col-lg-7 col-md-7 ">
+					<li class="fl mb20">
+						<div class="btn-group">
+							<button type="button" class="btn btn-5"onclick="floatingip_create_form('{% url 'region_list' %}','{% url 'floatingip_billing' %}','{% url 'floatingip_pools_list' %}');">
+								<img src="{% static 'images/Icon_createcloud.png' %}" />&nbsp;&nbsp;&nbsp;分配浮动IP
+							</button>
+						</div>
+					</li>
+					<li class="fl mb20">
+						<div class="btn-group">
+							<button type="button"
+								class="btn btn-5 dropdown-toggle tp-icon-admin"
+								data-toggle="dropdown" aria-haspopup="true"
+								aria-expanded="false">
+								<img src="{% static 'images/Icon_mor.png' %}" />&nbsp;&nbsp;&nbsp;更多操作
+								<span class="caret"></span>
+							</button>
+							<ul id="floatingip_meun" class="dropdown-menu dropdown-menu-usermenu">
+								<li id="floatingip_associate"class='disabled'><a href="#" onclick="floatingip_associate_form();">关联</a></li>
+								<li id="floatingip_disassociate"class='disabled'><a href="#" onclick="floatingip_disassociate_action('{% url 'floatingip_disassociate' %}');">解绑关联</a></li>
+								<li id="floatingip_delete" class='disabled'><a href="#" onclick="floatingip_delete_action('{% url 'floatingip_delete' %}');">释放浮动IP</a></li>
+							</ul>
+						</div>
+					</li>
+					<li class="fl mb20">
+						<div class="btn-group">
+							<button type="button" class="btn btn-6" id="btn_floatingip_delete" onclick="floatingip_delete_action('{% url 'floatingip_delete' %}');">
+								<img src="{% static 'images/Icon_delete.png' %}" />&nbsp;&nbsp;&nbsp;释放浮动IP
+							</button>
+						</div>
+					</li>
+				</div>
+				<div class="col-lg-5 col-md-5">
+					<li class="fl mb20">
+						<div class="btn-group">
+							<select id="search_opt" style="margin-right: 10px;height: 32px;">
+							<option value="floating_ip_address">IP地址</option>
+							</select>
+							<!-- <button type="button"
+								class="btn btn-6 dropdown-toggle tp-icon-admin"
+								data-toggle="dropdown" aria-haspopup="true"
+								aria-expanded="false">
+								云主机名称 <span class="caret"></span>
+							</button>
+							<ul class="dropdown-menu dropdown-menu-usermenu">
+								<li><a href="#">北京1区</a></li>
+								<li><a href="#">北京2区</a></li>
+								<li><a href="#">北京3区</a></li>
+								<li><a href="#">北京4区</a></li>
+							</ul> -->
+						</div>
+					</li>
+					<li class="fl mr10 mb20">
+						<div class="btn-group">
+							<input id="search_input" type="text" class="form-control" placeholder="请输入" />
+						</div>
+					</li>
+					<li class="fl mb20">
+						<div class="btn-group">
+							<button type="button" class="btn btn-primary" onclick="search();">搜索</button>
+						</div>
+					</li>
+				</div>
+				<table id="floatingipTable" data-locale="zh-CN"
+					data-url="{% url 'floatingip_list' %}"
+					data-side-pagination="server" data-width="100"
+					data-pagination="true" data-page-list="[1,5, 10]">
+					<thead>
+						<tr>
+							<th data-checkbox="true"></th>
+							<th data-field="floating_ip_address">IP地址</th>
+							<th data-field="fixed_ip_address" data-formatter='fixed_ip_address_fomatter'>映射固定IP地址</th>
+							<th data-field="pool_name">资源池</th>
+							<th data-field="status">状态</th>
+						</tr>
+					</thead>
+					</table>
+			</div>
+			<!-- panel-body -->
+		</div>
+	</div>
+</div>
+<!-- row -->
+{% endblock %} 
+{% block insert_html %}
+<div class="dialog-example" id="">
+<div class="modal fade" id="floatingip_create_form" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog" >
+			<div class="modal-content" >
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-hidden="true">×</button>
+					<h4 class="modal-title" id="myModalLabel">分配浮动IP</h4>
+				</div>
+				<div class="modal-body" >
+					<div class="row">
+							<form action=""class="form-horizontal" role="form" style="padding-top: 20px;padding-left: 10px;padding-bottom: 20px;">
+								<div class="form-group">
+									<label class="col-sm-4 control-label">资源池：</label>
+									<div class="col-sm-7" id="floatingip_pool">
+									</div>
+								</div>
+								<!--div class="form-group">
+									<label class="col-sm-4 control-label">价格：</label>
+									<div class="col-sm-7">
+											<label for="zone" class="control-label" style="font-size:20px;color:#ff6602;"><span id="price_hour"></span></label>
+											<label for="zone" class="control-label ml20" style="font-size:12px;color:#888;">每小时(合 <span id="price_year"></span>每月)</label>
+									</div>
+								</div-->
+							</form>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-5"aria-hidden="true"data-dismiss="modal">取消</button>
+					<button type="button" class="btn btn-5"aria-hidden="true" onclick="floatingip_create_action('{% url 'floatingip_allocate' %}');">确定</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="modal fade" id="floatingip_associate_form" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content" >
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-hidden="true">×</button>
+					<h4 class="modal-title" id="myModalLabel">关联端口</h4>
+				</div>
+				<div class="modal-body" >
+					<div class="row">
+						<div class="col-lg-11 col-md-11 "
+								style="border-right: 1px solid #eee; padding-left: 30px;padding-top: 30px;">
+						<div>
+						<label>请选择云主机</label>
+						</div>
+								<table id="portTable_associate" data-locale="zh-CN"
+								data-url="{% url 'floatingip_port_list' %}"
+								data-side-pagination="server" data-width="100"
+								data-pagination="true" data-page-list="[1,5, 10]">
+								<thead>
+									<tr>
+										<th data-radio="true"></th>
+										<th data-field="device_owner"data-formatter='device_owner_formatter'>端口类型</th>
+										<th data-field="fixed_ip_address">端口IP地址</th>
+										<th data-field="device_name">设备名称</th>
+										<th data-field="floating_ip_address">关联浮动IP</th>
+										<th data-field="status">状态</th>
+									</tr>
+								</thead>
+								</table>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-5"aria-hidden="true"data-dismiss="modal">取消</button>
+					<button type="button" class="btn btn-5"aria-hidden="true" onclick="floatingip_associate_action('{% url 'floatingip_associate' %}');">确定</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	</div>
+{% endblock %}

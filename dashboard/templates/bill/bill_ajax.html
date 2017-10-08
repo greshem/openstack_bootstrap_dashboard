@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="row search_combo">
+        <form  class="form-inline form-horizontal" role="form" onSubmit="return table_filter(this)">
+            <div class="form-group">
+                <label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;账单期段</label>&nbsp;&nbsp;
+                <div class="input-group date form_datetime col-md-4"  data-link-field="dtp_input1">
+                    <input class="form-control" size="16"  type="text" value=""  readonly style="background-color: #fff; width: 80px; border-right: none;">
+                    <span class="input-group-addon" style="background-color: #fff;border-left: none;border-right: none;padding-top: 4px;"><span class="glyphicon icon-empty"></span></span>
+                    <span class="input-group-addon" style="background-color: #fff;"><span class="icon-date glyphicon-th"></span></span>
+                </div>
+                <input type="hidden" id="dtp_input1" name="dateFrom" value="" />
+                <span>—</span>
+                <div class="input-group date form_datetime col-md-4"  data-link-field="dtp_input2">
+                    <input class="form-control" size="16" type="text" value="" readonly style="background-color: #fff; width: 80px; border-right: none;">
+                    <span class="input-group-addon" style="background-color: #fff;border-left: none;border-right: none;padding-top: 4px;"><span class="glyphicon icon-empty"></span></span>
+                    <span class="input-group-addon" style="background-color: #fff;"><span class="icon-date glyphicon-th"></span></span>
+                </div>
+                <input type="hidden" id="dtp_input2" name="dateTo" value="" />
+            </div>
+            <div class="form-group">
+              <label>账单类型</label>
+              <select name="type" class="form-control">
+                <option value="">all</option>
+                <option value="naas">naas</option>
+                <option value="cloud">cloud</option>
+              </select>
+            </div>
+            <button class="btn btn-default" type="submit" style="margin-right: 20px">查询</button>
+        </form>
+    </div>
+    <div class="row">
+        <table id="gitbillList" data-url="{{root_url}}/center/getbillList"
+               data-side-pagination="server" data-pagination="true"
+               data-page-list="[5,10,20,50,100,200]" data-search="false">
+            <thead>
+            <tr>
+                <th data-field="no" data-sortable="false" data-align="left" data-width="23%">账单编号</th>
+                <th data-field="type" data-sortable="false" data-align="left" data-width="23%">账单类型</th>
+                <th data-field="started_at" data-formatter="date_format_date" data-sortable="false" data-align="left" data-width="26%">账单开始时间</th>
+                <th data-field="ended_at" data-formatter="date_format_date" data-sortable="false" data-align="left" data-width="26%">账单结束时间</th>
+                <th data-field="amount" data-formatter="money_formatter" data-sortable="false" data-align="left" data-width="14%">消费</th>
+                <th data-field="" data-formatter="detail" data-align="left" data-width="11%">操作</th>
+            </tr>
+            </thead>
+        </table>
+        <script type="text/javascript">
+            $("#gitbillList").bootstrapTable({
+                'onPageChange':function(number, size){
+                },
+                'queryParams':function (params) {
+                    s_data = $('form').serializeArray();
+                    for (key in s_data) {
+                        item = s_data[key];
+                        var1 = item["name"];
+                        var2 = item["value"];
+                        params[var1] = var2;
+                    }
+                    return params
+                }
+            });
+            function table_filter(current){
+                $("#gitbillList").bootstrapTable('refresh', {
+                    'onPageChange':function(number, size){
+                    }
+                });
+                return false;
+            };
+        </script>
+    <script>
+        function getdetail(bill_id)
+        {
+
+            refreshMainContent('{{root_url}}/center/bill/detail?bill_id='+bill_id)
+        }
+        function detail(value,row,index)
+        {
+            bill_id=row['bill_id']
+            url='{{root_url}}/center/bill/detail?bill_id='+bill_id
+            return '<span><a style="cursor:pointer;text-decoration:none;hover:#ffaf1a;color:#ffb52e;" href="'+url+'"><i class="icon-bill"></i></a></span>'
+        }
+        $('.form_datetime').datetimepicker({
+            language:  'zh-CN',
+            format:'yyyy-mm',
+            weekStart: 1,
+            todayBtn:  1,
+            autoclose: 1,
+            todayHighlight: 1,
+            startView: 2,
+            minView: 2,
+            forceParse: 0
+        });
+    </script>
+    </div>
+{% endblock %}

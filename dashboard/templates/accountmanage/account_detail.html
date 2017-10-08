@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <style>
+  dd{
+    margin-left: 20px!important;
+{#    text-align: center!important;#}
+    line-height: 2.42857;
+  }
+  dt{
+    text-align: left!important;
+    width: 100px!important;
+  }
+  </style>
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="row">
+        <div class="col-sm-5">
+            <div class="dl-horizontal">
+              <dt>用户名:</dt> <dd>{{ account.username | default_if_none:""}}</dd>
+              <dt>公司名:</dt> <dd>{{ account.company | default_if_none:""}}</dd>
+              <dt>手机号:</dt> <dd>{{ account.telephone | default_if_none:""}}</dd>
+              <dt>邮箱:</dt> <dd>{{ account.email | default_if_none:""}}</dd>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <style>
+  dt {
+    font-weight: normal;
+    line-height: 2.5;
+  }
+  </style>
+{% endblock %}
+

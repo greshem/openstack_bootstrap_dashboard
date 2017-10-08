@@ -1,0 +1,743 @@
+.fix_body_left {
+    width: 200px;
+    position: relative;
+    *position: relative;
+    float: left;
+}
+
+.fix_body_right {
+    margin-left: 200px;
+    position: relative;
+}
+
+.search_combo {
+    padding-bottom: 25px;
+
+}
+
+.search_combo .form-group {
+    padding-right: 30px;
+}
+
+.search_combo .form-group label, .search_combo .form-group .btn {
+    padding-right: 5px !important;
+    font-weight: normal !important;
+}
+
+.search_combo label, .search_combo select, .search_combo input, .search_combo checkbox, .search_combo .btn {
+    font-size: 13px !important;
+}
+
+.highlight_bar {
+
+    background-color: #f3fbfe;
+    height: 55px;
+    padding-top: 13px;
+    font-size: 16px;
+    font-weight: 200;
+    margin-bottom: 13px;
+
+}
+
+.money1 {
+    color: #eea236;
+}
+
+.money2 {
+    color: #1b6d85;
+}
+
+.highlight_bar button {
+    font-size: 13px;
+}
+
+.header {
+    background-color: white;
+    height: 50px;
+    font-size: 20px;
+    border-top: 0px;
+}
+
+.logo {
+    margin-left: 15px;
+    margin-top: 10px;
+}
+
+.headerin {
+    padding: 2px 3px;
+    background: #a0b3d6;
+    box-shadow: 2px 2px 1px #444;
+    -moz-box-shadow: 2px 2px 1px #444;
+    -webkit-box-shadow: 2px 2px 1px #444;
+    position: relative;
+    z-index: 1;
+}
+
+.ieShadow {
+    _width: 215px;
+    _height: 160px;
+    filter: progid:DXImageTransform.Microsoft.Blur(pixelradius=6);
+    -ms-filter: "progid:DXImageTransform.Microsoft.Blur(pixelradius=6)";
+    background-color: #444 \9;
+    position: absolute;
+    left: 5px;
+    top: 5px;
+    right: -5px;
+    bottom: -5px;
+}
+
+.bill_table {
+
+}
+
+.bill_table thead tr {
+    font-size: 16px;
+    color: #888888;
+}
+
+.bill_table tr .number1 {
+    font-size: 16px;
+    color: #eea236;
+}
+
+ul li .active {
+    color: #eea236;
+}
+
+.money1_invoice {
+    color: #eea236;
+}
+
+.invoice_table {
+    color: GrayText;
+}
+
+.no_horizontal_pad {
+    padding-left: 1px;
+    padding-right: 1px;
+}
+
+.default_hide {
+    display: none;
+}
+
+.Invoice_Address_Choosen {
+    border: #fedea1 solid thin;
+    background-color: #fffbf5;
+}
+
+.Invoice_Address_Unchoosen {
+    border: white;
+    background-color: white;
+}
+
+.Invoice_Address {
+    padding-top: 9px;
+    padding-bottom: 9px;
+    height: 60px
+}
+
+.Invoice_Address_Choosen .xmx {
+    color: #ffb52e;
+}
+
+#leftSidebar .list-group-item {
+    background-color: #2e2e2e;
+    color: #fff;
+    border-bottom: 1px solid #242424;
+    border-left: 0px;
+    border-right: 0px;
+    border-top: 0px solid #242424;
+    border-radius: 0px;
+    height: 46px;
+    padding-top: 15px;
+    #border-color: #242424;
+}
+
+#leftSidebar a.list-group-item:focus, a.list-group-item:hover, button.list-group-item:focus, button.list-group-item:hover {
+    background-color: #FFb52e;
+    color: #FFb52e;
+}
+
+#leftSidebar .list-group-item.active, .list-group-item.active:focus, .list-group-item.active:hover {
+    text-shadow: 0px -0px 0px #286090;
+    background-image: linear-gradient(to bottom, #FFb52e 0px, #ffb52e 100%);
+    background-repeat: repeat-x;
+    border-color: #2B669A;
+    color: #000000;
+
+}
+
+#first_menu.list-group-item.active {
+    border-top: 0px;
+    box-shadow: inset 0px 2px 5px #e0a028;
+}
+
+.main_body {
+    box-shadow: inset 0px 2px 5px #ddd;
+    background-color: #f5f5f5;
+    padding: 2px;
+    padding-bottom: 0px;
+    font-weight: 200;
+
+}
+
+.page-title {
+    font-size: 12px;
+}
+
+.breadcumbs {
+    font-size: 12px;
+    color: #666;
+}
+
+.top_links {
+    width: 100px;
+    font-size: 14px;
+    color: #777;
+    padding: 20px;
+    display: inline;
+    align: center;
+    list-style-type: none;
+
+}
+
+.child_main_body {
+    padding: 14px 15px;
+    padding-bottom: 30px;
+    background-color: #fff;
+    margin: 0px 20px;
+}
+
+.child_main_head {
+    padding: 14px 23px;
+
+}
+
+.child_title, .child_title1 {
+    font-size: 14px;
+    padding-bottom: 10px;
+    line-height: 200%
+}
+
+.child_title2 {
+    color: #b2b2b2;
+    font-size: 12px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    line-height: 200%
+
+}
+
+.fixed-table-container {
+    border: 1px solid #eee;
+    border-bottom: 0px;
+}
+
+.fixed-table-container.table {
+    border: 0px solid #ddd;
+    margin-bottom: 0 !important;
+    border-collapse: collapse !important;
+    border-radius: 0px;
+}
+
+.fixed-table-container .table > thead > tr > th {
+    height: 0;
+    padding: 0;
+    margin: 0;
+    border-left: 0px solid #dddddd;
+    border-bottom: 1px solid #ffffff;
+!important;
+}
+
+.fixed-table-container thead th .th-inner {
+    font-size: 14px;
+    background-color: #f3f3f3;
+    text-align: left;
+    line-height: 45px;
+    padding: 0px;
+    padding-left: 15px;
+}
+
+.fixed-table-container tbody td {
+    border-left: 0px solid #dddddd;
+    color: #333;
+}
+
+.fixed-table-container tr td {
+    text-align: left;
+}
+
+.fixed-table-container tbody tr td {
+    line-height: 30px !important;
+    text-align: left;
+    padding-left: 15px !important;
+}
+
+.fixed-table-container .table > tbody > tr > td, .table > tbody > tr > th, .table > tfoot > tr > td, .table > tfoot > tr > th, .table > thead > tr > td, .table > thead > tr > th {
+    padding: 8px;
+    line-height: 1.42857;
+    vertical-align: top;
+    border-top: 1px dashed #DDD;
+}
+
+.bootstrap-table .table, .bootstrap-table .table > tbody > tr > td, .bootstrap-table .table > tbody > tr > th, .bootstrap-table .table > tfoot > tr > td, .bootstrap-table .table > tfoot > tr > th, .bootstrap-table .table > thead > tr > td {
+    padding: 8px !important;
+    padding-left: 15px !important;
+}
+
+.page-list button {
+    font-size: 12px;
+    color: #666;
+}
+
+.fixed-table-footer {
+    margin-top: 50px;
+    padding-top: 50px;
+}
+
+.fixed-table-pagination .pagination-detail, .fixed-table-pagination div.pagination {
+    margin-top: 15px;
+}
+
+.fixed-table-container a {
+    color: #ffb52e;
+}
+
+.form_datetime label {
+    margin-top: 10px;
+}
+
+/*@font-face {*/
+/*font-family: 'fontello';*/
+/*src: url('../font/fontello.eot?98270808');*/
+/*src: url('../font/fontello.eot?98270808#iefix') format('embedded-opentype'),*/
+/*url('../font/fontello.woff?98270808') format('woff'),*/
+/*url('../font/fontello.ttf?98270808') format('truetype'),*/
+/*url('../font/fontello.svg?98270808#fontello') format('svg');*/
+/*font-weight: normal;*/
+/*font-style: normal;*/
+/*}*/
+
+/*图标字体*/
+@font-face {
+    font-family: 'fontello';
+    src: url('../font/fontello.eot');
+    src: url('../font/fontello.eot') format('embedded-opentype'),
+    url('../font/fontello.woff') format('woff'),
+    url('../font/fontello.ttf') format('truetype'),
+    url('../font/fontello.svg') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* Chrome hack: SVG is rendered more smooth in Windozze. 100% magic, uncomment if you need it. */
+/* Note, that will break hinting! In other OS-es font will be not as sharp as it could be */
+/*
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+  @font-face {
+    font-family: 'fontello';
+    src: url('../font/fontello.svg?67010176#fontello') format('svg');
+  }
+}
+*/
+
+[class^="icon-"]:before, [class*=" icon-"]:before {
+    font-family: "fontello";
+    font-style: normal;
+    font-weight: normal;
+    speak: none;
+
+    display: inline-block;
+    text-decoration: inherit;
+    width: 1em;
+    margin-right: .2em;
+    text-align: center;
+    /* opacity: .8; */
+
+    /* For safety - reset parent styles, that can break glyph codes*/
+    font-variant: normal;
+    text-transform: none;
+
+    /* fix buttons height, for twitter bootstrap */
+    line-height: 1em;
+
+    /* Animation center compensation - margins should be symmetric */
+    /* remove if not needed */
+    margin-left: .2em;
+
+    /* you can be more comfortable with increased icons size */
+    /* font-size: 120%; */
+
+    /* Font smoothing. That was taken from TWBS */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+
+    /* Uncomment for 3D effect */
+    /* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
+}
+
+.icon-account_d:before {
+    content: '\e800';
+}
+
+.icon-bill:before {
+    content: '\e801';
+}
+
+.icon-account_det:before {
+    content: '\e802';
+}
+
+.icon-child_m:before {
+    content: '\e803';
+}
+
+.icon-pay_r:before {
+    content: '\e804';
+}
+
+.icon-child_pay:before {
+    content: '\e805';
+}
+
+.icon-invoice:before {
+    content: '\e806';
+}
+
+.icon-date:before {
+    content: '\e807';
+}
+
+.icon-empty:before {
+    content: '\e808';
+}
+
+.icon-recharge:before {
+    content: '\e809';
+}
+
+.menu-icon {
+    font-family: "fontello";
+    font-style: normal;
+    font-weight: normal;
+    speak: none;
+
+    display: inline-block;
+    text-decoration: inherit;
+    width: 1em;
+    margin-right: .2em;
+    text-align: center;
+    /* opacity: .8; */
+
+    /* For safety - reset parent styles, that can break glyph codes*/
+    font-variant: normal;
+    text-transform: none;
+
+    /* fix buttons height, for twitter bootstrap */
+    line-height: 1em;
+
+    /* Animation center compensation - margins should be symmetric */
+    /* remove if not needed */
+    margin-left: .2em;
+    margin-right: 15px;
+    /* You can be more comfortable with increased icons size */
+    /* font-size: 120%; */
+
+    /* Font smoothing. That was taken from TWBS */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+
+    /* Uncomment for 3D effect */
+    /* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
+}
+
+.menu-item {
+    padding-left: 10px;
+}
+
+#table_invoice_body_modal th, #table_invoice_body_modal td {
+    text-align: center;
+}
+
+#table_invoice_body_modal th {
+    text-align: center;
+    background-color: #f3fbfe;
+}
+
+a {
+    cursor: pointer;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+label {
+    padding-right: 5px !important;
+    font-weight: normal !important;
+    font-size: 16px;
+}
+
+.form-group label {
+    font-weight: normal !important;
+    font-size: 12px !important;
+    color: #666;
+}
+
+.headbar_modal_invoice {
+    background-color: #2e2e2e;
+    height: 40px;
+    line-height: 40px;
+    margin-bottom: 20px;
+    color: #fff;
+    font-size: 16px;
+}
+
+.modalbody_invoice {
+    font-size: 12px;
+}
+
+/*.invoice_form_label{*/
+/*color:#666;*/
+/*}*/
+
+.form-group_invoice {
+    height: 32px;
+    line-height: 32px;
+}
+
+.text_red {
+    color: red;
+}
+
+.modal-title {
+    color: #fff;
+    font-size: 14px;
+    margin-top: -5px;
+}
+
+.modal-header {
+    background-color: #2e2e2e;
+    height: 40px;
+}
+
+/*按钮*/
+
+.modal-dialog .modal-content .modal-footer .row .col-sm-6 #cancel_apply, #cancel_in_modal2, #cancel_in_modal3, #discount_close_model {
+    text-shadow: none;
+    color: #fff;
+    padding: 3px 30px;
+    border-radius: 2px;
+    border: 1px solid #141414;
+    background-color: #2e2e2e;
+    border-bottom: 2px solid #171717;
+}
+
+.modal-dialog .modal-content .modal-footer .row .col-sm-6 #Do_Apply, #confirm_cancel_apply, #confirm_invoice_apply, #discount_confirm_model {
+    color: #fff;
+    padding: 3px 30px;
+    border-radius: 2px;
+    border: 1px solid #faa300;
+    background-color: #ffb52e;
+    border-bottom: 2px solid #e6a429;
+}
+
+body {
+    font-size: 13px;
+}
+
+.jconfirm.white .jconfirm-box {
+    width: 300px;
+}
+
+.jconfirm .jconfirm-box div.content {
+    padding: 20px 45px;
+    text-align: center;
+}
+
+button.close {
+    background-color: #2e2e2e;
+}
+
+.close {
+    color: #fff;
+    opacity: 1;
+}
+
+.close:hover, .close:focus {
+    color: #fff;
+    opacity: 1;
+}
+
+/*覆盖bootstrap分页的样式*/
+.dropdown-menu > .active > a, .dropdown-menu > .active > a:focus, .dropdown-menu > .active > a:hover {
+    background-color: #ffb52e;
+    background-image: -webkit-linear-gradient(top, #337ab7 0, #2e6da4 100%);
+    background-image: -o-linear-gradient(top, #337ab7 0, #2e6da4 100%);
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#337ab7), to(#2e6da4));
+    background-image: linear-gradient(to bottom, #ffb52e 0, #ffb52e 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff337ab7', endColorstr='#ff2e6da4', GradientType=0);
+    background-repeat: repeat-x;
+}
+
+.pagination > .active > a, .pagination > .active > a:focus, .pagination > .active > a:hover, .pagination > .active > span, .pagination > .active > span:focus, .pagination > .active > span:hover {
+    z-index: 2;
+    color: #fff;
+    cursor: default;
+    background-color: #ffb52e;
+    border-color: #ffb52e;
+}
+
+.pagination > .active > a, .pagination > .active > a:focus, .pagination > .active > a:hover, .pagination > .active > span, .pagination > .active > span:focus, .pagination > .active > span:hover {
+    z-index: 2;
+    color: #2e2e2e;
+    cursor: default;
+    background-color: #ffb52e;
+    border-color: #ffb52e;
+}
+
+.pagination > li > a, .pagination > li > span {
+    position: relative;
+    float: left;
+    padding: 6px 12px;
+    margin-left: 0px;
+    margin-right: 4px;
+    line-height: 1.42857143;
+    color: #2e2e2e;
+    text-decoration: none;
+    background-color: #fff;
+    border: 1px solid #ddd;
+}
+
+.pagination > li > a:hover {
+    color: #2e2e2e;
+}
+
+.pagination > li:last-child > a, .pagination > li:last-child > span {
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+}
+
+.pagination > li:first-child > a, .pagination > li:first-child > span {
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
+}
+
+/*end overriding of bootstrap theme*/
+
+.jconfirm-box {
+    transition-duration: 0.4s;
+    transition-timing-function: cubic-bezier(0.27, 1.12, 0.32, 1.5);
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.jconfirm .jconfirm-box div.title {
+    font-size: 16px;
+    font-weight: normal;
+    font-family: inherit;
+    padding: 0px 14px 0px;
+    height: 40px;
+    line-height: 40px;
+    background-color: #2e2e2e;
+    margin-bottom: 10px;
+    color: #fff;
+}
+
+.jconfirm.white .jconfirm-box .buttons {
+    margin-left: auto;
+    margin-right: auto;
+    width: 216px;
+    height: 46px;
+    float: none;
+}
+
+.jconfirm-box .buttons button:nth-child(2) {
+    color: #fff;
+    padding: 3px 25px;
+    border-radius: 2px;
+    border: 1px solid #141414;
+    background-color: #2e2e2e;
+    border-bottom: 2px solid #171717;
+    float: left;
+}
+
+.jconfirm-box .buttons button:first-child {
+    color: #fff;
+    padding: 3px 25px;
+    border-radius: 2px;
+    border: 1px solid #faa300;
+    background-color: #ffb52e;
+    border-bottom: 2px solid #e6a429;
+    float: right;
+}
+
+.jconfirm.white .jconfirm-box .buttons button.btn-default {
+    box-shadow: none;
+    color: white;
+}
+
+.jconfirm.white .jconfirm-box .buttons button {
+    background-image: none;
+    text-transform: uppercase;
+    font-size: 14px;
+    font-weight: normal;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, .2);
+    -webkit-transition: background .1s;
+    transition: background .1s;
+    color: white;
+}
+
+.jconfirm.white .jconfirm-box {
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+    margin-top: 200px !important;
+}
+
+/*覆盖bootstrap border-radius*/
+.modal-content {
+    border-radius: 0px;
+}
+
+.middle_btn {
+    position: relative;
+    right: 50px;
+}
+
+.form-group_invoice label, .form-group_invoice input, .form-group_invoice textarea {
+    margin-bottom: 10px;
+}
+
+.hint {
+
+    margin-top: -10px;
+    height: 30px;
+    line-height: 30px;
+}
+
+.colorbox-no-yes {
+    text-align: center;
+    margin-bottom: 14px;
+}
+
+.colorbox-no-yes >button:first-child, .black_cancel {
+    text-shadow: none;
+    color: #fff;
+    padding: 3px 30px;
+    border-radius: 2px;
+    border: 1px solid #141414;
+    background-color: #2e2e2e;
+    border-bottom: 2px solid #171717;
+    margin-right:14px
+}
+
+.colorbox-no-yes >button:nth-child(2), .yellow_confirm {
+    color: #fff;
+    padding: 3px 30px;
+    border-radius: 2px;
+    border: 1px solid #faa300;
+    background-color: #ffb52e;
+    border-bottom: 2px solid #e6a429;
+    margin-left:14px
+}

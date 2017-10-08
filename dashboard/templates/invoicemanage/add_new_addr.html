@@ -1,0 +1,76 @@
+
+  <script>
+      $(function (){
+            initComplexArea('seachprov', 'seachcity', 'seachdistrict', area_array, sub_array, '0', '0', '0');
+        });
+
+        //得到地区码
+        function getAreaID(){
+            var area = 0;
+            if($("#seachdistrict").val() != "0"){
+                area = $("#seachdistrict").val();
+            }else if ($("#seachcity").val() != "0"){
+                area = $("#seachcity").val();
+            }else{
+                area = $("#seachprov").val();
+            }
+            return area;
+        }
+
+
+        //根据地区码查询地区名
+        function getAreaNamebyID(areaID){
+            var areaName = "";
+            if(areaID.length == 2){
+                areaName = area_array[areaID];
+            }else if(areaID.length == 4){
+                var index1 = areaID.substring(0, 2);
+                areaName = area_array[index1] + " " + sub_array[index1][areaID];
+            }else if(areaID.length == 6){
+                var index1 = areaID.substring(0, 2);
+                var index2 = areaID.substring(0, 4);
+                areaName = area_array[index1] + " " + sub_array[index1][index2] + " " + sub_arr[index2][areaID];
+            }
+            return areaName;
+        };
+  </script>
+  <div class="form-group form-group_invoice" style="margin-bottom:5px">
+      <label for="receiver_name" class="col-sm-3 text-right"><span class="text_red">*</span>&nbsp;收件人姓名</label>
+      <div class="col-sm-8"><input class="form-control" id="receiver_name" maxlength="14" onblur="check_null(this, this.value)"></div>
+  </div>
+  <div class="col-sm-offset-3 col-sm-8 row hint" style="display: none;"><span class="text_red">*收件人姓名不能为空</span>&nbsp;</div>
+  <div class="form-group form-group_invoice" style="margin-bottom:5px">
+      <label for="seachprov" class="col-sm-3 text-right" style="margin-bottom: 8px"><span class="text_red">*</span>&nbsp;收件地址</label>
+      <div class="col-sm-8" style="margin-bottom: 8px">
+        <select id="seachprov" name="seachprov" onChange="changeComplexProvince(this.value, sub_array, 'seachcity', 'seachdistrict');"></select>&nbsp;&nbsp;
+        <select id="seachcity" name="homecity" onChange="changeCity(this.value,'seachdistrict','seachdistrict');"></select>&nbsp;&nbsp;
+        <span id="seachdistrict_div"><select id="seachdistrict" name="seachdistrict"></select></span>
+      </div>
+  </div>
+  <div class="form-group form-group_invoice">
+      <div class="col-sm-offset-3 col-sm-8"><input class="form-control" id="street" placeholder="街道地址" onblur="check_null(this, this.value)"></div>
+  </div>
+  <div class="col-sm-offset-3 col-sm-8 row hint" style="display: none;"><span class="text_red">*街道地址不能为空</span>&nbsp;</div>
+  <div class="form-group form-group_invoice">
+      <label for="mobile" class="col-sm-3 text-right"><span class="text_red">*</span>&nbsp;手机号码</label>
+      <div class="col-sm-8"><input class="form-control" id="mobile" onblur="check_mobile(this, this.value)" maxlength="20"></div>
+  </div>
+  <div class="col-sm-offset-3 col-sm-8 row hint" style="display: none;"><span class="text_red">*手机号码只能为数字</span>&nbsp;</div>
+  <div class="form-group form-group_invoice row">
+      <label for="district_num" class="col-sm-3 text-right">电话号码</label>
+      <div class="col-sm-8">
+          <div class="row">
+          <div class="col-sm-3"><input class="form-control" id="district_num" placeholder="区号" onblur="check_num1()" maxlength="5"></div>
+          <div class="col-sm-5"><input class="form-control" id="work_num" placeholder="号码" onblur="check_num1()" maxlength="12"></div>
+          <div class="col-sm-4"><input class="form-control" id="forward" placeholder="分机号" onblur="check_num1()" maxlength="6"></div>
+          </div>
+          <div class="col-sm-8 row hint" id="phone_num_hit" style="display: none"><span class="text_red">*电话号码不能为非数字</span>&nbsp;</div>
+      </div>
+  </div>
+  <div class="form-group form-group_invoice" style="margin-bottom:10px">
+      <div class="clearfix visible-sm"></div>
+      <label for="zip" class="col-sm-3 text-right">邮政编码</label>
+      <div class="col-sm-3"><input class="form-control" id="zip" maxlength="6" onblur="check_num(this,this.value)"></div>
+  </div>
+  <div class="col-sm-offset-3 col-sm-8 row hint" style="display: none;"><span class="text_red">*邮政编码不能为非数字</span>&nbsp;</div>
+

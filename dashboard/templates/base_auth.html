@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+{% block title %}{% trans "Login" %}{% endblock %}
+
+{% block body_id %}splash{% endblock %}
+
+{% block content %}
+  {% include 'auth/_login.html' %}
+{% endblock %}
+
+{% block footer %}
+  {% include '_login_footer.html' %}
+{% endblock %}
+</body>
+</html>

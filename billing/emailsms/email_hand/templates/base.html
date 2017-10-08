@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>STcloud云计算</title>
+    <style type="text/css">
+        .receiver{
+            text-align: left;
+        }
+        .title{
+            text-align: center;
+        }
+        .content{
+            margin-top: 5px;
+            margin-left:50px ;
+            margin-right:10px ;
+            margin-bottom: 5px;
+        }
+        .autograph{
+            margin-left:600px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+{% block body %}
+    <div class="receiver">
+        {% block receiver %}
+            <h3>
+                【STcloud云】尊敬的用户{{ receiver.username }}：
+            </h3>
+        {% endblock %}
+    </div>
+    <div class="title">
+        {% block title %}
+            <h2>{{title}}</h2>
+        {% endblock %}
+    </div>
+    <div class="content">
+        {% block content %}
+            {% for item in para_list %}
+                <p>item</p>>
+            {% endfor %}
+        {% endblock %}
+    </div>
+    <div class="autograph">
+        {% block autograph %}
+            <h5>{{ sender.username }}</h5>
+            <h5>{{ senday }}</h5>
+            <h5>{{ sender.sign }}</h5>
+        {% endblock %}
+    </div>
+{% endblock %}
+</body>
+</html>

@@ -1,0 +1,40 @@
+<div>
+	<form class="form-inline row search_combo" role="form">
+        <div style="margin-left:20px;margin-right:20px;padding-right: 10px;padding-left: 10px;padding-top: 10px;
+        color: #E69100;background-color: #fff4e2;height:10px;">
+        </div>
+		<div class="form-group" style="padding-right: 30px;padding-left: 30px;width:45%;padding-top: 20px;">
+			<label style="width: 120px;">账户类型:</label> 
+			<input id="account_type_key" type="hidden" value="{{type.key}}">
+			<label id='account_type'>{{type.value}}</label>
+		</div>
+		<div id="upgrade_credit" class="form-group" style="padding-right: 0px;padding-left: 30px;width:45%;padding-top: 20px;">
+			<label style="width: 120px;vertical-align: bottom;">升级信用账户:</label><input id="upgradecreditaccount"type="checkbox" onclick="upgradecredit()">
+		</div>
+		<hr>
+		<div id ="credit_line_set"class="form-group" style="padding-right: 30px;padding-left: 30px;padding-top: 20px;">
+			<label style="width: 120px;">信用额度:</label> <input id="credit_line_set_num" class="form-control"for="number"
+				id="" value="" size="10">
+		</div>
+	</form>
+</div>
+<script>
+function upgradecredit(){
+	if($("input[type='checkbox']:checked").length)
+		$("#credit_line_set").show()
+	else
+		$("#credit_line_set").hide()
+}
+$(document).ready(function(){
+	var account_type=$("#account_type").html()
+	if(account_type=='信用账户'){
+		$("#upgrade_credit").hide()
+		$("#credit_line_set").show()
+		$('#credit_line_set_num').val({{credit_line}})
+	}
+	if(account_type=='普通账户'){
+		$("#upgrade_credit").show()
+		$("#credit_line_set").hide()
+	}
+})
+</script>

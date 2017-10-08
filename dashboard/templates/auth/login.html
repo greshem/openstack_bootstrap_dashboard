@@ -1,0 +1,87 @@
+﻿{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>登录</title>
+        <link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}" />
+    </head>
+    <body>
+    	<div class="header">
+    		<div class="headerbar">
+    			<div class="header-logo">
+    				<img src="{% static 'images/login/login_logo.png' %}" />
+    			</div>
+    			<div class="header-welcome">
+    				<span>你好，欢迎来到cloud平台！</span>
+    				<span><img src="{% static 'images/login/login_tel.png' %}" />400-222-910</span>
+    			</div>
+    		</div>
+    	</div>
+		<div class="main">
+			<div class="mainframe">
+				<img style="position: absolute;" src="{% static 'images/login/login_bg.png' %}" />
+				<div class="login-frame">
+					<div class="main-title">
+						<div style="float:left;font-size:16px;">登录平台</div>
+						<div style="float:right;font-size:12px;">
+							<span>没有账号</span>
+							<a href="#" style="text-decoration: underline;">立即注册</a>
+						</div>
+					</div>
+					<div class="clearfix"></div>
+					<form action="{%url 'login'%}" method="POST" id="login-form">
+					    <div id="main-login" class="main-login">
+							{% csrf_token %}
+							{{ form.as_p }}
+							{{ next }}
+					    </div>
+						<!-- div class="login-verify">
+							<input id="verifycode" style="float: left;width: 170px;" type="text" placeholder="请输入密码验证" />
+							<input id="createcode"  type="button"  />
+							<div class="clearfix"></div>
+							<p></p>
+						</div-->
+					    <div class="main-button" onclick="login()">
+						       <span >登录</span>
+					    </div>
+					    <input type="hidden" name="next" value="{{ next }}">
+					</form>
+				</div>
+			</div>
+			
+		</div>
+		<div class="site_foot">    
+			<div class="site_foot_wrap">      
+               
+
+
+				<div class="site_foot_report">
+					<a class="site_foot_report_link site_foot_report_2" href="http://net.china.com.cn/index.htm" target="_blank">不良信息举报中心</a>
+					<a class="site_foot_report_link site_foot_report_3" href="http://www.miibeian.gov.cn" target="_blank">经营性网站备案信息</a>
+					<a class="site_foot_report_link site_foot_report_4" href="http://www.bj.cyberpolice.cn/index.jsp" target="_blank">网络110报警服务</a>
+				</div>    
+			</div>  
+		</div>
+		<script src="{% static 'js/jquery.min.js' %}" type="text/javascript"></script>
+		<script type="text/javascript" src="{% static 'js/login.js' %}"></script>
+    </body>
+    
+	<script type="text/javascript">
+		$(document).ready(function(){ 
+            $("#main-login p label:first-child").remove();
+            $("#main-login p label:last-child").remove();
+            $("#main-login p:eq(0)").wrap("<div class='login-name'/>");
+            $("#id_username").attr("placeholder","请输入用户名");
+            $("#id_password").attr("placeholder","请输入密码");
+            $("#main-login p:eq(1)").wrap("<div class='login-psw'/>");
+            $("#id_password").unwrap();
+            $("#id_username").unwrap();
+        });
+		function login(){
+			$("#login-form").submit();
+		}
+	</script>
+</html>

@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="row search_combo">
+        <form  class="form-inline form-horizontal" role='form' onSubmit="return table_filter(this)">
+            <label for="usernamelike" style="font-size:12px!important; color:#666">用户名</label>
+            <input id="usernamelike" name="usernamelike" class="form-control" type="text" style="height: 34px">
+            <label for="amount_to_search" style="font-size:12px!important; color:#666; margin-left: 20px">金额</label>
+            <select id="amount_to_search" name="amount_to_search" class="form-control">
+                <option value="all">全部</option>
+                <option value="0-500">0-500</option>
+                <option value="500-1000">500-1000</option>
+                <option value="1000-5000">1000-5000</option>
+                <option value="5000+">5000以上</option>
+            </select>
+            <div class="form-group" style="margin-left: 20px">
+                <label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;查询区间</label>&nbsp;&nbsp;
+                <div class="input-group date form_datetime col-md-4"  data-link-field="dtp_input1">
+                    <input class="form-control" size="16"  type="text" value=""  readonly style="background-color: #fff; width: 100px; border-right: none;">
+                    <span class="input-group-addon" style="background-color: #fff;border-left: none;border-right: none;padding-top: 4px;"><span class="glyphicon icon-empty"></span></span>
+                    <span class="input-group-addon" style="background-color: #fff;"><span class="icon-date glyphicon-th"></span></span>
+                </div>
+                <input type="hidden" id="dtp_input1" name="started_at" value="" />
+                <span>—</span>
+                <div class="input-group date form_datetime col-md-4"  data-link-field="dtp_input2">
+                    <input class="form-control" size="16" type="text" value="" readonly style="background-color: #fff; width: 100px; border-right: none;">
+                    <span class="input-group-addon" style="background-color: #fff;border-left: none;border-right: none;padding-top: 4px;"><span class="glyphicon icon-empty"></span></span>
+                    <span class="input-group-addon" style="background-color: #fff;"><span class="icon-date glyphicon-th"></span></span>
+                </div>
+                <input type="hidden" id="dtp_input2" name="ended_at" value="" />
+            </div>
+
+            <button class="btn btn-default" type="submit" style="margin-right: 20px">查询</button>
+        </form>
+    </div>
+    <div class="row" style="margin-bottom: 20px">
+    代充值总额：{{ totalamount | floatformat:2 }} 元
+    </div>
+
+    <div class="row">
+        <table id="getInsteadRechargeLog" class="table" data-url="{{root_url}}/center/prepareRechargeData"
+               data-side-pagination="server" data-pagination="true"
+               data-page-list="[5,10,20,50,100]" data-search="false">
+            <thead>
+            <tr>
+                <th data-field="username" data-align="left">用户名</th>
+                <th data-field="amount" data-formatter="money_format" data-align="left">充值金额</th>
+                <th data-field="pay_at" data-formatter="date_format_time" data-align="left">充值时间</th>
+                <th data-field="remark" data-align="left">备注</th>
+            </tr>
+            </thead>
+        </table>
+        <script>
+            $("#getInsteadRechargeLog").bootstrapTable({
+                'onPageChange':function(number, size){
+                },
+                'queryParams':function (params) {
+                    s_data = $('form').serializeArray();
+                    for (key in s_data) {
+                        item = s_data[key];
+                        var1 = item["name"];
+                        var2 = item["value"];
+                        params[var1] = var2;
+                    }
+                    return params
+                }
+                });
+
+            function table_filter(current){
+                $("#getInsteadRechargeLog").bootstrapTable('refresh', {
+                    'onPageChange':function(number, size){
+                    }
+                });
+                return false;
+            }
+
+            function money_format(value){
+                var m ;
+                m = parseFloat(value).toFixed(2)
+                return '￥'+m
+            }
+
+            $(document).ready(function() {
+
+                $('.form_datetime').datetimepicker({
+                    language: 'zh-CN',
+                    format: 'yyyy-mm-dd',
+                    weekStart: 1,
+                    todayBtn: 1,
+                    autoclose: 1,
+                    todayHighlight: 1,
+                    startView: 2,
+                    minView: 2,
+                    forceParse: 0
+                });
+            });
+        </script>
+    </div>
+{% endblock %}

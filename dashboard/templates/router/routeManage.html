@@ -1,0 +1,152 @@
+{% extends "ECloud.html" %} 
+{% load staticfiles %} 
+
+{% block insert_js_css %}
+<script src="{% static 'js/router_route.js' %}"></script>
+<script type="text/javascript">
+function operation_formatter(value,row){
+	var name=row.name
+	if(row.name.replace(/\(/g,"%28").startwith('%28')&&row.name.replace(/\)/g,"%29").endwith('%29')){
+		name=''
+	}
+	if(row.device_owner=='network:router_gateway'){
+		return "<a href='#' onclick='router_route_edit_form(\""+row.id+"\",\""+name+"\",\""+row.admin_state+"\");'>编辑端口</a>"
+	}
+	return "<a href='#' onclick='router_route_edit_form(\""+row.id+"\",\""+name+"\",\""+row.admin_state+"\");'>编辑端口</a>&nbsp;&nbsp;<a href='#' onclick='router_route_delete_action(\"{% url 'router_port_delete' %}\",\""+row.id+"\",\"{{ router_id }}\");'>删除端口</a>"
+}
+</script>
+{% endblock %} 
+{% block title %}
+<span class="menu-num-blue">网络</span>
+<span class="menu-num-blue">/ {{ router_name }}</span>
+<span class="menu-num-defult">/ 路由管理</span>
+{% endblock %} 
+
+{% block center_body %}
+<div class="row">
+	<div class="col-lg-12 col-md-12">
+		<div class="panel panel-default" style="padding: 0px;">
+			<div class="panel-heading heading-default">
+				<h4 class="panel-title">路由管理</h4> 
+			<div class="panel-body" style="padding: 30px 0px;">
+			<div class="col-lg-7 col-md-7 ">
+					<li class="fl mb20">
+						<div class="btn-group">
+							<button type="button" class="btn btn-5"onclick="router_route_create_form();">
+								<img src="{% static 'images/Icon_createcloud.png' %}" />&nbsp;&nbsp;&nbsp;创建路由
+							</button>
+						</div>
+					</li>
+					<li class="fl mb20">
+						<div class="btn-group">
+							<button type="button"
+								class="btn btn-5 dropdown-toggle tp-icon-admin"
+								data-toggle="dropdown" aria-haspopup="true"
+								aria-expanded="false">
+								<img src="{% static 'images/Icon_mor.png' %}" />&nbsp;&nbsp;&nbsp;更多操作
+								<span class="caret"></span>
+							</button>
+							<ul id="router_route_meun" class="dropdown-menu dropdown-menu-usermenu">
+								<li id="router_route_delete" class='disabled'><a href="#" onclick="router_route_delete_action('{% url 'router_route_delete' %}','{{ router_id }}');">删除路由</a></li>
+							</ul>
+						</div>
+					</li>
+					<li class="fl mb20">
+						<div class="btn-group">
+							<button type="button" class="btn btn-6" id="btn_router_route_delete" onclick="router_route_delete_action('{% url 'router_route_delete' %}','{{ router_id }}');">
+								<img src="{% static 'images/Icon_delete.png' %}" />&nbsp;&nbsp;&nbsp;删除路由
+							</button>
+						</div>
+					</li>
+				</div>
+				<div class="col-lg-5 col-md-5">
+					<li class="fl mb20">
+						<div class="btn-group">
+							<select id="search_opt" style="margin-right: 10px;height: 32px;">
+							<option value="nexthop">下一跳地址</option>
+							</select>
+							<!-- <button type="button"
+								class="btn btn-6 dropdown-toggle tp-icon-admin"
+								data-toggle="dropdown" aria-haspopup="true"
+								aria-expanded="false">
+								云主机名称 <span class="caret"></span>
+							</button>
+							<ul class="dropdown-menu dropdown-menu-usermenu">
+								<li><a href="#">北京1区</a></li>
+								<li><a href="#">北京2区</a></li>
+								<li><a href="#">北京3区</a></li>
+								<li><a href="#">北京4区</a></li>
+							</ul> -->
+						</div>
+					</li>
+					<li class="fl mr10 mb20">
+						<div class="btn-group">
+							<input id="search_input" type="text" class="form-control" placeholder="请输入" />
+						</div>
+					</li>
+					<li class="fl mb20">
+						<div class="btn-group">
+							<button type="button" class="btn btn-primary" onclick="search();">搜索</button>
+						</div>
+					</li>
+				</div>
+				<table id="router_routeTable" data-locale="zh-CN"
+					data-url="{% url 'router_route_list' %}?router_id={{ router_id }}"
+					data-side-pagination="server" data-width="100"
+					data-pagination="false" data-page-list="[1,5, 10]">
+					<thead>
+						<tr>
+							<th data-checkbox="true"></th>
+							<th data-field="destination">目的CIDR</th>
+							<th data-field="nexthop">下一跳地址</th>
+						</tr>
+					</thead>
+					</table>
+			</div>
+			<!-- panel-body -->
+		</div>
+	</div>
+</div>
+<!-- row -->
+{% endblock %} 
+{% block insert_html %}
+<div class="dialog-example" id="">
+	<div class="modal fade" id="router_route_create_form" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content" >
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-hidden="true">×</button>
+					<h4 class="modal-title" id="myModalLabel">创建路由</h4>
+				</div>
+				<div class="modal-body" >
+					<div class="row">
+							<form action=""class="form-horizontal" role="form" style="padding-top: 30px;padding-left: 10px;padding-bottom: 40px;">
+								<div class="form-group">
+									<label class="col-sm-3 control-label">目的CIDR：</label>
+									<div class="col-sm-6">
+										<input class="form-control" id="router_route_cidr" type="text" autofocus name="router_route_cidr" data-bv-notempty-message="不能为空" placeholder="0.0.0.0/0" autocomplete="off" data-bv-notempty>
+										<input type="hidden" id="router_id" value="{{ router_id }}">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label">下一跳地址：</label>
+									<div class="col-sm-6">
+										<input class="form-control" id="router_route_nexthop" type="text" autofocus name="router_route_nexthop" data-bv-notempty-message="下一跳地址不能为空" data-bv-ip-message="必须为IP地址格式"placeholder="0.0.0.0" autocomplete="off" data-bv-notempty data-bv-ip-ipv4>
+									</div>
+								</div>
+							</form>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-5"aria-hidden="true"data-dismiss="modal">取消</button>
+					<button type="button" class="btn btn-5"aria-hidden="true" onclick="router_route_create_action('{% url 'router_route_create' %}');">确定</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	
+	</div>
+{% endblock %}

@@ -1,0 +1,766 @@
+{% extends "ECloud.html" %} 
+{% load staticfiles %} 
+
+{% block insert_js_css %}
+<script src="{% static 'js/instance.js' %}"></script>
+{% endblock %} 
+{% block title %}
+<span class="menu-num-blue">云主机</span>
+<span class="menu-num-defult">/ 云主机管理</span>
+{% endblock %} 
+
+{% block center_body %}
+<div class="row" id="instance_body">
+	<div class="col-lg-12 col-md-12">
+		<div class="panel panel-default" style="padding: 0px;">
+			<div class="panel-heading heading-default">
+				<h4 class="panel-title">云主机管理</h4>
+			</div>
+			<div class="panel-body" style="padding: 30px 0px;">
+				<div class="col-lg-7 col-md-7 ">
+					<li class="fl mb20">
+						<div class="btn-group">
+							<button type="button" class="btn btn-5"onclick="instance_create_form('{% url 'instance_image_list' %}','{% url 'region_list' %}','{% url 'instance_billing' %}','{% url 'instance_network_list' %}');">
+								<img src="{% static 'images/Icon_createcloud.png' %}" />&nbsp;&nbsp;&nbsp;创建云主机
+							</button>
+						</div>
+					</li>
+					<li class="fl mb20">
+						<div class="btn-group">
+							<button type="button"
+								class="btn btn-5 dropdown-toggle tp-icon-admin"
+								data-toggle="dropdown" aria-haspopup="true"
+								aria-expanded="false">
+								<img src="{% static 'images/Icon_mor.png' %}" />&nbsp;&nbsp;&nbsp;更多操作
+								<span class="caret"></span>
+							</button>
+							<ul id="instance_meun" class="dropdown-menu dropdown-menu-usermenu">
+								<li id="instance_binging_floatingip"class='disabled'><a href="#" onclick="floating_ip_form('{% url 'region_list' %}','{% url 'floatingip_billing' %}','{% url 'instance_ports' %}','{% url 'floatingip_noassociate_list' %}','{% url 'floatingip_pools_list' %}');">绑定浮动ip</a></li>
+								<li id="instance_unbinding_floatingip"class='disabled'><a href="#" onclick="instance_disassociate('{% url 'instance_disassociate' %}');">解绑浮动ip</a></li>
+								<li id="instance_edit"class='disabled'><a href="#" onclick="edit_form();">编辑</a></li>
+								<li id="instance_start"class='disabled'><a href="#"onclick="instance_start('{% url 'instance_start' %}');">开机</a></li>
+								<li id="instance_shutdown"class='disabled'><a href="#" onclick="instance_stop('{% url 'instance_stop' %}');">关机</a></li>
+								<li id="instance_reboot"class='disabled'><a href="#" onclick="instance_reboot('{% url 'instance_reboot' %}');">重启</a></li>
+								<li id="instance_console"class='disabled'><a href="#" onclick="instance_console('{% url 'instance_console' %}');">控制台</a></li>
+								<li id="instance_securitygroup"class='disabled'><a href="#" onclick="securitygroup_edit_form('{% url 'securitygroup_nopage_list' %}','{% url 'instance_securitygroup' %}');">安全组管理</a></li>
+								<li id="instance_console"class='disabled'><a href="#" onclick="instance_resize_form('{% url 'region_list' %}','{% url 'instance_billing' %}');">调整大小</a></li>
+								<li id="instance_snapshot"class='disabled'><a href="#" onclick="snapshot_form();">创建快照</a></li>
+								<li id="instance_delete" class='disabled'><a href="#" onclick="instance_delete('{% url 'instance_delete' %}');">删除</a></li>
+								<li id="instance_detail"class='disabled'><a href="#" onclick="detail_form();">详情</a></li>
+							</ul>
+						</div>
+					</li>
+					<li class="fl mb20">
+						<div class="btn-group">
+							<button type="button" class="btn btn-6" id="btn_instance_delete" onclick="instance_delete('{% url 'instance_delete' %}');">
+								<img src="{% static 'images/Icon_delete.png' %}" />&nbsp;&nbsp;&nbsp;删除云主机
+							</button>
+						</div>
+					</li>
+				</div>
+				<div class="col-lg-5 col-md-5">
+					<li class="fl mb20">
+						<div class="btn-group">
+							<select id="search_opt" style="margin-right: 10px;height: 32px;">
+							<option value="name">云主机名称</option>
+							<option value="status">状态</option>
+							</select>
+							<!-- <button type="button"
+								class="btn btn-6 dropdown-toggle tp-icon-admin"
+								data-toggle="dropdown" aria-haspopup="true"
+								aria-expanded="false">
+								云主机名称 <span class="caret"></span>
+							</button>
+							<ul class="dropdown-menu dropdown-menu-usermenu">
+								<li><a href="#">北京1区</a></li>
+								<li><a href="#">北京2区</a></li>
+								<li><a href="#">北京3区</a></li>
+								<li><a href="#">北京4区</a></li>
+							</ul> -->
+						</div>
+					</li>
+					<li class="fl mr10 mb20">
+						<div class="btn-group">
+							<input id="search_input" type="text" class="form-control" placeholder="请输入云主机名称" />
+						</div>
+					</li>
+					<li class="fl mb20">
+						<div class="btn-group">
+							<button type="button" class="btn btn-primary" onclick="search();">搜索</button>
+						</div>
+					</li>
+				</div>
+				<table id="instanceTable" data-locale="zh-CN"
+					data-url="{% url 'instance_list' %}"
+					data-side-pagination="server" data-width="100"
+					data-pagination="true" data-page-list="[1,5, 10]">
+					<thead>
+						<tr>
+							<th data-checkbox="true"></th>
+							<th data-field="name">名称</th>
+							<th data-field="memory_mb">内存(MB)</th>
+							<th data-field="vcpus">CPU</th>
+							<th data-field="root_gb">系统盘(GB)</th>
+							<th data-field="network">网络</th>
+							<th data-field="status">状态</th>
+							<th data-field="power_state">电源状态</th>
+							<th data-field="image_name">镜像</th>
+							<th data-field="created" data-formatter="date_format_time">创建时间</th>
+						</tr>
+					</thead>
+					</table>
+			</div>
+			<!-- panel-body -->
+		</div>
+	</div>
+</div>
+<!-- row -->
+{% endblock %} 
+{% block insert_html %}
+<div class="dialog-example" id="instance_create_form">
+	<!-- first step dialog start-->
+		<div class="modal fade" id="firststep" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	   		<div class="modal-dialog modal-lg">
+		   		<div class="modal-content">
+		      		<div class="modal-header">
+		         		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+		         		<h4 class="modal-title" id="myModalLabel">创建云主机</h4>
+		    		</div>
+		      		<div class="modal-body">
+		      			<div class="row" style="margin-right:0px;">
+							<div class="col-lg-7 col-md-7" style="border-right: 1px solid #eee;padding-right:0px;">
+								<div class="left-content-head">
+									<div class="content-progress">
+										<div class="progress-img step1">
+										</div>
+										<ul>
+											<li class="active" style="left:-8px;">选择印象</li>
+											<li style="left:135px;">配置选择</li>
+											<li style="right:135px;">网络设置</li>
+											<li style="right:-15px;">云主机设置</li>
+										</ul>
+									</div>
+								</div>
+								<div class="clearfix"></div>
+								<div class="left-content-body">
+									<form class="form-horizontal num-fs12 frame-list frame-first">
+										<div class="form-group ">
+											<div class="col-sm-12">
+												<label for="zone" class="control-label">可用区域：</label>
+												<label for="zone" class="control-label ml20" id="region_description"></label>
+												<input type="hidden" id="region_id">
+											</div>
+										</div>
+										<div class="form-group">
+											<div class="col-sm-12">
+											<label for="opratesystem" class="control-label fl">操作系统：</label>
+												<ul id="operate-os">
+													<li class="fl ml20 text-center active">
+														<div class="system-icon">
+															<span data-toggle="tooltip" data-placement="top" title="CentOS" class="os-family os-windows"></span>
+														</div>
+													</li>
+													<li class="fl ml10 text-center">
+														<div class="system-icon">
+															<span data-toggle="tooltip" data-placement="top" title="Windows" class="os-family os-windows"></span>
+														</div>
+													</li>
+													<li class="fl ml10 text-center">
+														<div class="system-icon">
+															<span data-toggle="tooltip" data-placement="top" title="snapshot" class="os-family os-windows"></span>
+														</div>
+													</li>
+													<li class="fl ml10 text-center">
+														<div class="system-icon">
+															<span data-toggle="tooltip" data-placement="top" title="other" class="os-family os-windows"></span>
+														</div>
+													</li>
+												<ul>
+											</div>
+										</div>
+										<div class="list-group">
+											<a href="#" class="list-group-item"><input type="hidden" value=""><span>CentOS 5.8 32bit</span><span class="fr">ID:centos58*86a</span></a>
+											<a href="#" class="list-group-item"><span>CentOS 5.8 32bit</span><span class="fr">ID:centos58*86a</span></a>
+											<a href="#" class="list-group-item"><span>CentOS 5.8 32bit</span><span class="fr">ID:centos58*86a</span></a>
+											<a href="#" class="list-group-item"><span>CentOS 5.8 32bit</span><span class="fr">ID:centos58*86a</span></a>
+											<a href="#" class="list-group-item"><span>CentOS 5.8 32bit</span><span class="fr">ID:centos58*86a</span></a>
+										</div>
+									</form>
+									<form class="form-horizontal num-fs12 frame-list frame-second" style="display:none;">
+										<div class="form-group">
+											<div class="col-md-12 col-sm-12 mb10">
+												<label for="zone" class="control-label">主机类型：</label>
+											</div>
+											<div class="col-md-12 col-sm-12">
+												<ul class="master-type">
+													<li class="active">性能型</li>
+												</ul>
+											</div>
+										</div>
+										<div class="form-group">
+											<div class="col-md-12 col-sm-12 mb10">
+												<label for="opratesystem" class="control-label">CPU:</label>
+											</div>
+											<div class="col-md-12 col-sm-12">
+												<ul class="cpu-type">
+													<li class="active"><span>1</span>核</li>
+													<li ><span>2</span>核</li>
+													<li ><span>4</span>核</li>
+													<li ><span>8</span>核</li>
+													<li ><span>16</span>核</li>
+													<li ><span>32</span>核</li>
+												</ul>
+											</div>
+										</div>
+										<div class="form-group">
+											<div class="col-md-12 col-sm-12 mb10">
+												<label for="opratesystem" class="control-label">内存:</label>
+											</div>
+											<div class="col-md-12 col-sm-12">
+												<ul class="mic-type">
+													<li class="active"><span>1</span>G</li>
+													<li ><span>2</span>G</li>
+													<li ><span>4</span>G</li>
+													<li ><span>8</span>G</li>
+													<li ><span>16</span>G</li>
+													<li ><span>32</span>G</li>
+													<li ><span>64</span>G</li>
+													<li ><span>128</span>G</li>
+												</ul>
+											</div>
+										</div>
+										<div class="form-group">
+											<div class="col-md-12 col-sm-12 mb10">
+												<label for="opratesystem" class="control-label">硬盘:</label>
+											</div>
+											<div class="col-md-12 col-sm-12">
+												<ul class="disk-type">
+													<li ><span>1</span>G</li>
+													<li class="active"><span>10</span>G</li>
+													<li ><span>20</span>G</li>
+													<li ><span>30</span>G</li>
+													<li ><span>40</span>G</li>
+													<li ><span>50</span>G</li>
+													<li ><span>100</span>G</li>
+													<li ><span>150</span>G</li>
+												</ul>
+											</div>
+										</div>
+										<div class="form-group">
+											<div class="col-md-12 col-sm-12 mb10">
+												<label for="opratesystem" class="control-label">临时磁盘:</label>
+											</div>
+											<div class="col-md-12 col-sm-12">
+												<ul class="ephemeral-disk-type">
+													<li class="active"><span>0</span>G</li>
+													<li ><span>1</span>G</li>
+													<li ><span>10</span>G</li>
+													<li ><span>20</span>G</li>
+													<li ><span>40</span>G</li>
+													<li ><span>80</span>G</li>
+													<li ><span>100</span>G</li>
+													<li ><span>150</span>G</li>
+												</ul>
+											</div>
+										</div>
+										<div class="form-group">
+											<div class="col-md-12 col-sm-12 mb10">
+												<label for="opratesystem" class="control-label">swap磁盘:</label>
+											</div>
+											<div class="col-md-12 col-sm-12">
+												<ul class="swap-disk-type">
+													<li class="active"><span>0</span>G</li>
+													<li ><span>1</span>G</li>
+													<li ><span>10</span>G</li>
+													<li ><span>20</span>G</li>
+													<li ><span>40</span>G</li>
+													<li ><span>80</span>G</li>
+													<li ><span>100</span>G</li>
+													<li ><span>150</span>G</li>
+												</ul>
+											</div>
+										</div>
+									</form>
+									<form class="form-horizontal num-fs12 frame-list frame-third display-none" >
+										<div class="form-group">
+											<div class="col-md-12 col-sm-12 mb10">
+												<label for="zone" class="control-label fl">类型：</label>
+												<ul class="master-type">
+													<li class="active">私有网络</li>
+												</ul>
+											</div>
+										</div>
+										<div class="form-group">
+											<div class="col-md-12 col-sm-12 mb10">
+												<label for="opratesystem" class="control-label fl"></label>
+												<span class="cloud-tip"><p>将主机加入自定义私有网络中，能够实现不同私有网络中资源的完全隔离。</p>
+												<p>选择私有网络创建的云主机，可在不同的私有网络之间移动。</p>
+												<p>私有网络需要与虚拟路由协同工作，并通过端口转发方式访问外网。</p>
+												</span>
+											</div>
+										</div>
+										<div class="form-group">
+											<div class="col-md-12 col-sm-12 mb10">
+												<label for="opratesystem" class="control-label fl">子网:</label>
+												<div class="fl" style="min-width:200px;">
+													<select class="form-control" id="network_list_select">
+													</select>
+												</div>
+											</div>
+										</div>
+									</form>
+									<form class="form-horizontal num-fs12 frame-list frame-last display-none" id="instance_create_detail">
+										<div class="form-group">
+											<label for="inputPassword" class="col-lg-3 col-sm-3 control-label">主机名称</label>
+											<div class="col-lg-6 col-sm-6">
+												<input type="text" class="form-control"id="instance_name_input" name="instance_name_input" data-bv-notempty-message="主机名称不能为空"placeholder="请输入主机名称" autocomplete="off" data-bv-notempty>
+											</div>
+										</div>
+										<div class="form-group">
+											<label for="inputPassword" class="col-lg-3 col-sm-3 control-label">主机数量</label>
+											<div class="col-lg-4 col-sm-4">
+												<input type="text" class="form-control" for='number' id="instance_count_input" name="instance_count_input" data-bv-notempty-message="主机数量不能为空" data-bv-between-message="主机数量在1到10台之间" value='1'data-bv-between-max="10" data-bv-between-min="1" data-bv-between data-bv-notempty>
+											</div>
+										</div>
+										<div class="form-group">
+											<label for="inputPassword" class="col-lg-3 col-sm-3 control-label" style="white-space:nowrap;">SSH登录方式</label>
+											<div class="col-lg-6 col-sm-6">
+												<div class="rdio rdio-primary fl mr15">
+												  <input type="radio" id="male" value="m" name="gender" required>
+												  <label for="male">SSH密钥</label>
+												</div><!-- rdio -->
+												<div class="rdio rdio-primary fl">
+												  <input type="radio" value="f" id="female" name="gender">
+												  <label for="female">密码</label>
+												</div><!-- rdio -->
+												<label class="error" for="gender"></label>
+											</div>
+										</div>
+										<div class="form-group">
+											<label for="inputPassword" class="col-lg-3 col-sm-3 control-label">用户名</label>
+											<div class="col-lg-6 col-sm-6">
+												<input type="text" value="root" class="form-control" disabled>
+											</div>
+										</div>
+										<div class="form-group">
+											<label for="inputPassword" class="col-lg-3 col-sm-3 control-label">密码</label>
+											<div class="col-lg-6 col-sm-6">
+												<input type="password"  class="form-control" id="instance_root_pass">
+											</div>
+											<div class="col-lg-3 col-sm-3 checkbox">
+												<label>
+													<input type="checkbox" value="">显示密码
+												</label>
+											</div>
+											<span class="col-md-6 col-md-offset-3 col-md-6 col-md-offset-3 control-label ">密码至少8位，并包括大小写字母及数字</span>
+										</div>
+										
+									</form>
+								</div>
+							</div>
+							<div class="col-lg-5 col-md-5">
+								<form class="form-horizontal mt20 num-fs12">
+									<div class="form-group" style="margin-right:0px;">
+										<div class="col-sm-12">
+											<label for="zone" class="control-label" style="font-size:16px">配置详情</label>
+										</div>
+										<div class="col-sm-12 mt10" >
+											<table class="table table-striped table-bordered" style="background:#fff;">
+												<tbody>
+													<tr>
+													  <td style="padding-left:30px;color:#7692a8;">映像</td>
+													  <td style="padding-left:30px;"><span id="image_name_select"></span><input id="image_id_select" type="hidden"></td>
+													</tr>
+													<tr>
+													  <td style="padding-left:30px;color:#7692a8;">主机类型</td>
+													  <td style="padding-left:30px;">性能型</td>
+													</tr>
+													<tr>
+													  <td style="padding-left:30px;color:#7692a8;">CPU</td>
+													  <td style="padding-left:30px;"><span id="vcpus_select">1</span>核</td>
+													</tr>
+													<tr>
+													  <td style="padding-left:30px;color:#7692a8;">内存</td>
+													  <td style="padding-left:30px;"><span id="memory_select">1</span>G</td>
+													</tr>
+													<tr>
+													  <td style="padding-left:30px;color:#7692a8;">硬盘</td> 
+													  <td style="padding-left:30px;"><span id="disk_select">1</span>G</td>
+													</tr>
+													<tr>
+													  <td style="padding-left:30px;color:#7692a8;">临时磁盘</td> 
+													  <td style="padding-left:30px;"><span id="ephemeral_disk_select">0</span>G</td>
+													</tr>
+													<tr>
+													  <td style="padding-left:30px;color:#7692a8;">swap磁盘</td> 
+													  <td style="padding-left:30px;"><span id="swap_disk_select">0</span>G</td>
+													</tr>
+													<!-- <tr>
+													  <td style="padding-left:30px;color:#7692a8;">名称</td>
+													  <td style="padding-left:30px;">Ancher</td>
+													</tr>
+													<tr>
+													  <td style="padding-left:30px;color:#7692a8;">Hostname</td>
+													  <td style="padding-left:30px;">good</td>
+													</tr>
+													<tr>
+													  <td style="padding-left:30px;color:#7692a8;">数量</td>
+													  <td style="padding-left:30px;">1</td>
+													</tr> -->
+													<tr style="height:40px;">
+													  <td> </td>
+													  <td> </td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+										<div class="col-sm-12">
+											<label for="zone" class="control-label">总价格：</label>
+											<label for="zone" class="control-label" style="font-size:20px;color:#ff6602;"><span id="price_hour"></span></label>
+											<label for="zone" class="control-label ml20" style="font-size:12px;color:#888;">每小时(合 <span id="price_year"></span>每月)</label>
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+		      		</div>
+		      		<div class="modal-footer">
+						<div class="button-first">
+							<button id="next_firststep" type="button" class="btn btn-5" >下一步</button>
+						</div>
+						<div class="button-second display-none">
+							<button id="back_secondstep" type="button" class="btn btn-5 mr15" >上一步</button>
+							<button id="next_secondstep" type="button" class="btn btn-5" onclick="instance_flavor_create_action('{% url 'instance_flavor_create' %}');">下一步</button>
+						</div>
+						<div class="button-third display-none">
+							<button id="back_thirdstep" type="button" class="btn btn-5 mr15" >上一步</button>
+							<button id="next_thirdstep" type="button" class="btn btn-5" >下一步</button>
+						</div >
+						<div class="button-last display-none">
+							<button id="back_laststep" type="button" class="btn btn-5 mr15" >上一步</button>
+							<button id="creat" type="button" class="btn btn-7" onclick="instance_create_action('{% url 'instance_create' %}');">创建</button>
+						</div>
+		      		</div>
+		   		</div>
+	   		</div>
+		</div><!-- first step dialog end -->
+		
+	
+	
+	
+
+<div class="modal fade" id="instance_edit_form" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog" id="instance_edit_modal_dialog" >
+			<div class="modal-content" >
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-hidden="true">×</button>
+					<h4 class="modal-title" id="myModalLabel">编辑</h4>
+				</div>
+				<div class="modal-body" >
+					<div class="row">
+						<form action="" style="padding-top: 50px;padding-left: 50px;padding-bottom: 50px;">
+							<div class="form-group">
+							<label class="col-sm-3 control-label">云主机名称：</label>
+							<div class="col-sm-6">
+								<input class="form-control" id="instance_name_edit" type="text" autofocus name="instance_name_edit" data-bv-notempty-message="云主机名称不能为空"placeholder="请输入云主机名称" autocomplete="off" data-bv-notempty>
+							</div>
+							</div>
+						</form>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-5"aria-hidden="true"data-dismiss="modal">取消</button>
+					<button type="button" class="btn btn-5"aria-hidden="true" onclick="edit_form('{% url 'instance_update' %}');">确定</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+<!-- editsecuritygroup dialog start-->
+		<div class="modal fade" id="securitygroup_edit_form" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	   		<div class="modal-dialog modal-lg">
+		   		<div class="modal-content unitt">
+		      		<div class="modal-header">
+		         		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+		         		<h4 class="modal-title" id="myModalLabel">编辑安全组</h4>
+		    		</div>
+		      		<div class="modal-body">
+		      			<div class="row">
+							<div class="body-group">
+								<div class="text-center mb30">您目前有1个安全组，您还可以添加更多的安全组哦~</div>
+								<ul id="selectsecuritygroup">
+									<li>defult</li>
+									<li>ancher</li>
+									<li>ancher</li>
+									<li>congradulation</li>
+									<li class="active">test</li>
+									<li>good</li>
+									<li>defult</li>
+									<li>push</li>
+									<li class="active">default</li>
+									<li>ball</li>
+									<li>defult</li>
+									<li>pull</li>
+								</ul>
+							</div>
+						</div>
+		      		</div>
+		      		<div class="modal-footer">
+						<button id="creat" type="button" class="btn btn-7 mr15"  onclick="securitygroup_edit_action('{% url 'instance_securitygroup_update' %}');">确定</button>
+		         		<button type="button" data-dismiss="modal" aria-hidden="true" class="btn btn-8" >取消</button>
+		      		</div>
+		   		</div>
+	   		</div>
+		</div><!-- editsecuritygroup step dialog end -->
+		<!-- bingIP dialog start-->
+		<div class="modal fade" id="floating_ip_form" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	   		<div class="modal-dialog">
+		   		<div class="modal-content">
+		      		<div class="modal-header">
+		         		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+		         		<h4 class="modal-title" id="myModalLabel">绑定浮动IP</h4>
+		    		</div>
+		      		<div class="modal-body">
+		      			<div class="row">
+							<div class="body-group" style="padding: 30px 60px;">
+								<div class="text-center mb30">请为选中的云主机或端口选择要绑定的IP</div>
+								<form class="form-horizontal">
+									<div class="form-group">
+										<div class="col-md-12 col-sm-12 mb10">
+											<label for="inputPassword" class="col-md-3 col-sm-3 control-label">IP地址:</label>
+											<div class="col-md-7 col-sm-7">
+												<select class="form-control" id="associate_ip" name="associate_ip" placeholder="请选择IP地址" data-bv-notempty-message="IP地址不能为空！" data-bv-notempty>
+													<option value='0'>net01</option>
+													<option value='1'>net02</option>
+													<option value='2'>net03</option>
+													<option value='3'>net04</option>
+													<option value='4'>net05</option>
+												</select>
+											</div>
+										</div>
+										<div class="col-md-12 col-sm-12 mb10 display-none">
+											<label cfor="inputPassword" class="col-md-3 col-sm-3 control-label">资源池：</label>
+											<div class="col-md-7 col-sm-7" id="floatingip_pool">
+											</div>
+										</div>
+										<div class="col-md-12 col-sm-12 mb10">
+											<label for="inputPassword" class="col-md-3 col-sm-3 control-label">是否分配:</label>
+											<div class="col-md-7 col-sm-7">
+												<label class="radio-inline mr30">
+													<input type="radio" name="isDistribution" value="yes">是
+												</label>
+												<label class="radio-inline">
+													<input type="radio" name="isDistribution" value="no" checked="checked">否
+												</label>
+											</div>
+										</div>
+										<div class="col-md-12 col-sm-12 mb10">
+											<label for="inputPassword" class="col-md-3 col-sm-3 control-label">待连接的端口:</label>
+											<div class="col-md-7 col-sm-7">
+												<select class="form-control" id="associate_port" placeholder="请选择IP地址" data-bv-notempty-message="端口不能为空！" data-bv-notempty>
+													<option value='0'>net01</option>
+													<option value='1'>net02</option>
+													<option value='2'>net03</option>
+													<option value='3'>net04</option>
+													<option value='4'>net05</option>
+												</select>
+											</div>
+										</div>
+										<div class="col-sm-12">
+											<label for="zone" class="col-md-3 col-sm-3 control-label">总价格：</label>
+											<label for="zone" class="control-label" style="font-size:20px;color:#ff6602;"><span id="floatingip_price_hour"></span></label>
+											<label for="zone" class="control-label ml20" style="font-size:12px;color:#888;">每小时(合 <span id="floatingip_price_year"></span>每月)</label>
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+		      		</div>
+		      		<div class="modal-footer">
+						<button id="creat" type="button" class="btn btn-7 mr15" onclick="floating_ip_action('{% url 'instance_associate' %}');">确定</button>
+		         		<button type="button" data-dismiss="modal" aria-hidden="true" class="btn btn-8" >取消</button>
+		      		</div>
+		   		</div>
+	   		</div>
+		</div><!-- bingIP step dialog end -->
+		
+		<!-- edit cloudpc dialog start-->
+		<div class="modal fade" id="instance_resize_form" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	   		<div class="modal-dialog modal-lg">
+		   		<div class="modal-content">
+		      		<div class="modal-header">
+		         		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+		         		<h4 class="modal-title" id="myModalLabel">更改配置</h4>
+		    		</div>
+		      		<div class="modal-body">
+		      			<div class="row">
+							<div class="col-lg-7 col-md-7" style="border-right: 1px solid #eee;padding-right:0px;">
+								<div class="left-content-body">
+									<form class="form-horizontal num-fs12 frame-list frame-second">
+										<div class="form-group">
+											<div class="col-md-12 col-sm-12 mb10">
+												<label for="opratesystem" class="control-label tx-left">CPU:</label>
+											</div>
+											<div class="col-md-12 col-sm-12 mb15">
+												<ul class="cpu-type">
+													<li class="active"><span>1</span>核</li>
+													<li ><span>2</span>核</li>
+													<li ><span>4</span>核</li>
+													<li ><span>8</span>核</li>
+													<li ><span>16</span>核</li>
+													<li ><span>32</span>核</li>
+												</ul>
+											</div>
+											<div class="col-md-12 col-sm-12">
+												<div class="dbtitle">
+													<label for="opratesystem" class="control-label dbtype fl">最小值1核</label>
+													<input for="number1" type="number"id="instance_resize_cpu_num" name="instance_resize_cpu_num"class="form-control row-index fl" value="2"style="width:80px;" data-bv-notempty-message="CPU不能为空" data-bv-between-message="CPU在1到32台之间" data-bv-between-max="32" data-bv-between-min="1" data-bv-between data-bv-notempty>
+													<label for="opratesystem" class="control-label dbtype fl">最大值32核</label>
+												</div>
+												<label for="opratesystem" class="control-label tx-left ml10">G</label>
+											</div>
+										</div>
+										<div class="form-group">
+											<div class="col-md-12 col-sm-12 mb10">
+												<label for="opratesystem" class="control-label tx-left">内存:</label>
+											</div>
+											<div class="col-md-12 col-sm-12 mb15">
+												<ul class="mic-type">
+													<li class="active"><span>1</span>G</li>
+													<li ><span>2</span>G</li>
+													<li ><span>4</span>G</li>
+													<li ><span>6</span>G</li>
+													<li ><span>8</span>G</li>
+													<li ><span>10</span>G</li>
+													<li ><span>12</span>G</li>
+													<li ><span>14</span>G</li>
+													<li ><span>16</span>G</li>
+													<li ><span>32</span>G</li>
+													<li ><span>64</span>G</li>
+												</ul>
+											</div>
+											<div class="col-md-12 col-sm-12">
+												<div class="dbtitle">
+													<label for="opratesystem" class="control-label dbtype fl">最小值1G</label>
+													<input for="number1" type="number" id="instance_resize_memory_num"name="instance_resize_memory_num" class="form-control row-index fl" value="4" style="width:80px;" data-bv-notempty-message="内存不能为空" data-bv-between-message="内存在1到64台之间" data-bv-between-max="64" data-bv-between-min="1" data-bv-between data-bv-notempty>
+													<label for="opratesystem" class="control-label dbtype fl">最大值64G</label>
+												</div>
+												<label for="opratesystem" class="control-label tx-left ml10">G</label>
+											</div>
+										</div>
+										<div class="form-group">
+											<div class="col-md-12 col-sm-12 mb10">
+												<label for="opratesystem" class="control-label fl tx-left">硬盘:</label>
+											</div>
+											<div class="col-md-12 col-sm-12 mb15">
+												<ul class="disk-type">
+													<li class="active"><span>1</span>G</li>
+													<li ><span>2</span>G</li>
+													<li ><span>4</span>G</li>
+													<li ><span>8</span>G</li>
+													<li ><span>10</span>G</li>
+													<li ><span>16</span>G</li>
+													<li ><span>20</span>G</li>
+													<li ><span>32</span>G</li>
+													<li ><span>50</span>G</li>
+													<li ><span>64</span>G</li>
+													<li ><span>100</span>G</li>
+													<li ><span>128</span>G</li>
+													<li ><span>200</span>G</li>
+													<li ><span>256</span>G</li>
+												</ul>
+											</div>
+											<div class="col-md-12 col-sm-12">
+												<div class="dbtitle">
+													<label id="instance_resize_disk_num_label" for="opratesystem" class="control-label dbtype fl">最小值1G</label>
+													<input id="instance_resize_disk_num" name="instance_resize_disk_num" for="number1" type="number" class="form-control row-index fl" value="16" style="width:80px;" data-bv-notempty-message="硬盘不能为空" data-bv-between-message="硬盘在1G到256G台之间" data-bv-between-max="256" data-bv-between-min="1" data-bv-between data-bv-notempty>
+													<label for="opratesystem" class="control-label dbtype fl">最大值256G</label>
+												</div>
+												<label for="opratesystem" class="control-label tx-left ml10">G</label>
+											</div>
+										</div>
+									</form>
+								</div>
+							</div>
+							<div class="col-lg-5 col-md-5">
+								<form class="form-horizontal mt20 num-fs12">
+									<div class="form-group" style="margin-right:0px;">
+										<div class="col-sm-12">
+											<label for="zone" class="control-label" style="font-size:16px">配置详情</label>
+										</div>
+										<div class="col-sm-12 mt10" >
+											<table class="table table-striped table-bordered" style="background:#fff;">
+												<tbody>
+													<tr>
+													  <td style="padding-left:30px;color:#7692a8;">CPU</td>
+													  <td style="padding-left:30px;"><span id="instance_resize_cpus">2</span>核</td>
+													</tr>
+													<tr>
+													  <td style="padding-left:30px;color:#7692a8;">内存</td>
+													  <td style="padding-left:30px;"><span id="instance_resize_memory">1</span>G</td>
+													</tr>
+													  <td style="padding-left:30px;color:#7692a8;">硬盘</td>
+													  <td style="padding-left:30px;"><span id="instance_resize_disk">60</span>G</td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+										<div class="col-sm-12">
+											<label for="zone" class="control-label">总价格：</label>
+											<label for="zone" class="control-label" style="font-size:20px;color:#ff6602;"><span id="resize_price_hour"></span></label>
+											<label for="zone" class="control-label ml20" style="font-size:12px;color:#888;">每小时(合 <span id="resize_price_year"></span>每月)</label>
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+		      		</div>
+		      		<div class="modal-footer">
+						<button id="creat" type="button" class="btn btn-7 mr15" onclick="instance_resize_action('{% url 'instance_resize' %}');" >确定</button>
+		         		<button type="button" data-dismiss="modal" aria-hidden="true" class="btn btn-8" >取消</button>
+		      		</div>
+		   		</div>
+	   		</div>
+		</div><!-- edit cloudpc dialog end -->
+		
+		
+
+		<div class="modal fade" id="snapshot_form" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	   		<div class="modal-dialog">
+		   		<div class="modal-content">
+		      		<div class="modal-header">
+		         		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+		         		<h4 class="modal-title" id="myModalLabel">创建快照</h4>
+		    		</div>
+		      		<div class="modal-body">
+		      			<div class="row">
+							<div class="body-group" style="padding: 30px 60px;">
+								<div class="text-center mb30">创建云主机的快照，并显示在镜像列表中</div>
+								<form class="form-horizontal">
+									<div class="form-group">
+										<div class="col-md-12 col-sm-12 mb10">
+											<label for="inputPassword" class="col-md-3 col-sm-3 control-label">快照名称:</label>
+											<div class="col-md-7 col-sm-7">
+												<input type="text" id="snapshot_name" name="snapshot_name" data-bv-notempty-message="快照名称不能为空！" data-bv-notempty>
+											</div>
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+		      		</div>
+		      		<div class="modal-footer">
+						<button id="creat" type="button" class="btn btn-7 mr15" onclick="snapshot_action('{% url 'instance_snapshot_create' %}');">确定</button>
+		         		<button type="button" data-dismiss="modal" aria-hidden="true" class="btn btn-8" >取消</button>
+		      		</div>
+		   		</div>
+	   		</div>
+		</div>
+
+
+</div>
+{% endblock %}

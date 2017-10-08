@@ -1,0 +1,189 @@
+{% extends "ECloud.html" %} 
+{% load staticfiles %} 
+
+{% block insert_js_css %}
+<script src="{% static 'js/securitygroup.js' %}"></script>
+<script type="text/javascript">
+function operation_formatter(value, row) {
+    return "<a href='{% url 'securitygrouprule_index' %}?sg_id="+row.id+"'>管理规则</a>"
+}
+</script>
+{% endblock %} 
+{% block title %}
+<span class="menu-num-blue">云主机</span>
+<span class="menu-num-defult">/ 安全组管理</span>
+{% endblock %} 
+
+{% block center_body %}
+<div class="row">
+	<div class="col-lg-12 col-md-12">
+		<div class="panel panel-default" style="padding: 0px;">
+			<div class="panel-heading heading-default">
+				<h4 class="panel-title">安全组管理</h4>
+			</div>
+			<div class="panel-body" style="padding: 30px 0px;">
+				<div class="col-lg-7 col-md-7 ">
+					<li class="fl mb20">
+						<div class="btn-group">
+							<button type="button" class="btn btn-5"onclick="securitygroup_create_form('{% url 'zone_list' %}','{% url 'region_list' %}','{% url 'volumn_billing' %}');">
+								<img src="{% static 'images/Icon_createcloud.png' %}" />&nbsp;&nbsp;&nbsp;创建安全组
+							</button>
+						</div>
+					</li>
+					<li class="fl mb20">
+						<div class="btn-group">
+							<button type="button"
+								class="btn btn-5 dropdown-toggle tp-icon-admin"
+								data-toggle="dropdown" aria-haspopup="true"
+								aria-expanded="false">
+								<img src="{% static 'images/Icon_mor.png' %}" />&nbsp;&nbsp;&nbsp;更多操作
+								<span class="caret"></span>
+							</button>
+							<ul id="securitygroup_meun" class="dropdown-menu dropdown-menu-usermenu">
+								<li id="securitygroup_edit"class='disabled'><a href="#" onclick="securitygroup_edit_form();">编辑安全组</a></li>
+								<li id="securitygroup_delete" class='disabled'><a href="#" onclick="securitygroup_delete_action('{% url 'securitygroup_delete' %}');">删除安全组</a></li>
+							</ul>
+						</div>
+					</li>
+					<li class="fl mb20">
+						<div class="btn-group">
+							<button type="button" class="btn btn-6" id="btn_securitygroup_delete" onclick="securitygroup_delete_action('{% url 'securitygroup_delete' %}');">
+								<img src="{% static 'images/Icon_delete.png' %}" />&nbsp;&nbsp;&nbsp;删除安全组
+							</button>
+						</div>
+					</li>
+				</div>
+				<div class="col-lg-5 col-md-5">
+					<li class="fl mb20">
+						<div class="btn-group">
+							<select id="search_opt" style="margin-right: 10px;height: 32px;">
+							<option value="name">安全组名称</option>
+							</select>
+							<!-- <button type="button"
+								class="btn btn-6 dropdown-toggle tp-icon-admin"
+								data-toggle="dropdown" aria-haspopup="true"
+								aria-expanded="false">
+								云主机名称 <span class="caret"></span>
+							</button>
+							<ul class="dropdown-menu dropdown-menu-usermenu">
+								<li><a href="#">北京1区</a></li>
+								<li><a href="#">北京2区</a></li>
+								<li><a href="#">北京3区</a></li>
+								<li><a href="#">北京4区</a></li>
+							</ul> -->
+						</div>
+					</li>
+					<li class="fl mr10 mb20">
+						<div class="btn-group">
+							<input id="search_input" type="text" class="form-control" placeholder="请输入安全组名称" />
+						</div>
+					</li>
+					<li class="fl mb20">
+						<div class="btn-group">
+							<button type="button" class="btn btn-primary" onclick="search();">搜索</button>
+						</div>
+					</li>
+				</div>
+				<table id="securitygroupTable" data-locale="zh-CN"
+					data-url="{% url 'securitygroup_list' %}"
+					data-side-pagination="server" data-width="100"
+					data-pagination="true" data-page-list="[1,5, 10]">
+					<thead>
+						<tr>
+							<th data-checkbox="true"></th>
+							<th data-field="name">名称</th>
+							<th data-field="description">描述</th>
+							<th data-field=""data-formatter="operation_formatter">操作</th>
+						</tr>
+					</thead>
+					</table>
+			</div>
+			<!-- panel-body -->
+		</div>
+	</div>
+</div>
+<!-- row -->
+{% endblock %} 
+{% block insert_html %}
+<div class="dialog-example" id="">
+<div class="modal fade" id="securitygroup_create_form" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg" >
+			<div class="modal-content" >
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-hidden="true">×</button>
+					<h4 class="modal-title" id="myModalLabel">创建安全组</h4>
+				</div>
+				<div class="modal-body" >
+					<div class="row">
+							<div class="col-sm-7 col-md-7">
+							<form  action=""class="form-horizontal" role="form" style="padding-top: 20px;padding-left: 10px;padding-bottom: 20px;">
+								<div class="form-group">
+									<label class="col-sm-3 control-label">安全组名称：</label>
+									<div class="col-sm-7">
+										<input class="form-control" id="securitygroup_name" type="text" autofocus name="username" data-bv-notempty-message="安全组名称不能为空"placeholder="请输入安全组名称" autocomplete="off" data-bv-notempty>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label">描述：</label>
+									<div class="col-sm-7">
+										<textarea rows="5" cols="36" id='securitygroup_description'></textarea>
+									</div>
+								</div>
+							</form>
+							</div>
+							<div class="col-sm-5 col-md-5" style="padding-top: 20px;padding-left: 10px;padding-bottom: 20px;">
+								<div class="form-group">
+									<label class="col-sm-2 control-label"><strong>说明</strong></label>
+								</div>
+								<div class="form-group" style="padding-top: 20px;padding-right: 20px;">
+									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;安全组是IP过滤规则的集合，可被应用到虚拟机的网络设置中。在安全组创建后，你可以给安全组增加规则。
+								</div>
+							</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-5"aria-hidden="true"data-dismiss="modal">取消</button>
+					<button type="button" class="btn btn-5"aria-hidden="true" onclick="securitygroup_create_action('{% url 'securitygroup_create' %}');">确定</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="modal fade" id="securitygroup_edit_form" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content" >
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-hidden="true">×</button>
+					<h4 class="modal-title" id="myModalLabel">编辑安全组</h4>
+				</div>
+				<div class="modal-body" >
+					<div class="row">
+							<form action=""class="form-horizontal" role="form" style="padding-top: 30px;padding-left: 10px;padding-bottom: 40px;">
+								<div class="form-group">
+									<label class="col-sm-3 control-label">安全组名称：</label>
+									<div class="col-sm-6">
+										<input class="form-control" id="securitygroup_name_edit" type="text" autofocus name="username" data-bv-notempty-message="安全组名称不能为空"placeholder="请输入安全组名称" autocomplete="off" data-bv-notempty>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label">描述：</label>
+									<div class="col-sm-6">
+										<textarea rows="5" cols="38" id='securitygroup_description_edit'></textarea>
+									</div>
+								</div>
+							</form>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-5"aria-hidden="true"data-dismiss="modal">取消</button>
+					<button type="button" class="btn btn-5"aria-hidden="true" onclick="securitygroup_edit_action('{% url 'securitygroup_update' %}');">确定</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	</div>
+{% endblock %}

@@ -1,0 +1,367 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>云管理平台</title>
+		<link rel="stylesheet" type="text/css" href="plugins/bootstrap/css/bootstrap.min.css" />
+		<link rel="stylesheet" type="text/css" href="plugins/bootstrap-table/css/bootstrap-table.min.css" />
+		<link rel="stylesheet" type="text/css" href="plugins/font-awesome/css/font-awesome.min.css" />
+        <link href="css/style.default.css" rel="stylesheet">
+		<link href="css/zone.css" rel="stylesheet">
+
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+        <script src="js/html5shiv.js"></script>
+        <script src="js/respond.min.js"></script>
+        <![endif]-->
+    </head>
+
+    <body>
+        <section>
+
+            <div class="leftpanel">
+
+                <div class="logopanel">
+                    <h1><img src="images/ecloud_logo.png" alt="" /></h1>
+                </div><!-- logopanel -->
+
+                <div class="leftpanelinner">
+
+                    <ul class="nav nav-pills nav-stacked nav-bracket">
+                        <li class="nav-parent"><a href="index.html"><i class="fa fa-home"></i> <span>概述</span></a></li>
+                        <li class="nav-parent nav-active"><a href=""><i class="fa fa-edit"></i> <span>云主机</span></a>
+                            <ul class="children" style="display:block;">
+                                <li class="active"><a href="ECloud.html"> 云主机管理</a></li>
+                                <li ><a href="ECloudmanage.html">云硬盘管理</a></li>
+                                <li><a href="form-validation.html"> 镜像管理</a></li>
+                                <li><a href="form-wizards.html"> 快照管理</a></li>
+                                <li><a href="wysiwyg.html"> 安全组管理</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-parent"><a href=""><i class="fa fa-suitcase"></i> <span>网络</span></a>
+                            <ul class="children">
+                                <li><a href="general-forms.html"> 云主机管理</a></li>
+                                <li><a href="form-layouts.html"> 云硬盘管理</a></li>
+                                <li><a href="form-validation.html"> 镜像管理</a></li>
+                                <li><a href="form-wizards.html"> 快照管理</a></li>
+                                <li><a href="wysiwyg.html"> 安全组管理</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-parent"><a href="tables.html"><i class="fa fa-th-list"></i> <span>管理员</span></a></li>
+                        
+                    </ul>
+                </div><!-- leftpanelinner -->
+            </div><!-- leftpanel -->
+
+            <div class="mainpanel">
+
+                <div class="headerbar">
+
+                    <a class="menutoggle"><i class="fa fa-bars"></i></a>
+					<div class="btn-group">
+						<button type="button" class="btn btn-default dropdown-toggle tp-icon-address" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							<img class="icon-mini" src="images/icon_location.png" />  北京二区 <span class="caret"></span>
+						</button>
+						<ul class="dropdown-menu dropdown-menu-usermenu">
+							<li><a href="#">北京1区</a></li>
+							<li><a href="#">北京2区</a></li>
+							<li><a href="#">北京3区</a></li>
+							<li><a href="#">北京四区</a></li>
+						</ul>
+					</div>
+                    <div class="header-right">
+                        <ul class="headermenu">
+                            <li>
+                                <div class="btn-group">
+                                    <button class="btn btn-default dropdown-toggle tp-icon" data-toggle="dropdown">
+                                        <i class="fa fa-file-text-o" aria-hidden="true"></i> 工单服务
+                                    </button>
+                                </div>
+                            </li>
+							<li>
+								<div style="margin-top:14px;color:#cccccc;">|</div>
+							</li>
+                            <li>
+                                <div class="btn-group">
+                                    <button class="btn btn-default dropdown-toggle tp-icon" data-toggle="dropdown">
+                                        <i class="fa fa-jpy" aria-hidden="true"></i> 费用中心
+                                    </button>
+                                </div>
+                            </li>
+							<li>
+								<div style="margin-top:14px;color:#cccccc;">|</div>
+							</li>
+                            <li>
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-default dropdown-toggle tp-icon-admin" data-toggle="dropdown">
+                                        admin
+                                        <span class="caret"></span>
+										<img src="images/user.png" alt="" />
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-usermenu pull-right">
+                                        <li><a href="profile.html"><i class="glyphicon glyphicon-user"></i> 修改密码</a></li>
+                                        <li><a href="#"><i class="glyphicon glyphicon-cog"></i> 账户设置</a></li>
+                                        <li><a href="#"><i class="glyphicon glyphicon-question-sign"></i> 帮助</a></li>
+                                        <li><a href="signin.html"><i class="glyphicon glyphicon-log-out"></i> 注销</a></li>
+                                    </ul>
+                                </div>
+                            </li>
+                        </ul>
+                    </div><!-- header-right -->
+                </div><!-- headerbar -->
+				<div class="contentpanel">
+					<div class="filemanager-options">
+						<span class="menu-num-blue">概述</span> \ <span class="menu-num-defult">首页</span>
+					</div>
+					<div class="row">
+						<div class="col-lg-7 col-md-7">
+							<div class="panel panel-default" style="padding:0px;">
+								<div class="panel-body">
+									<div class="col-lg-4 col-md-4 col-sm-4 user">
+										<img class="user-icon" src="images/user.png" />
+										<div class="text-center menu-num-defult">
+											Admin
+										</div>
+									</div>
+									<div class="col-lg-8 col-md-8 col-sm-8">
+										<div class="user-acount">
+											 <span> &nbsp;账户余额：</span>
+										</div>
+										<div class="user-acount">
+											<span class="num-fs28 color-3">1200</span>.
+											<span class="num-fs13 color-6">00</span>
+											<span class="num-fs13 color-a7">元</span>
+										</div>
+										<div class="user-acount">
+											<button type="button" class="btn btn-primary">充值</button>
+											<a href="#" class="ml20 mr20 color-blue num-fs13">查看明细</a>
+											<span>|</span>
+											<a href="#" class="ml20 mr20 color-blue num-fs13">费用中心</a>
+										</div>
+									</div>
+								</div>
+							</div><!-- panel -->
+						</div><!-- col-md-6 -->
+						<div class="col-md-5">
+							<div class="panel panel-default" style="padding:0px;">
+								<div class="panel-body">
+									<div class="col-lg-12 col-md-12 col-sm-12">
+										<div class="user-acount">
+											 <span> 工单服务：</span>
+										</div>
+										<div class="user-acount">
+											<span class="num-fs28 color-3">0</span>
+											<span class="num-fs13 color-a7">待办</span>
+										</div>
+										<div class="user-acount" style="padding:15px 10px 26px 25px;">
+											<a href="#" class="mr20 color-blue num-fs13">我的工单</a>
+											<span>|</span>
+											<a href="#" class="ml20 mr20 color-blue num-fs13">提交工单</a>
+										</div>
+									</div>
+								</div>
+							</div><!-- panel -->
+						</div><!-- col-md-6 -->
+					</div><!-- row -->
+					<div class="row">
+						<div class="col-lg-7 col-md-7">
+							<div class="panel panel-default">
+								<div class="panel-heading">
+									<h4 class="panel-title">资源配额使用情况</h4>
+								</div>
+								<div class="panel-body">
+									<ul>
+										<li class="fl ml10 mb10 mr30 mt40 text-center">
+											<div class="bc1 user-icon pd15-10">
+												<img  src="images/Icon_01.png" />
+											</div>
+											<div class="text-center menu-num-defult">
+												云主机
+											</div>
+											<div class="text-center menu-num-defult">
+												4个
+											</div>
+										</li>
+										<li class="fl ml10 mb10 mr30 mt40 text-center">
+											<div class="bc2 user-icon pd15-10">
+												<img  src="images/Icon_02.png" />
+											</div>
+											<div class="text-center menu-num-defult">
+												VCPU数量
+											</div>
+											<div class="text-center menu-num-defult">
+												14个
+											</div>
+										</li>
+										<li class="fl ml10 mb10 mr30 mt40 text-center">
+											<div class="bc3 user-icon pd15-10">
+												<img  src="images/Icon_03.png" />
+											</div>
+											<div class="text-center menu-num-defult">
+												内存
+											</div>
+											<div class="text-center menu-num-defult">
+												28G
+											</div>
+										</li>
+										<li class="fl ml10 mb10 mr30 mt40 text-center">
+											<div class="bc4 user-icon pd15-10">
+												<img  src="images/Icon_04.png" />
+											</div>
+											<div class="text-center menu-num-defult">
+												浮动IP
+											</div>
+											<div class="text-center menu-num-defult">
+												2个
+											</div>
+										</li>
+										<li class="fl ml10 mb10 mr30 mt40 text-center">
+											<div class="bc5 user-icon pd15-10">
+												<img  src="images/Icon_05.png" />
+											</div>
+											<div class="text-center menu-num-defult">
+												安全组
+											</div>
+											<div class="text-center menu-num-defult">
+												5个
+											</div>
+										</li>
+										<li class="fl ml10 mb10 mr30 mt40 text-center">
+											<div class="bc6 user-icon pd15-10">
+												<img  src="images/Icon_06.png" />
+											</div>
+											<div class="text-center menu-num-defult">
+												卷
+											</div>
+											<div class="text-center menu-num-defult">
+												2个
+											</div>
+										</li>
+										<li class="fl ml10 mb10 mr30 mt40 text-center">
+											<div class="bc7 user-icon pd15-10">
+												<img  src="images/Icon_07.png" />
+											</div>
+											<div class="text-center menu-num-defult">
+												云硬盘存储
+											</div>
+											<div class="text-center menu-num-defult">
+												512G
+											</div>
+										</li>
+										<li class="fl ml10 mb10 mr30 mt40 text-center">
+											<div class="bc8 user-icon pd15-10">
+												<img  src="images/Icon_08.png" />
+											</div>
+											<div class="text-center menu-num-defult">
+												路由器
+											</div>
+											<div class="text-center menu-num-defult">
+												2个
+											</div>
+										</li>
+										<li class="fl ml10 mb10 mr30 mt40 text-center">
+											<div class="bc9 user-icon pd15-10">
+												<img  src="images/Icon_09.png" />
+											</div>
+											<div class="text-center menu-num-defult">
+												网络
+											</div>
+											<div class="text-center menu-num-defult">
+												2个
+											</div>
+										</li>
+										<li class="fl ml10 mb10 mr30 mt40 text-center">
+											<div class="bc10 user-icon pd15-10">
+												<img  src="images/Icon_10.png" />
+											</div>
+											<div class="text-center menu-num-defult">
+												防火墙
+											</div>
+											<div class="text-center menu-num-defult">
+												5个
+											</div>
+										</li>
+										<li class="fl ml10 mb10 mr30 mt40 text-center">
+											<div class="bc11 user-icon pd15-10">
+												<img  src="images/Icon_11.png" />
+											</div>
+											<div class="text-center menu-num-defult">
+												vpn
+											</div>
+											<div class="text-center menu-num-defult">
+												2个
+											</div>
+										</li>
+										<li class="fl ml10 mb10 mr30 mt40 text-center">
+											<div class="bc12 user-icon pd15-10">
+												<img  src="images/Icon_12.png" />
+											</div>
+											<div class="text-center menu-num-defult">
+												均衡负载
+											</div>
+											<div class="text-center menu-num-defult">
+												12个
+											</div>
+										</li>
+									<ul>
+								</div>
+							</div><!-- panel -->
+						</div><!-- col-md-6 -->
+						<div class="col-md-5">
+							<div class="panel panel-default">
+								<div class="panel-heading">
+									<h4 class="panel-title">一键初始化</h4>
+								</div>
+								<div class="panel-body">
+									<div class="panel-wd fl pl10 mt10 border-bd border-br">
+										<div class="fc-initialize fl ">
+											<div class="btn-title">
+												初始化就是把变量赋为默认值把控件设为默认状态，把没准备的准备好...
+											</div>
+											<button type="button" class="btn btn-1 mgbtn"><img  src="images/Icon_Refresh.png" />&nbsp;&nbsp;&nbsp;一键初始化网络</button>
+										</div>
+									</div>
+									<div class="panel-wd fl pl20 mt10 border-bd">
+										<div class="fc-initialize">
+											<div class="btn-title">
+												为变量分配空间时，初始化过的变量的初值位于可执行文件代码段数据后...
+											</div>
+											<button type="button" class="btn btn-2 mgbtn"><img  src="images/Icon_Refresh.png" />&nbsp;&nbsp;&nbsp;一件默认初始化</button>
+										</div>
+									</div>
+									<div class="clearfix"></div>
+									<div class="panel-wd fl pl10 pt10 border-br">
+										<div class="fc-initialize fl">
+											<div class="btn-title">
+												在C语言等高级语言中，为每一个变量赋初值被视为良好的编程习惯...
+											</div>
+											<button type="button" class="btn btn-3 mgbtn"><img  src="images/Icon_Refresh.png" />&nbsp;&nbsp;&nbsp;一键初始化VPN</button>
+										</div>
+									</div>
+									<div class="panel-wd fl pl20 pt10">
+										<div class="fc-initialize fl">
+											<div class="btn-title">
+												有助于减少出现Bugs的可能性。因此，是否对不必要的变量初始化依情况而定...
+											</div>
+											<button type="button" class="btn btn-4 mgbtn"><img  src="images/Icon_Refresh.png" />&nbsp;&nbsp;&nbsp;一件初始化LBaa</button>
+										</div>
+									</div>
+								</div>
+							</div><!-- panel -->
+						</div><!-- col-md-6 -->
+					
+				</div><!-- contentpanel -->
+            </div><!-- mainpanel -->
+        </section>
+        <script src="http://scdn.qbcdn.com/web/??lib/jquery/1.12.0/jquery.min.js" type="text/javascript"></script>
+		<script type="text/javascript" src="js/jquery.cookie.js"></script>
+		<script src="plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+        <script src="js/jquery-migrate-1.2.1.min.js"></script>
+        <script src="js/jquery.sparkline.min.js"></script>
+        <script src="js/toggles.min.js"></script>
+
+        <script src="js/custom.js"></script>
+
+    </body>
+</html>

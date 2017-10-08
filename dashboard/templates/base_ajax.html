@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block main_body %}
+    <div class="panel-heading child_main_head" >
+
+        {% block title %}
+            {% for item in title_list %}
+                {% if item.url %}
+                    <a class="breadcumbs" href='{{ root_url }}{{ item.url}}'>
+                        {% ifequal forloop.counter 1 %}
+                            {{ item.name }}
+                        {% else %}
+                            &nbsp;&#47;&nbsp;{{ item.name }}
+                        {% endifequal %}
+                    </a>
+                {% else %}
+                    <span class="breadcumbs">
+	        	{% ifequal forloop.counter 1 %}
+                    {{ item.name }}
+                {% else %}
+                    &nbsp;&#47;&nbsp;{{ item.name }}
+                {% endifequal %}
+                </span>
+                {% endif %}
+            {% endfor %}
+        {% endblock %}
+
+    </div>
+    <div  class="panel-body child_main_body">
+        <div class="container-fluid">
+            <div class="row" style="padding: 10px 6px 0px;">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    {% block content %}
+                    {% endblock %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

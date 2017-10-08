@@ -1,0 +1,134 @@
+{% extends 'colorbox_ajax.html' %}
+{% block title %}
+    基本信息修改
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-lg-3">
+            <label class="pull-right kkk" for="company">公司名</label>
+        </div>
+        <div class="col-lg-9">
+            <input class="form-control" id="company" value="{{ company }}">
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-3">
+            <label class="pull-right kkk" for="company_property">公司性质</label>
+        </div>
+        <div class="col-lg-9">
+            <select id="company_property" class="form-control">
+                <option value="集体企业">集体企业</option>
+                <option value="股份制企业">股份制企业</option>
+                <option value="私营企业">私营企业</option>
+                <option value="个体户">个体户</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-3">
+            <label class="pull-right kkk" for="industry">所属行业</label>
+        </div>
+        <div class="col-lg-9">
+            <select id="industry" class="form-control">
+                <option value="饮食行业">饮食行业</option>
+                <option value="服装行业">服装行业</option>
+                <option value="机械行业">机械行业</option>
+                <option value="金融行业">金融行业</option>
+                <option value="移动互联网行业">移动互联网行业</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-3">
+            <label class="pull-right kkk">客户等级</label>
+        </div>
+        <div class="col-lg-9">
+            <select class="form-control" id="customer_level">
+                <option value="A">A级</option>
+                <option value="B">B级</option>
+                <option value="C">C级</option>
+                <option value="D">D级</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-3">
+            <label class="pull-right kkk">备注</label>
+        </div>
+        <div class="col-lg-9">
+            <textarea class="form-control" id="comment"></textarea>
+        </div>
+    </div>
+
+    <style>
+        .kkk {
+            height: 34px;
+            line-height: 34px;
+        }
+
+        .form-control{
+            width:auto;
+        }
+    </style>
+{% endblock %}
+
+{% block action_script %}
+    <script>
+        $('#company_property').val('{{ customer_info.company_property }}');
+        $('#industry').val('{{ industry }}');
+        $('#customer_level').val('{{ customer_info.customer_level }}');
+
+        $('#confirm_btn').click(function(){
+            var company=$('#company').val();
+            var company_property=$('#company_property').val();
+            var industry=$('#industry').val();
+            var customer_level=$('#customer_level').val();
+            var comment=$('#comment').val();
+
+{#            需要插入输入检测#}
+            if(company==""){
+                $.alert({
+                    title: '提示',
+                    content: '公司名不能为空',
+                    confirmButton: '确认'
+                });
+                return false;
+            }
+
+            if(company=='{{ company }}' && company_property=='{{ customer_info.company_property }}' && industry=='{{ industry }}' && customer_level=='{{ customer_info.customer_level }}'){
+                $.colorbox.close();
+                return false;
+            }
+{#            #}
+            result2= $.ajax({
+                type:'post',
+                url: '{{ root_url }}/manage/info/',
+                data:{
+                    'company': company,
+                    'company_property': company_property,
+                    'industry': industry,
+                    'customer_level': customer_level,
+                    'comment': comment,
+                    'account_id':'{{ account_id }}',
+                    'user_id': '{{ user_id }}',
+                    'origin_company': '{{ company }}'
+                },
+                async: false
+            });
+
+            if(result2.responseText=='ok'){
+                $.colorbox.close();
+                toastr.success('修改基本信息成功')
+                location.href='{{ root_url }}/manage/'
+            }else{
+                $.colorbox.close();
+                toastr.error('修改基本信息失败')
+            }
+        })
+    </script>
+{% endblock %}

@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% block content %}
+    <script type="text/javascript">
+        function detail(account_id, name) {
+            refreshMainContent('{{root_url}}/center/subComsumption/detail?sub_account_id='
+            + account_id + '&name=' + name)
+        }
+        function consumption_history(account_id, name, type) {
+            refreshMainContent('{{root_url}}/center/subComsumption/consumptionhistory?sub_account_id='
+            + account_id + '&name=' + name)
+        }
+        function operation(value, row, index) {
+            url1='{{root_url}}/center/subComsumption/detail?sub_account_id='+ row['account_id'] + '&name=' + row['name'];
+            url2='{{root_url}}/center/subComsumption/consumptionhistory?sub_account_id='+ row['account_id'] + '&name=' + row['name'];
+            return '<span><a href="'+url1+'">详情</a>&nbsp;&nbsp;&nbsp;'
+                    +'<a href="'+url2+ '">历史账单</a></span>'
+        }
+        function type_formatter(value){
+            return constant.account_type[value]
+        }
+        $(".moneyformatter").each(function(){
+            $(this).html("<span class='moneyformatter money1'>"+money_formatter($(this).text())+"</span>")
+        });
+
+    </script>
+    <div class="row search_combo">
+
+        <form class="form-inline" role="form" >
+            <div class="form-group" >
+                <label>账户类型</label>
+                <div class="checkbox" style="padding: 5px">
+                    <input type="checkbox" value="normal"><label style="vertical-align: bottom;padding-left: 5px;">普通账户</label>
+                </div>
+                <div class="checkbox" style="padding: 5px">
+                    <input type="checkbox" value="credit"><label style="vertical-align: bottom;padding-left: 5px;">信用账户</label>
+                </div>
+            </div>
+            <div class="form-group" >
+                <label>账户</label><input type="text" id='subconsum_account' onkeydown='if(event.keyCode==13) return false;' class="form-control" placeholder="">
+            </div>
+            <button type="button" class="btn btn-default" onclick="search()">提交</button>
+        </form>
+
+    </div>
+    <div class="row child_title">
+        当月消费金额汇总：<span id="subConsumption_amount_total" class="moneyformatter">{{sunAccountAmountSum.amount_total}}</span>&nbsp;&nbsp;&nbsp;当月标准价消费金额汇总：<span id="subConsumption_standard_amount_total" class="moneyformatter">{{sunAccountAmountSum.standard_amount_total}}</span>
+    </div>
+    <br />
+    <div class="row">
+        <table id='abc' data-url="{{root_url}}/center/subComsumptionList"
+               data-side-pagination="server" data-width="100" data-pagination="true"
+               data-page-list="[5,10, 20, 50, 100, 200]">
+            <thead>
+            <tr>
+                <th data-field="name" >账户</th>
+                <th data-field="company" >公司名</th>
+                <th data-field="type" 
+                    data-formatter="type_formatter">账户分类</th>
+                <th data-field="amount_total"
+                     data-formatter="money_formatter">当月消费金额（元）</th>
+                <th data-field="standard_amount_total"
+                     data-formatter="money_formatter">当月标准价消费金额（元）</th>
+                <th data-field="" 
+                    data-formatter="operation">操作</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+    <script type="text/javascript">
+        function refresh() {
+            $('#abc').bootstrapTable('refresh', {
+                'silent' : true
+            });
+        }
+        $("#abc").bootstrapTable({
+            'onPageChange' : function(number, size) {
+                //alert(number)
+            },
+            'queryParams':function(params){
+                var name=$('#subconsum_account').val()
+                if(name.length>0)
+                    params['name']=name
+                if($("input[type='checkbox']:checked").length==1)
+                    $("input[type='checkbox']:checked").each(function(){
+                        params['type']=$(this).val()
+                    })
+                return params
+            }
+        })
+        function search(){
+            $("#abc").bootstrapTable('selectPage',1)
+        }
+    </script>
+{% endblock %}

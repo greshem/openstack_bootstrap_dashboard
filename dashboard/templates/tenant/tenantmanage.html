@@ -1,0 +1,95 @@
+{% extends "ECloud.html" %} 
+{% load staticfiles %} 
+
+{% block insert_js_css %}
+<script src="{% static 'js/tenant.js' %}"></script>
+{% endblock %} 
+{% block title %}
+<span class="menu-num-blue">管理员</span>
+<span class="menu-num-defult">/ 项目管理</span>
+{% endblock %} 
+
+{% block center_body %}
+<div class="row">
+	<div class="col-lg-12 col-md-12">
+		<div class="panel panel-default" style="padding: 0px;">
+			<div class="panel-heading heading-default">
+				<h4 class="panel-title">项目管理</h4>
+			</div>
+			<!--
+			<div class="panel-body" style="padding: 30px 0px;">
+				<div class="col-lg-7 col-md-7 ">
+					<li class="fl mb20">
+						<div class="btn-group">
+							<button type="button" class="btn btn-5"onclick="floatingip_create_form('{% url 'region_list' %}','{% url 'floatingip_billing' %}','{% url 'floatingip_pools_list' %}');">
+								<img src="{% static 'images/Icon_createcloud.png' %}" />&nbsp;&nbsp;&nbsp;创建项目
+							</button>
+						</div>
+					</li>
+					<li class="fl mb20">
+						<div class="btn-group">
+							<button type="button"
+								class="btn btn-5 dropdown-toggle tp-icon-admin"
+								data-toggle="dropdown" aria-haspopup="true"
+								aria-expanded="false">
+								<img src="{% static 'images/Icon_mor.png' %}" />&nbsp;&nbsp;&nbsp;更多操作
+								<span class="caret"></span>
+							</button>
+							<ul id="floatingip_meun" class="dropdown-menu dropdown-menu-usermenu">
+								<li id="floatingip_associate"class='disabled'><a href="#" onclick="floatingip_associate_form();">关联</a></li>
+								<li id="floatingip_disassociate"class='disabled'><a href="#" onclick="floatingip_disassociate_action('{% url 'floatingip_disassociate' %}');">解绑关联</a></li>
+								<li id="floatingip_delete" class='disabled'><a href="#" onclick="floatingip_delete_action('{% url 'floatingip_delete' %}');">释放浮动IP</a></li>
+							</ul>
+						</div>
+					</li>
+					<li class="fl mb20">
+						<div class="btn-group">
+							<button type="button" class="btn btn-6" id="btn_floatingip_delete" onclick="floatingip_delete_action('{% url 'floatingip_delete' %}');">
+								<img src="{% static 'images/Icon_delete.png' %}" />&nbsp;&nbsp;&nbsp;释放浮动IP
+							</button>
+						</div>
+					</li>
+				</div>
+				<div class="col-lg-5 col-md-5">
+					<li class="fl mb20">
+						<div class="btn-group">
+							<select id="search_opt" style="margin-right: 10px;height: 32px;">
+							<option value="floating_ip_address">IP地址</option>
+							</select>
+						</div>
+					</li>
+					<li class="fl mr10 mb20">
+						<div class="btn-group">
+							<input id="search_input" type="text" class="form-control" placeholder="请输入" />
+						</div>
+					</li>
+					<li class="fl mb20">
+						<div class="btn-group">
+							<button type="button" class="btn btn-primary" onclick="search();">搜索</button>
+						</div>
+					</li>
+				</div>
+				<table id="tenantTable" data-locale="zh-CN"
+					data-url="{% url 'tenant_list' %}"
+					data-side-pagination="server" data-width="100"
+					data-pagination="true" data-page-list="[1,5, 10]">
+					<thead>
+						<tr>
+							<th data-checkbox="true"></th>
+							<th data-field="name">名称</th>
+							<th data-field="description">描述</th>
+							<th data-field="id">项目ID</th>
+							<th data-field="domain_id">域名</th>
+							<th data-field="enabled">激活</th>
+						</tr>
+					</thead>
+				</table>
+			</div>
+			-->
+			<!-- panel-body -->
+		</div>
+	</div>
+</div>
+
+<!-- row -->
+{% endblock %}

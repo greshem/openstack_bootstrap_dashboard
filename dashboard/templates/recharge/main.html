@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block content %}
+    <div class="row search_combo">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <form id="current_table" class="form-inline" role="form"  onSubmit="return table_filter(this);">
+                <div class="form-group">
+                    <label style="">筛选条件</label>
+                    <select class="form-control" name="field">
+                        {% for code,name in field_list %}
+                            <option value="{{ code }}">{{ name }}</option>
+                        {% endfor %}
+                    </select>
+                    <input class="form-control" name="keyword" size="16"  type="text" value="" placeholder="请输入关键字">
+                </div>
+                <div class="form-group">
+                    <label>充值时间:</label>&nbsp;&nbsp;&nbsp;
+                    <div class="input-group date form_datetime" data-date-format="yyyy-mm-dd" >
+                        <input class="form-control"  type="text" value="" id="started_at" readonly style="background-color: #fff;width: 90px; border-right: none;">
+                        <span class="input-group-addon" style="background-color: #fff;border-left: none;border-right: none;padding-top: 4px;"><span class="glyphicon icon-empty"></span></span>
+                        <span class="input-group-addon" style="background-color: #fff;"><span class="icon-date glyphicon-th"></span></span>
+                    </div>
+                    ——
+                    <div class="input-group date form_datetime" data-date-format="yyyy-mm-dd" >
+                        <input class="form-control" type="text" value="" id="ended_at" readonly style="background-color: #fff;width: 90px; border-right: none;">
+                        <span class="input-group-addon" style="background-color: #fff;border-left: none;border-right: none;padding-top: 4px;"><span class="glyphicon icon-empty"></span></span>
+                        <span class="input-group-addon" style="background-color: #fff;"><span class="icon-date glyphicon-th"></span></span>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-default">查询</button>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <table id='listdata' data-url="{{root_url}}/recharge/listdata" data-width="100"
+               data-side-pagination="server" data-pagination="true" data-page-list="[5,10, 20, 50, 100, 200]">
+            <thead>
+            <tr>
+{#                <th data-field="order_no" data-formatter="">订单号</th>#}
+                <th data-field="username" data-formatter="">用户名</th>
+{#                <th data-field="type" data-formatter="" >类型</th>#}
+                <th data-field="amount" >金额(元)</th>
+{#                <th data-field="bak" data-formatter="" >备注</th>#}
+                <th data-field="pay_at"  data-formatter="">时间</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+    <script>
+        $("#listdata").bootstrapTable({
+            'onPageChange':function(number, size){
+            },
+            'onRefreshOptions':function(){
+                $('#main_content').resize()
+            },
+            'queryParams':function (params){
+                s_data=$('#current_table').serializeArray();
+                for (key in s_data){
+                    item=s_data[key];
+                    var1=item["name"];
+                    var2=item["value"];
+                    params[var1]=var2;
+                }
+                return  params
+            }
+        });
+        function table_filter(current){
+            $("#listdata").bootstrapTable('refresh', {
+                'onPageChange':function(number, size){
+                }
+            });
+            return false;
+        };
+        function show_drop_down(value, row){
+            innerhtml='<div class="btn-group"><a onClick="colorpop(detail)">详情</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a onClick="colorpop(history)">历史账单</a></div>';
+            return innerhtml
+        }
+        function colorpop(url_name){
+            url='{{ root_url }}/bill/'+url_name;
+            $.colorbox({href:url,
+                transition:'none', opacity:0.3,
+                closeButton:true, width: 800, initialWidth: 800, initialHeight: 350, top:"15%"})
+        }
+        $(".form_datetime").datetimepicker({
+            format : 'yyyy-mm-dd',
+            language : 'zh-CN',
+            pickDate : false,
+            pickTime : false,
+            startView:2,
+            minView : 2,
+            todayBtn:true,
+            autoclose : true,
+            inputMask : true,
+            pickerPosition : 'bottom-left'
+        })
+    </script>
+{% endblock %}

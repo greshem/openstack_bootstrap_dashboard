@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block receiver %}
+    <h3>
+        【STcloud云】尊敬的用户{{ receiver.username }}：
+    </h3>
+{% endblock %}
+{% block content %}
+    <p>
+        您好，{{ senday }}，您的帐号{{ receiver.username }}
+        已解冻，服务已恢复正常，如有疑问，请拨打服务热线：4008-166620。
+    </p>
+{% endblock %}

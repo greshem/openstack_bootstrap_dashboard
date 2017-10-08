@@ -1,0 +1,30 @@
+{% load staticfiles %}
+<div style="background: #2e2e2e;color: white; height: 35px; line-height: 35px">
+    <span style="font-size:16px; padding-left:15px">
+        {% block title %}
+            在此输入内容
+        {% endblock %}
+    </span>
+</div>
+
+<div class="panel-body child_main_body">
+    <div class="container-fluid">
+        {% block content %}
+        {% endblock %}
+    </div>
+</div>
+
+{% block yesornot %}
+    <div class="colorbox-no-yes">
+        <button class="btn btn-default" id="cancel_btn">取消</button>
+        <button class="btn btn-primary" id="confirm_btn">确定</button>
+    </div>
+    <script>
+        $('#cancel_btn').click(function(){
+            $.colorbox.close();
+        });
+    </script>
+
+    {% block action_script %}
+    {% endblock %}
+{% endblock %}

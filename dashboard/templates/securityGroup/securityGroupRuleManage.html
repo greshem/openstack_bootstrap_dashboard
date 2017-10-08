@@ -1,0 +1,249 @@
+{% extends "ECloud.html" %} 
+{% load staticfiles %} 
+
+{% block insert_js_css %}
+<script src="{% static 'js/securitygrouprule.js' %}"></script>
+{% endblock %} 
+{% block title %}
+<span class="menu-num-blue">云主机</span>
+<span class="menu-num-blue">/ <a href="{% url 'securitygroup_index' %}">安全组管理 </a></span>
+<span class="menu-num-defult">/ {{ sg_name }}</span>
+{% endblock %} 
+
+{% block center_body %}
+<div class="row">
+	<div class="col-lg-12 col-md-12">
+		<div class="panel panel-default" style="padding: 0px;">
+			<div class="panel-heading heading-default">
+				<h4 class="panel-title">安全组规则管理</h4>
+			</div>
+			<div class="panel-body" style="padding: 30px 0px;">
+			<div class="col-lg-6 col-md-6 ">
+			 <label class="col-sm-6 control-label">安全组：{{ sg_name }}</label>
+			</div>
+				<div class="col-lg-4 col-md-4 " style="float: right;">
+					<li class="fl mb20">
+						<div class="btn-group">
+							<button type="button" class="btn btn-5"onclick="securitygrouprule_create_form('{% url 'securitygrouprule_menu' %}','{% url 'securitygroup_list' %}');">
+								<img src="{% static 'images/Icon_createcloud.png' %}" />&nbsp;&nbsp;&nbsp;创建安全组规则
+							</button>
+						</div>
+					</li>
+					<li class="fl mb20">
+						<div class="btn-group">
+							<button type="button" class="btn btn-6" id="btn_securitygrouprule_delete" onclick="securitygrouprule_delete_action('{% url 'securitygrouprule_delete' %}');">
+								<img src="{% static 'images/Icon_delete.png' %}" />&nbsp;&nbsp;&nbsp;删除安全组规则
+							</button>
+						</div>
+					</li>
+				</div>
+				<!-- <div class="col-lg-5 col-md-5">
+					<li class="fl mb20">
+						<div class="btn-group">
+							<select id="search_opt" style="margin-right: 10px;height: 32px;">
+							<option value="name">安全组名称</option>
+							</select>
+							<button type="button"
+								class="btn btn-6 dropdown-toggle tp-icon-admin"
+								data-toggle="dropdown" aria-haspopup="true"
+								aria-expanded="false">
+								云主机名称 <span class="caret"></span>
+							</button>
+							<ul class="dropdown-menu dropdown-menu-usermenu">
+								<li><a href="#">北京1区</a></li>
+								<li><a href="#">北京2区</a></li>
+								<li><a href="#">北京3区</a></li>
+								<li><a href="#">北京4区</a></li>
+							</ul>
+						</div>
+					</li>
+					<li class="fl mr10 mb20">
+						<div class="btn-group">
+							<input id="search_input" type="text" class="form-control" placeholder="请输入安全组名称" />
+						</div>
+					</li>
+					<li class="fl mb20">
+						<div class="btn-group">
+							<button type="button" class="btn btn-primary" onclick="search();">搜索</button>
+						</div>
+					</li>
+				</div> -->
+				<table id="securitygroupruleTable" data-locale="zh-CN"
+					data-url="{% url 'securitygrouprule_list' %}?sg_id={{sg_id}}"
+					data-side-pagination="server" data-width="100"
+					data-pagination="true" data-page-list="[1,5, 10]">
+					<thead>
+						<tr>
+							<th data-checkbox="true"></th>
+							<th data-field="direction"data-formatter='direction_formatter' >方向</th>
+							<th data-field="ethertype">以太网类型</th>
+							<th data-field="ip_protocol"data-formatter='protocol_formatter'>协议</th>
+							<th data-field="port_range"data-formatter='port_formatter'>端口范围</th>
+							<th data-field="ip_range">远端IP前缀</th>
+							<th data-field="group">远端安全组</th>
+						</tr>
+					</thead>
+					</table>
+			</div>
+			<!-- panel-body -->
+		</div>
+	</div>
+</div>
+<!-- row -->
+{% endblock %} 
+{% block insert_html %}
+<div class="dialog-example" id="">
+<div class="modal fade" id="securitygrouprule_create_form" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg" >
+			<div class="modal-content" >
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-hidden="true">×</button>
+					<h4 class="modal-title" id="myModalLabel">创建安全组规则</h4>
+				</div>
+				<div class="modal-body" >
+					<div class="row">
+							<div class="col-sm-7 col-md-7">
+							<form  action=""class="form-horizontal" role="form" style="padding-top: 20px;padding-left: 10px;padding-bottom: 20px;">
+								<div class="form-group">
+									<label class="col-sm-3 control-label">规则：</label>
+									<div class="col-sm-7">
+										<select class="form-control" id="securitygrouprule_rule">
+										
+										</select>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label">方向：</label>
+									<div class="col-sm-7">
+										<select class="form-control" id="securitygrouprule_direction">
+											<option value="ingress">入口
+											<option value="egress">出口
+										</select>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label">IP协议：</label>
+									<div class="col-sm-7">
+										<input class="form-control" id="securitygrouprule_ip_protocol" type="text" autofocus name="ip_protocol" data-bv-notempty-message="协议号不能为空"placeholder="请输入1-255之间的整数" autocomplete="off" data-bv-notempty>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label">打开端口：</label>
+									<div class="col-sm-7">
+										<select class="form-control" id="securitygrouprule_port_type">
+											<option value='port'>端口
+											<option value='port_range'>端口范围
+										</select>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label">端口：</label>
+									<div class="col-sm-7">
+										<input class="form-control" id="securitygrouprule_port" type="text" autofocus name="port" data-bv-notempty-message="端口不能为空" data-bv-numeric-message="输入大于1小于65535的整数" placeholder="输入大于1小于65535的整数" autocomplete="off" data-bv-notempty data-bv-numeric>
+									</div>
+								</div>
+								<div class="form-group ">
+									<label class="col-sm-3 control-label">起始端口号：</label>
+									<div class="col-sm-7">
+										<input class="form-control" id="securitygrouprule_from_port" type="text" autofocus name="from_port" data-bv-notempty-message="端口不能为空"placeholder="输入大于1小于65535的整数" autocomplete="off" data-bv-notempty>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label">终止端口号：</label>
+									<div class="col-sm-7">
+										<input class="form-control" id="securitygrouprule_to_port" type="text" autofocus name="to_port" data-bv-notempty-message="端口不能为空"placeholder="输入大于1小于65535的整数" autocomplete="off" data-bv-notempty>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label">远程：</label>
+									<div class="col-sm-7">
+										<select class="form-control" id="securitygrouprule_remote">
+											<option value='cidr'>CIDR
+											<option value='securitygroup'>安全组
+										</select>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label">CIDR：</label>
+									<div class="col-sm-7">
+										<input class="form-control" id="securitygrouprule_cidr" type="text" autofocus name="cidr" data-bv-notempty-message="不能为空" value="0.0.0.0/0" placeholder="0.0.0.0/0" autocomplete="off" data-bv-notempty>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label">安全组：</label>
+									<div class="col-sm-7">
+										<select class="form-control" id="securitygrouprule_securitygroup">
+											<option>1
+										</select>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label">以太网类型：</label>
+									<div class="col-sm-7">
+										<select class="form-control" id="securitygrouprule_ethertype">
+											<option>IPv4
+											<option>IPv6
+										</select>
+									</div>
+								</div>
+							</form>
+							</div>
+							<div class="col-sm-5 col-md-5" style="padding-top: 20px;padding-left: 10px;padding-bottom: 20px;">
+								<div class="form-group">
+									<label class="col-sm-3 control-label"><strong style="font-weight: bold;font-size: medium;">说明</strong></label>
+								</div>
+								<div class="form-group" style="padding-top: 20px;padding-right: 20px;">
+									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;云主机可以关联安全组，组中的规则定义了允许哪些访问到达被关联的云主机。安全组由以下三个主要组件组成：</br>
+									<strong style="font-weight: bold;">规则：</strong> 你可以指定期望的规则模板或者使用定制规则，选项有定制TCP规则、定制UDP规则或定制ICMP规则。</br>
+									<strong style="font-weight: bold;">打开端口/端口范围：</strong> 你选择的TCP和UDP规则可能会打开一个或一组端口.选择"端口范围"，你需要提供开始和结束端口的范围.对于ICMP规则你需要指定ICMP类型和代码.</br>
+									<strong style="font-weight: bold;">远程：</strong> 你必须指定允许通过该规则的流量来源。可以通过以下两种方式实现：IP地址块(CIDR)或者来源地址组(安全组)。如果选择一个安全组作为来访源地址，则该安全组中的任何云主机都被允许使用该规则访问任一其它云主机。
+								</div>
+							</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-5"aria-hidden="true"data-dismiss="modal">取消</button>
+					<button type="button" class="btn btn-5"aria-hidden="true" onclick="securitygrouprule_create_action('{{ sg_id }}','{% url 'securitygrouprule_create' %}');">确定</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="modal fade" id="securitygrouprule_edit_form" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content" >
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-hidden="true">×</button>
+					<h4 class="modal-title" id="myModalLabel">编辑安全组</h4>
+				</div>
+				<div class="modal-body" >
+					<div class="row">
+							<form action=""class="form-horizontal" role="form" style="padding-top: 30px;padding-left: 10px;padding-bottom: 40px;">
+								<div class="form-group">
+									<label class="col-sm-3 control-label">安全组名称：</label>
+									<div class="col-sm-6">
+										<input class="form-control" id="securitygrouprule_name_edit" type="text" autofocus name="username" data-bv-notempty-message="安全组名称不能为空"placeholder="请输入安全组名称" autocomplete="off" data-bv-notempty>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label">描述：</label>
+									<div class="col-sm-6">
+										<textarea rows="5" cols="38" id='securitygrouprule_description_edit'></textarea>
+									</div>
+								</div>
+							</form>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-5"aria-hidden="true"data-dismiss="modal">取消</button>
+					<button type="button" class="btn btn-5"aria-hidden="true" onclick="securitygrouprule_edit_action('');">确定</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	</div>
+{% endblock %}

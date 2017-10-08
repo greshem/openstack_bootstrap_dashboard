@@ -1,0 +1,108 @@
+{% extends 'colorbox_ajax.html' %}
+{% block title %}
+    账户信息修改
+{% endblock %}
+
+{% block content %}
+    <div style="text-align: center; margin: 10px; height: 40px; line-height: 40px;background-color: #FFEBCD"><p>注：只能普通用户升级为信用用户</p></div>
+    <div style="text-align: center;" class="form-inline">
+        <span>账户类型</span>&nbsp;&nbsp;&nbsp;&nbsp;
+        <input type="radio" id='type_normal' name="modify_account_type" value="normal">普通&nbsp;&nbsp;&nbsp;&nbsp;
+        <input type="radio" id='type_credit' name="modify_account_type" value="credit">信用&nbsp;&nbsp;&nbsp;&nbsp;
+        <input type="text" id="credit_line" name='credit_line1' class="form-control" placeholder="信用额度" style="width: 100px"><span id="yuan">元</span>
+    </div>
+{% endblock %}
+
+{% block action_script %}
+    <script>
+    $(document).ready(function(){
+        var type='{{ type }}';
+        var credit_line='{{ credit_line }}';
+        var account_id = '{{ account_id }}';
+        var username = '{{ username }}';
+        if(type=='credit'){
+            $('#type_credit').attr('checked', 'checked');
+            $('#type_normal').attr('disabled', 'disabled');
+            $('#credit_line').val({{ credit_line }})
+        }
+        if(type=='normal'){
+            $('#type_normal').attr('checked', 'checked');
+            $('#credit_line').hide();
+            $('#yuan').hide();
+        };
+        $('#type_credit').click(function(){
+            $('#credit_line').show().val({{ credit_line }});
+            $('#yuan').show();
+            $.colorbox.resize()
+        });
+        $('#type_normal').click(function(){
+            $('#credit_line').hide();
+            $('#yuan').hide();
+            $.colorbox.resize()
+        });
+
+        $('#confirm_btn').click(function(){
+            reg=/^\d+(\.(\d){1,2})?$/;
+            if (!reg.test($('#credit_line').val())){
+                $.alert({
+                    title: '提示',
+                    content: '输入金额不合法,请重新输入',
+                    confirmButton: '确认'
+                });
+                return false;
+            }
+            var credit_line1=parseFloat($('#credit_line').val()).toFixed(2);
+            var credit_line=parseFloat({{ credit_line }}).toFixed(2);
+            var type1=$('input[name="modify_account_type"]:checked').val();
+
+            if(type1=='normal'){
+                $.colorbox.close()
+            }
+
+            if(type1=='credit' && type=='credit'){
+                if(credit_line1==credit_line){
+                    $.colorbox.close()
+                }
+
+                if(credit_line1!=credit_line){
+                    result=$.ajax({
+                        type:'post',
+                        url:'{{ root_url }}/manage/account/',
+                        data: {
+                            'account_id': account_id,
+                            'credit_line1': credit_line1,
+                            'type': 'update_credit_line'
+                        },
+                        async:false
+                    });
+                    if(result.responseText=='success'){
+                        $.colorbox.close();
+                        location.href='{{ root_url }}/manage/';
+                    }else{
+                        toastr.error('调整额度失败');
+                    }
+                }
+            }
+
+            if(type1=='credit' && type=='normal'){
+                result1=$.ajax({
+                    type:'post',
+                    url:'{{ root_url }}/manage/account/',
+                    data:{
+                        'account_id':account_id,
+                        'credit_line1': credit_line1,
+                        'type': 'change_account_type'
+                    },
+                    async:false
+                });
+                if(result1.responseText=='success'){
+                    $.colorbox.close();
+                    location.herf='{{ root_url }}/manage/';
+                }else{
+                    toastr.error('升级信用用户失败');
+                }
+            }
+        })
+    })
+    </script>
+{% endblock %}
