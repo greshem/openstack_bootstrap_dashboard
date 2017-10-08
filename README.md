@@ -1,3 +1,6 @@
+# openstack_bootstrap_dashboard
+## html webpage  framework as  follow
+```jinja
 {% block body %}
 {% block innerscript %}g
 {% endblock %}
@@ -12,4 +15,4 @@
 {% endblock %}
 {% block modal %}
 {% endblock %}
-
+```
